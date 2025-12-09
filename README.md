@@ -33,4 +33,4 @@ npm run build
 npm run lint
 ```
 
-### TEST hkahkfshkfh hej
+### TEST hkahkfshkfh hej jag lyckades pulla
