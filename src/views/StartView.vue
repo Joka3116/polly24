@@ -119,5 +119,17 @@ export default {
   .hide {
     left:-12em;
   }
+  
 }
+</style>
+
+<style>
+  body {
+    background-image: url('/img/bakgrund.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+  }
+
 </style>
