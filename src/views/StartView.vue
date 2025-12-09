@@ -8,7 +8,12 @@
       Who wants to be a billionaire 
     </div>
   </header>
+  
   <div class="page-wrapper">
+  <div class="center-logo">
+  <img src="/img/logo.png" alt="Logo">
+</div>
+
   <ResponsiveNav v-bind:hideNav="hideNav">
     <button v-on:click="switchLanguage">
       {{ uiLabels.changeLanguage }}
@@ -30,6 +35,13 @@
   <router-link v-bind:to="'/lobby/' + newPollId">
     {{ uiLabels.participatePoll }}
   </router-link>
+  
+  <div class="play-container">
+  <button class="play-btn" @click="$router.push('/create')">
+    PLAY
+  </button>
+  </div>
+
   </div>
 </template>
 
@@ -73,6 +85,8 @@ export default {
 }
 </script>
 <style scoped>
+
+
   header {
     background-color: rgba(60, 12, 116, 1)   ;
     width: 100%;
@@ -80,7 +94,7 @@ export default {
     grid-template-columns: 2em auto;
   }
   .page-wrapper {
-  background-image: url('/img/bakgrund.png');
+  background-color: purple;
   background-size: 100% auto; /* Full bredd, behåll proportioner */
   background-repeat: no-repeat;
   background-position: center top;
@@ -114,6 +128,31 @@ export default {
     cursor: pointer;
     font-size: 1.5rem;
   }
+  .play-container {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.play-btn {
+  background: radial-gradient(circle, #512da8, #311b92);
+  color: gold;
+  padding: 12px 40px;
+  font-size: 1.8rem;
+  font-weight: bold;
+  border: 3px solid gold;
+  border-radius: 30px;
+  letter-spacing: 3px;
+  cursor: pointer;
+  box-shadow: 0 0 15px gold;
+  transition: 0.2s ease;
+}
+
+.play-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 25px gold;
+}
+
 
 @media screen and (max-width:50em) {
   .logo {
@@ -133,5 +172,20 @@ export default {
   }
   
 }
+
+.center-logo {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.center-logo img {
+  width: 300px;   /* ändra storlek här */
+  height: auto;
+}
+
+
+
 </style>
 
