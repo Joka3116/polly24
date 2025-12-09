@@ -8,6 +8,7 @@
       Who wants to be a billionaire 
     </div>
   </header>
+  <div class="page-wrapper">
   <ResponsiveNav v-bind:hideNav="hideNav">
     <button v-on:click="switchLanguage">
       {{ uiLabels.changeLanguage }}
@@ -29,6 +30,7 @@
   <router-link v-bind:to="'/lobby/' + newPollId">
     {{ uiLabels.participatePoll }}
   </router-link>
+  </div>
 </template>
 
 <script>
@@ -77,6 +79,16 @@ export default {
     display: grid;
     grid-template-columns: 2em auto;
   }
+  .page-wrapper {
+  background-image: url('/img/bakgrund.png');
+  background-size: 100% auto; /* Full bredd, behåll proportioner */
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-attachment: fixed;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
   .logo {
     text-transform: uppercase;
     letter-spacing: 0.25em;
@@ -123,13 +135,3 @@ export default {
 }
 </style>
 
-<style>
-  body {
-    background-image: url('/img/bakgrund.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
-  }
-
-</style>
