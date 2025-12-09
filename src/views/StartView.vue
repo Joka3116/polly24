@@ -5,8 +5,7 @@
     </div>
     <div class="logo">
       <img src="/img/logo.png">
-      Polly polling tool 
-      <img src="../assets/logo.svg">
+      Who wants to be a billionaire 
     </div>
   </header>
   <ResponsiveNav v-bind:hideNav="hideNav">
@@ -73,7 +72,7 @@ export default {
 </script>
 <style scoped>
   header {
-    background-color: gray;
+    background-color: rgba(60, 12, 116, 1)   ;
     width: 100%;
     display: grid;
     grid-template-columns: 2em auto;
@@ -86,7 +85,7 @@ export default {
     padding-top:0.2em;
   }
   .logo img {
-    height:2.5rem;
+    height:5rem;
     vertical-align: bottom;
     margin-right: 0.5rem; 
   }
@@ -120,5 +119,17 @@ export default {
   .hide {
     left:-12em;
   }
+  
 }
+</style>
+
+<style>
+  body {
+    background-image: url('/img/bakgrund.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
+  }
+
 </style>
