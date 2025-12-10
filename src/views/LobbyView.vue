@@ -6,20 +6,13 @@
 
     <div v-if="!joined" class="join-container">
       <h2>{{ uiLabels.participateInPoll || "Enter Name" }}</h2>
-      
+
       <div class="input-wrapper">
-        <input 
-          type="text" 
-          v-model="userName" 
-          :placeholder="uiLabels['name'] || 'NAME'"
-          v-on:keyup.enter="participateInPoll"
-        >
+        <input type="text" v-model="userName" :placeholder="uiLabels['name'] || 'NAME'"
+          v-on:keyup.enter="participateInPoll">
       </div>
 
-      <button 
-        class="action-btn" 
-        v-on:click="participateInPoll"
-        :disabled="userName.length < 1">
+      <button class="action-btn" v-on:click="participateInPoll" :disabled="userName.length < 1">
         {{ uiLabels["join"] || "JOIN" }}
       </button>
     </div>
@@ -28,31 +21,23 @@
       <img src="/img/logo.png" alt="Logo" class="lobby-logo" />
 
       <h2>
-        {{ uiLabels.welcome || "Welcome" }} 
+        {{ uiLabels.welcome || "Welcome" }}
         <span class="highlight">{{ userName }}</span>!
       </h2>
 
       <h3 class="pulsing-text">{{ uiLabels["waiting"] || "Waiting..." }}</h3>
-      
-      <button 
-        class="action-btn ready-btn"
-        :class="{ 'not-ready-btn': isReady }" 
-        v-on:click="toggleReady">
+
+      <button class="action-btn ready-btn" :class="{ 'not-ready-btn': isReady }" v-on:click="toggleReady">
         {{ isReady ? (uiLabels.notReady || "NOT READY") : (uiLabels.ready || "READY") }}
       </button>
 
       <h3>{{ uiLabels.participants || "Participants" }}:</h3>
-      
+
       <div class="participants-grid">
-        <div 
-          v-for="(participant, index) in displayParticipants" 
-          :key="index" 
-          class="participant-card"
-          :class="{ 
-            'is-me': participant.name === userName, 
-            'ready': participant.isReady 
-          }"
-        >
+        <div v-for="(participant, index) in displayParticipants" :key="index" class="participant-card" :class="{
+          'is-me': participant.name === userName,
+          'ready': participant.isReady
+        }">
           {{ participant.name }}
         </div>
       </div>
@@ -72,7 +57,7 @@ export default {
       pollId: "inactive poll",
       uiLabels: {},
       joined: false,
-      isReady: false, 
+      isReady: false,
       lang: localStorage.getItem("lang") || "en",
       participants: []
     }
@@ -90,26 +75,26 @@ export default {
   },
   created: function () {
     this.pollId = this.$route.params.id;
-    socket.on( "uiLabels", labels => this.uiLabels = labels );
-    socket.on( "participantsUpdate", p => this.participants = p );
-    socket.on( "startPoll", () => this.$router.push("/poll/" + this.pollId) );
-    socket.emit( "joinPoll", this.pollId );
-    socket.emit( "getUILabels", this.lang );
+    socket.on("uiLabels", labels => this.uiLabels = labels);
+    socket.on("participantsUpdate", p => this.participants = p);
+    socket.on("startPoll", () => this.$router.push("/poll/" + this.pollId));
+    socket.emit("joinPoll", this.pollId);
+    socket.emit("getUILabels", this.lang);
   },
   methods: {
     participateInPoll: function () {
-      if(this.userName.length > 0) {
-        socket.emit( "participateInPoll", {pollId: this.pollId, name: this.userName} )
+      if (this.userName.length > 0) {
+        socket.emit("participateInPoll", { pollId: this.pollId, name: this.userName })
         this.joined = true;
       }
     },
     toggleReady: function () {
       this.isReady = !this.isReady;
       // Skicka statusuppdatering till servern
-      socket.emit("playerReady", { 
-        pollId: this.pollId, 
-        name: this.userName, 
-        isReady: this.isReady 
+      socket.emit("playerReady", {
+        pollId: this.pollId,
+        name: this.userName,
+        isReady: this.isReady
       });
     }
   }
@@ -131,7 +116,7 @@ export default {
 .lobby-header {
   margin-top: 2rem;
   margin-bottom: 1rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .highlight {
@@ -148,9 +133,17 @@ export default {
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 .join-container {
@@ -225,7 +218,7 @@ input::placeholder {
 .pulsing-text {
   animation: pulse 2s infinite;
   margin-bottom: 1rem;
-  color: #ff8db1;
+  color: gold;
   font-style: italic;
 }
 
@@ -248,9 +241,17 @@ input::placeholder {
 }
 
 @keyframes pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
+  0% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
 }
 
 .participants-grid {
@@ -264,9 +265,9 @@ input::placeholder {
 /* Hitta detta block och ersätt det */
 .participant-card {
   /* ÄNDRAT: Från blå gradient till grå */
-  background: grey; 
+  background: grey;
   /* ÄNDRAT: Bytt kantfärg från ljusblå till en ljusgrå för att matcha bättre */
-  border: 2px solid #bbb; 
+  border: 2px solid #bbb;
   border-radius: 50px;
   padding: 8px 20px;
   color: white;
@@ -274,28 +275,38 @@ input::placeholder {
   font-size: 1rem;
   min-width: 100px;
   text-align: center;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   transition: background 0.3s, transform 0.2s;
   animation: popIn 0.3s ease-out;
 }
 
-/* Hitta detta block och ersätt det också */
+
 .participant-card.is-me {
   border-color: gold;
-  /* Vi tog bort "background: grey;" härifrån eftersom det nu är standard ovan */
   color: white;
   transform: scale(1.05);
-  box-shadow: 0 0 10px gold; /* Lade till en liten guldeffekt för att markera dig */
+  box-shadow: 0 0 10px gold;
+  /* Lade till en liten guldeffekt för att markera dig */
 }
+
 .participant-card.ready {
-  background: linear-gradient(145deg, #2e7d32, #43a047) !important; /* Grön */
+  background: linear-gradient(145deg, #2e7d32, #43a047) !important;
+  /* Grön */
   border-color: #2e7d32;
 }
 
 
 @keyframes popIn {
-  0% { transform: scale(0); }
-  80% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(0);
+  }
+
+  80% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 </style>
