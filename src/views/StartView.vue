@@ -26,6 +26,15 @@
                 <button class="play-btn" @click="$router.push('/lobby/' + newPollId)">
                     {{ uiLabels.join || "JOIN" }}
                 </button>
+
+                <button 
+  v-if="showPollInput" 
+  class="back-btn"
+  @click="showPollInput = false"
+>
+  X
+</button>
+
       </div>
 
             <button
@@ -157,6 +166,26 @@ main a {
     gap: 1.5rem;
     width: 100%;
 }
+
+.back-btn {
+    background: var(--button-background-color);
+    border: 2px solid var(--button-color);
+    color: var(--button-color);
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 12px var(--button-color);
+    transition: 0.2s ease;
+}
+
+.back-btn:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 20px gold;
+}
+
 
 .play-btn {
     background: var(--button-background-color);
