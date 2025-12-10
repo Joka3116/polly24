@@ -1,8 +1,11 @@
 :root {
-  --foreground-color: red;
-  --background-color: green;
+    --foreground-color: white;
+    --background-color: #3a0b3a;
+
+    --foreground-alt-color: #3a0b3a;
+    --background-alt-color: #ff8db1;
 }
 body {
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }

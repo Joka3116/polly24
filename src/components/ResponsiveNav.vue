@@ -42,6 +42,13 @@ nav {
     z-index: 50;
 }
 
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+}
+
 #hamburger {
     position: fixed;
     top: 40px;
@@ -49,7 +56,7 @@ nav {
     width: 78px;
     height: 78px;
     border-radius: 50%;
-    background-color: #ff8db1;
+    background-color: var(--background-alt-color);
     cursor: pointer;
     z-index: 101;
     transition: transform 0.4s ease;
@@ -72,7 +79,7 @@ nav {
 #hamburger-line-two {
     position: absolute;
     left: 32%;
-    background-color: #3a0b3a;
+    background-color: var(--foreground-alt-color);
     height: 2px;
     border-radius: 2px;
     transition: all 0.4s ease;
@@ -92,6 +99,9 @@ nav {
 }
 
 /* Active States for Hamburger */
+#hamburger.active {
+    background-color: var(--foreground-alt-color);
+}
 #hamburger.active #hamburger-line-one,
 #hamburger.active #hamburger-line-two {
     left: 50%;
@@ -99,18 +109,15 @@ nav {
     width: 28px;
     height: 3px;
     transform-origin: center center;
-    background-color: black;
+    background-color: var(--background-alt-color);
 }
 
 @media (max-width: 768px) {
     #hamburger {
         width: 64px;
         height: 64px;
-        top: var(
-            --min-padding,
-            20px
-        ); /* Added fallback in case var is missing */
-        right: var(--min-padding, 20px);
+        top: 20px;
+        right: 20px;
     }
     #hamburger-line-one {
         width: 24px;
@@ -134,7 +141,7 @@ nav {
         width: 24px;
         height: 3px;
         transform-origin: center center;
-        background-color: black;
+        background-color: var(--background-alt-color);
     }
 }
 
@@ -153,7 +160,7 @@ nav {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #3a0b3a;
+    background-color: var(--background-alt-color);
 
     transition: all 0.4s ease-in-out;
     z-index: 100;
@@ -178,22 +185,10 @@ nav {
     align-items: center;
 }
 
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    text-align: center;
-}
-
-nav ul li {
-    margin: 30px 0;
-}
-
-/* Updated selector to be more specific or use deep if content is slotted */
 #nav-overlay-container ul :deep(li a) {
     opacity: 1 !important;
     display: block;
-    color: white;
+    color: var(--foreground-alt-color);
     text-decoration: none;
     text-align: center;
     text-transform: uppercase;
@@ -203,7 +198,7 @@ nav ul li {
     font-size: 32px;
     line-height: 36px;
 
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    border: 2px solid var(--foreground-alt-color);
     padding: 25px;
     min-width: 60vw;
     border-radius: 45px;
@@ -216,10 +211,12 @@ nav ul li {
     outline-width: 0;
     outline-style: solid;
     outline-offset: -1px;
+
+    margin: 30px 0;
 }
 
 #nav-overlay-container ul :deep(li a:hover) {
-    border: 2px solid rgba(255, 255, 255, 1);
+    border: 2px solid var(--foreground-alt-color);
     outline-width: 5px;
 }
 
