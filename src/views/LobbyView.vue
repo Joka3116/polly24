@@ -261,9 +261,12 @@ input::placeholder {
   width: 100%;
 }
 
+/* Hitta detta block och ersätt det */
 .participant-card {
-  background: linear-gradient(145deg, #0d47a1, #1565c0);
-  border: 2px solid #4fc3f7;
+  /* ÄNDRAT: Från blå gradient till grå */
+  background: grey; 
+  /* ÄNDRAT: Bytt kantfärg från ljusblå till en ljusgrå för att matcha bättre */
+  border: 2px solid #bbb; 
   border-radius: 50px;
   padding: 8px 20px;
   color: white;
@@ -276,16 +279,19 @@ input::placeholder {
   animation: popIn 0.3s ease-out;
 }
 
+/* Hitta detta block och ersätt det också */
 .participant-card.is-me {
   border-color: gold;
-  background: grey; 
+  /* Vi tog bort "background: grey;" härifrån eftersom det nu är standard ovan */
   color: white;
   transform: scale(1.05);
+  box-shadow: 0 0 10px gold; /* Lade till en liten guldeffekt för att markera dig */
 }
-
 .participant-card.ready {
   background: linear-gradient(145deg, #2e7d32, #43a047) !important; /* Grön */
+  border-color: #2e7d32;
 }
+
 
 @keyframes popIn {
   0% { transform: scale(0); }
