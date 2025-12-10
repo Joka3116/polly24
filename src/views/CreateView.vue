@@ -113,7 +113,7 @@ startPoll() {
 
 <style scoped> 
   .create-container {
-    background-color: rgba(60, 12, 116, 1);
+    background-color: var(--background-color);
     width: 100%;
     min-height: 100vh; 
     color: white;      
