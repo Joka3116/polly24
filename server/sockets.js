@@ -19,6 +19,10 @@ function sockets(io, socket, data) {
     data.participateInPoll(d.pollId, d.name);
     io.to(d.pollId).emit('participantsUpdate', data.getParticipants(d.pollId));
   });
+  socket.on('playerReady', function(d) {
+    data.setPlayerReady(d.pollId, d.name, d.isReady);
+    io.to(d.pollId).emit('participantsUpdate', data.getParticipants(d.pollId));
+  });
 
   socket.on('startPoll', function (pollId) {
     io.to(pollId).emit('startPoll');

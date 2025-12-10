@@ -50,7 +50,7 @@
           class="participant-card"
           :class="{ 
             'is-me': participant.name === userName, 
-            'ready': participant.name === userName && isReady 
+            'ready': participant.isReady 
           }"
         >
           {{ participant.name }}
@@ -81,8 +81,9 @@ export default {
     displayParticipants() {
       const list = [...this.participants];
       const me = list.find(p => p.name === this.userName);
+      // Lägg till isReady: this.isReady här så det syns direkt för dig själv
       if (this.joined && !me && this.userName) {
-        list.push({ name: this.userName });
+        list.push({ name: this.userName, isReady: this.isReady });
       }
       return list;
     }
@@ -104,7 +105,12 @@ export default {
     },
     toggleReady: function () {
       this.isReady = !this.isReady;
-      // Här kan du skicka uppdatering till servern: socket.emit("playerReady", this.isReady)
+      // Skicka statusuppdatering till servern
+      socket.emit("playerReady", { 
+        pollId: this.pollId, 
+        name: this.userName, 
+        isReady: this.isReady 
+      });
     }
   }
 }
@@ -230,9 +236,15 @@ input::placeholder {
 }
 
 .not-ready-btn {
-  background: linear-gradient(145deg, #c62828, #d32f2f);
+  background: linear-gradient(145deg, #c62828, #d32f2f) !important;
   border-color: #ff8a80;
   color: white;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.4) !important;
+}
+
+.not-ready-btn:hover {
+  background: linear-gradient(145deg, #d32f2f, #e53935) !important;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.6) !important;
 }
 
 @keyframes pulse {
@@ -271,8 +283,8 @@ input::placeholder {
   transform: scale(1.05);
 }
 
-.participant-card.is-me.ready {
-  background: linear-gradient(145deg, #2e7d32, #43a047); /* Grön */
+.participant-card.ready {
+  background: linear-gradient(145deg, #2e7d32, #43a047) !important; /* Grön */
 }
 
 @keyframes popIn {
