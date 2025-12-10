@@ -50,7 +50,7 @@
           class="participant-card"
           :class="{ 
             'is-me': participant.name === userName, 
-            'ready': participant.name === userName && isReady 
+            'ready': participant.isReady 
           }"
         >
           {{ participant.name }}
@@ -81,8 +81,9 @@ export default {
     displayParticipants() {
       const list = [...this.participants];
       const me = list.find(p => p.name === this.userName);
+      // Lägg till isReady: this.isReady här så det syns direkt för dig själv
       if (this.joined && !me && this.userName) {
-        list.push({ name: this.userName });
+        list.push({ name: this.userName, isReady: this.isReady });
       }
       return list;
     }
@@ -104,7 +105,12 @@ export default {
     },
     toggleReady: function () {
       this.isReady = !this.isReady;
-      // Här kan du skicka uppdatering till servern: socket.emit("playerReady", this.isReady)
+      // Skicka statusuppdatering till servern
+      socket.emit("playerReady", { 
+        pollId: this.pollId, 
+        name: this.userName, 
+        isReady: this.isReady 
+      });
     }
   }
 }
@@ -230,9 +236,15 @@ input::placeholder {
 }
 
 .not-ready-btn {
-  background: linear-gradient(145deg, #c62828, #d32f2f);
+  background: linear-gradient(145deg, #c62828, #d32f2f) !important;
   border-color: #ff8a80;
   color: white;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.4) !important;
+}
+
+.not-ready-btn:hover {
+  background: linear-gradient(145deg, #d32f2f, #e53935) !important;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.6) !important;
 }
 
 @keyframes pulse {
@@ -249,9 +261,12 @@ input::placeholder {
   width: 100%;
 }
 
+/* Hitta detta block och ersätt det */
 .participant-card {
-  background: linear-gradient(145deg, #0d47a1, #1565c0);
-  border: 2px solid #4fc3f7;
+  /* ÄNDRAT: Från blå gradient till grå */
+  background: grey; 
+  /* ÄNDRAT: Bytt kantfärg från ljusblå till en ljusgrå för att matcha bättre */
+  border: 2px solid #bbb; 
   border-radius: 50px;
   padding: 8px 20px;
   color: white;
@@ -264,16 +279,19 @@ input::placeholder {
   animation: popIn 0.3s ease-out;
 }
 
+/* Hitta detta block och ersätt det också */
 .participant-card.is-me {
   border-color: gold;
-  background: grey; 
+  /* Vi tog bort "background: grey;" härifrån eftersom det nu är standard ovan */
   color: white;
   transform: scale(1.05);
+  box-shadow: 0 0 10px gold; /* Lade till en liten guldeffekt för att markera dig */
+}
+.participant-card.ready {
+  background: linear-gradient(145deg, #2e7d32, #43a047) !important; /* Grön */
+  border-color: #2e7d32;
 }
 
-.participant-card.is-me.ready {
-  background: linear-gradient(145deg, #2e7d32, #43a047); /* Grön */
-}
 
 @keyframes popIn {
   0% { transform: scale(0); }

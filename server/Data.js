@@ -86,7 +86,18 @@ Data.prototype.getPoll = function (pollId) {
 Data.prototype.participateInPoll = function (pollId, name) {
   console.log("participant will be added to", pollId, name);
   if (this.pollExists(pollId)) {
-    this.polls[pollId].participants.push({ name: name, answers: [] })
+    // LÄGG TILL: isReady: false
+    this.polls[pollId].participants.push({ name: name, answers: [], isReady: false });
+  }
+}
+Data.prototype.setPlayerReady = function(pollId, name, isReady) {
+  if (this.pollExists(pollId)) {
+    const participants = this.polls[pollId].participants;
+    // Hitta rätt deltagare och uppdatera status
+    const participant = participants.find(p => p.name === name);
+    if (participant) {
+      participant.isReady = isReady;
+    }
   }
 }
 
