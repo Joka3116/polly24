@@ -69,6 +69,13 @@ Data.prototype.createPoll = function (pollId, lang = "en") {
   return this.polls[pollId];
 }
 
+Data.prototype.saveSettings = function (pollId, settings) {
+  if (this.pollExists(pollId)) {
+    this.polls[pollId].settings = settings;
+    console.log("Settings saved for", pollId, settings);
+  }
+}
+
 Data.prototype.getPoll = function (pollId) {
   if (this.pollExists(pollId)) {
     return this.polls[pollId];
