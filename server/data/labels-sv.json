@@ -1,11 +1,15 @@
 {
-	"sales-pitch": "Svar. Helt. Enkelt.",
-	"subHeading": "Ett enkelt enkätverktyg",
+	"sales-pitch": "Är du redo att bli miljardär?",
+	"subHeading": "Det bästa quizspelet av vår tid",
 	"invite": "Bjud in deltagare med den här länken:",
 	"createPoll": "Skapa röstning",
 	"participatePoll": "Delta i röstning",
 	"question": "Fråga",
 	"changeLanguage": "Change to English",
 	"about": "Om oss",
-	"participateInPoll": "Delta i enkäten"
+	"participateInPoll": "Delta i enkäten",
+	"createGame": "SKAPA",
+	"PLAY": "SPELA",
+	"JOIN": "DELTA",
+	"gameID":"Skriv spel id:"
 }
