@@ -1,11 +1,15 @@
 {
-	"sales-pitch": "Simply. Great. Polling.",
-	"subHeading": "A simple polling tool",
+	"sales-pitch": "Are you ready to becomee a billionaire?",
+	"subHeading": "The greatest quiz game of our time",
 	"invite": "Invite participants with this link:",
 	"createPoll": "Create poll",
 	"participatePoll": "Participate in poll",
 	"question": "Question",
 	"changeLanguage": "Byt till svenska",
 	"about": "About",
-	"participateInPoll": "Participate in poll"
+	"participateInPoll": "Participate in poll",
+	"createGame": "CREATE",
+	"PLAY": "PLAY",
+	"JOIN": "JOIN",
+	"gameID": "Write game id:"
 }
