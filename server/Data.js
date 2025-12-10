@@ -1,5 +1,20 @@
 'use strict';
-import {readFileSync} from "fs";
+import { readFileSync } from "fs";
+import mysql from "mysql2/promise";
+
+const pool = mysql.createPool({
+  host: "localhost",
+  user: "root",
+  password: "YOUR_PASSWORD_HERE",
+  database: "quizgame"
+});
+
+function shuffleArray(arr) {
+  return arr
+    .map(a => ({ value: a, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(a => a.value);
+}
 
 // Store data in an object to keep the global namespace clean. In an actual implementation this would be interfacing a database...
 function Data() {
@@ -7,11 +22,13 @@ function Data() {
   this.polls['test'] = {
     lang: "en",
     questions: [
-      {q: "How old are you?", 
-       a: ["0-13", "14-18", "19-25", "26-35", "36-45","45-"]
+      {
+        q: "How old are you?",
+        a: ["0-13", "14-18", "19-25", "26-35", "36-45", "45-"]
       },
-      {q: "How much do you enjoy coding?", 
-       a: ["1", "2", "3", "4", "5"]
+      {
+        q: "How much do you enjoy coding?",
+        a: ["1", "2", "3", "4", "5"]
       }
     ],
     answers: [],
@@ -32,67 +49,56 @@ Data.prototype.pollExists = function (pollId) {
 
 Data.prototype.getUILabels = function (lang) {
   //check if lang is valid before trying to load the dictionary file
-  if (!["en", "sv"].some( el => el === lang))
+  if (!["en", "sv"].some(el => el === lang))
     lang = "en";
   const labels = readFileSync("./server/data/labels-" + lang + ".json");
   return JSON.parse(labels);
 }
 
-Data.prototype.createPoll = function(pollId, lang="en") {
+Data.prototype.createPoll = function (pollId, lang = "en") {
   if (!this.pollExists(pollId)) {
     let poll = {};
-    poll.lang = lang;  
+    poll.lang = lang;
     poll.questions = [];
     poll.answers = [];
     poll.participants = [];
-    poll.currentQuestion = 0;              
+    poll.currentQuestion = 0;
     this.polls[pollId] = poll;
     console.log("poll created", pollId, poll);
   }
   return this.polls[pollId];
 }
 
-Data.prototype.getPoll = function(pollId) {
+Data.prototype.getPoll = function (pollId) {
   if (this.pollExists(pollId)) {
     return this.polls[pollId];
   }
   return {};
 }
 
-Data.prototype.participateInPoll = function(pollId, name) {
+Data.prototype.participateInPoll = function (pollId, name) {
   console.log("participant will be added to", pollId, name);
   if (this.pollExists(pollId)) {
-    this.polls[pollId].participants.push({name: name, answers: []})
+    this.polls[pollId].participants.push({ name: name, answers: [] })
   }
 }
 
-Data.prototype.getParticipants = function(pollId) {
+Data.prototype.getParticipants = function (pollId) {
   const poll = this.polls[pollId];
   console.log("participants requested for", pollId);
-  if (this.pollExists(pollId)) { 
+  if (this.pollExists(pollId)) {
     return this.polls[pollId].participants
   }
   return [];
 }
 
-Data.prototype.addQuestion = function(pollId, q) {
+Data.prototype.addQuestion = function (pollId, q) {
   if (this.pollExists(pollId)) {
     this.polls[pollId].questions.push(q);
   }
 }
 
-Data.prototype.activateQuestion = function(pollId, qId = null) {
-  if (this.pollExists(pollId)) {
-    const poll = this.polls[pollId];
-    if (qId !== null) {
-      poll.currentQuestion = qId;
-    }
-    return poll.questions[poll.currentQuestion];
-  }
-  return {}
-}
-
-Data.prototype.getSubmittedAnswers = function(pollId) {
+Data.prototype.getSubmittedAnswers = function (pollId) {
   if (this.pollExists(pollId)) {
     const poll = this.polls[pollId];
     const answers = poll.answers[poll.currentQuestion];
@@ -103,7 +109,7 @@ Data.prototype.getSubmittedAnswers = function(pollId) {
   return {}
 }
 
-Data.prototype.submitAnswer = function(pollId, answer) {
+Data.prototype.submitAnswer = function (pollId, answer) {
   if (this.pollExists(pollId)) {
     const poll = this.polls[pollId];
     let answers = poll.answers[poll.currentQuestion];
@@ -123,6 +129,34 @@ Data.prototype.submitAnswer = function(pollId, answer) {
     console.log("answers looks like ", answers, typeof answers);
   }
 }
+
+Data.prototype.getRandomQuestion = async function (language = "sv") {
+
+  const [questions] = await pool.query(
+    `SELECT id, shared_question_id, text
+     FROM questions
+     WHERE language = ?
+     ORDER BY RAND()
+     LIMIT 1`,
+    [language]
+  );
+
+  const q = questions[0];
+
+  const [answers] = await pool.query(
+    `SELECT id, answer_text AS text, is_correct
+     FROM answers
+     WHERE question_id = ?`,
+    [q.id]
+  );
+
+  return {
+    id: q.id,
+    sharedId: q.shared_question_id,
+    text: q.text,
+    answers: shuffleArray(answers)
+  };
+};
 
 export { Data };
 
