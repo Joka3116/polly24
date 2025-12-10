@@ -11,7 +11,7 @@
         v-if="!showPollInput" 
         class="play-btn" 
         @click="showPollInput = true">
-        {{ uiLabels["PLAY"] || "PLAY" }}
+        {{ uiLabels["play"] || "PLAY" }}
       </button>
 
       <div v-else class="poll-input-area">
@@ -25,7 +25,7 @@
         </div>
 
         <button class="play-btn" @click="$router.push('/lobby/' + newPollId)">
-          {{ uiLabels["JOIN"] || "JOIN" }}
+          {{ uiLabels["join"] || "JOIN" }}
         </button>
       </div>
 

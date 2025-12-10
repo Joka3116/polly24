@@ -7,9 +7,15 @@
 	"question": "Question",
 	"changeLanguage": "Byt till svenska",
 	"about": "About",
-	"participateInPoll": "Participate in poll",
+	"participateInPoll": "Participate in game",
 	"createGame": "CREATE",
-	"PLAY": "PLAY",
-	"JOIN": "JOIN",
-	"gameID": "Write game id:"
+	"play": "PLAY",
+	"join": "JOIN",
+	"gameID": "Write game id:",
+	"name": "Your name",
+	"waiting": "Waiting for host to start the game...",
+  	"participants": "Participants",
+	"welcome": "WELCOME",
+	"READY": "READY",
+	"notReady": "NOT READY"
 }

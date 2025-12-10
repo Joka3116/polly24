@@ -7,9 +7,16 @@
 	"question": "Fråga",
 	"changeLanguage": "Change to English",
 	"about": "Om oss",
-	"participateInPoll": "Delta i enkäten",
+	"participateInPoll": "Delta i spelet",
 	"createGame": "SKAPA",
-	"PLAY": "SPELA",
-	"JOIN": "DELTA",
-	"gameID":"Skriv spel id:"
+	"play": "SPELA",
+	"join": "DELTA",
+	"gameID":"Skriv spel id:",
+	"name": "Ditt namn",
+	"waiting": "Väntar på att värden ska starta spelet...",
+	"participants": "Deltagare",
+	"welcome": "VÄLKOMMEN",
+	"ready": "REDO",
+	"notReady": "INTE REDO"
+
 }
