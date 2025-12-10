@@ -36,7 +36,7 @@
                 class="play-btn"
                 @click="$router.push('/create')"
             >
-                {{ uiLabels["createGame"] || "CREATE GAME" }}
+                {{ uiLabels["createGame"] || "CREATE" }}
             </button>
         </div>
     </main>
