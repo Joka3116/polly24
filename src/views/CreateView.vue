@@ -75,7 +75,7 @@ export default {
     }
   },
   created: function () {
-    this.pollId = Math.floor(10000 + Math.random() * 900000);
+    this.pollId = Math.floor(100000 + Math.random() * 900000);
     socket.on( "uiLabels", labels => this.uiLabels = labels );
     socket.on( "pollData", data => this.pollData = data );
     socket.on( "participantsUpdate", p => this.pollData.participants = p );
@@ -87,12 +87,16 @@ export default {
       socket.emit("createPoll", {pollId: this.pollId, lang: this.lang })
       socket.emit("joinPoll", this.pollId);
     },
-startPoll: function () {
-      socket.emit("startPoll", {
-        pollId: this.pollId,
-        difficulty: this.selectedDifficulty,
-        nrOfQuestions: this.selectedNrOfQuestions
-      })
+startPoll() {
+  socket.emit("startPoll", {
+    pollId: this.pollId,
+    difficulty: this.selectedDifficulty,
+    nrOfQuestions: this.selectedNrOfQuestions
+  });
+
+  this.$router.push(`/poll/${this.pollId}`);
+
+
     },
     addQuestion: function () {
       socket.emit("addQuestion", {pollId: this.pollId, q: this.question, a: this.answers } )
