@@ -16,6 +16,6 @@
 	"waiting": "Waiting for host to start the game...",
   	"participants": "Participants",
 	"welcome": "WELCOME",
-	"READY": "READY",
+	"ready": "READY",
 	"notReady": "NOT READY"
 }
