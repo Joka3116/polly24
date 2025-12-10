@@ -162,15 +162,15 @@ main a {
 }
 
 .play-btn {
-  background: radial-gradient(circle, #512da8, #311b92);
-  color: gold;
+  background: var(--button-background-color);
+  color: var(--button-color);
   padding: 12px 0;
   font-size: 1.8rem;
   font-weight: bold;
-  border: 3px solid gold;
+  border: 3px solid var(--button-color);
   border-radius: 30px;
   cursor: pointer;
-  box-shadow: 0 0 15px gold;
+  box-shadow: 0 0 15px var(--button-color);
   transition: 0.2s ease;
 
   width: 14rem;
@@ -183,7 +183,7 @@ main a {
 
 .play-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 25px gold;
+  box-shadow: 0 0 25px var(--button-color);
 }
 
 .input-wrapper {
@@ -198,7 +198,7 @@ main a {
 .input-wrapper input {
   background: transparent;
   border: none;
-  color: gold;
+  color: var(--button-color);
   /* Minskad font-storlek för att få plats bättre */
   font-size: 1.5rem; 
   font-weight: bold;
