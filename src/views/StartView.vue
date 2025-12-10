@@ -5,19 +5,39 @@
         <h2>{{ uiLabels.subHeading }}</h2>
     </header>
     <main>
+
+<div class="button-group">
+
+    <!-- PLAY-knappen om input-fältet inte visas -->
+    <button 
+        v-if="!showPollInput"
+        class="play-btn" 
+        @click="showPollInput = true">
+        PLAY
+    </button>
+
+    <!-- Input-fältet dyker upp efter klick -->
+    <div v-else class="poll-input-area">
         <label>
             Write poll id:
             <input type="text" v-model="newPollId" />
         </label>
-        <router-link v-bind:to="'/lobby/' + newPollId">
-            {{ uiLabels.participatePoll }}
-        </router-link>
-        <div class="play-container">
-            <button class="play-btn" @click="$router.push('/create')">
-                PLAY
-            </button>
-        </div>
-    </main>
+
+        <button class="play-btn" @click="$router.push('/lobby/' + newPollId)">
+            JOIN
+        </button>
+    </div>
+
+    <!-- CREATE-knappen finns alltid -->
+    <button class="play-btn" @click="$router.push('/create')">
+        CREATE
+    </button>
+
+</div>
+
+
+ </main> 
+
     <footer>
         <p>&copy; 2025 Polly24</p>
     </footer>
@@ -51,6 +71,7 @@ export default {
             newPollId: "",
             lang: localStorage.getItem("lang") || "en",
             hideNav: true,
+            showPollInput: false
         };
     },
     created: function () {
@@ -120,6 +141,23 @@ main a {
     color: white;
 }
 
+.poll-input-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+
 .play-container {
     margin-top: 2rem;
     display: flex;
@@ -129,16 +167,23 @@ main a {
 .play-btn {
     background: radial-gradient(circle, #512da8, #311b92);
     color: gold;
-    padding: 12px 40px;
+    padding: 12px 0; /* ändrad! lika för alla */
     font-size: 1.8rem;
     font-weight: bold;
     border: 3px solid gold;
     border-radius: 30px;
-    letter-spacing: 3px;
     cursor: pointer;
     box-shadow: 0 0 15px gold;
     transition: 0.2s ease;
+
+    width: 14rem;       /* exakt bredd */
+    height: 4rem;       /* exakt höjd */
+    display: flex;      
+    justify-content: center; 
+    align-items: center;      
+    letter-spacing: 2px; /* mindre spacing → CREATE blir inte bredare */
 }
+
 
 .play-btn:hover {
     transform: scale(1.1);
