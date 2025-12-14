@@ -7,7 +7,15 @@
     --button-background-color: radial-gradient(circle, #512da8, #311b92);
     --button-color: gold;
 }
-body {
+*,
+body,
+main,
+header {
     margin: 0;
     padding: 0;
+}
+body {
+    background: radial-gradient(#0f2845, #02050a);
+    height: 100%;
+    min-height: 100vh;
 }
