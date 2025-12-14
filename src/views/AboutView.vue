@@ -6,6 +6,9 @@
     <main></main>
     <FooterComponent></FooterComponent>
     <ResponsiveNav>
+        <router-link to="/">
+            {{ uiLabels.home || "HOME" }}
+        </router-link>
         <router-link to="/about/">
             {{ uiLabels.about || "ABOUT" }}
         </router-link>
