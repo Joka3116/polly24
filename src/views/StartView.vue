@@ -1,18 +1,18 @@
 <template>
-  <header>
-    <img src="/img/logo.png" alt="Logo" />
-    <h1>{{ uiLabels["sales-pitch"] }}</h1>
-    <h2>{{ uiLabels.subHeading }}</h2>
-  </header>
-  <main>
-    <div class="button-group">
-      
-      <button 
-        v-if="!showPollInput" 
-        class="play-btn" 
-        @click="showPollInput = true">
-        {{ uiLabels.play || "PLAY" }}
-      </button>
+    <header>
+        <img src="/img/logo.png" alt="Logo" />
+        <h1>{{ uiLabels["sales-pitch"] }}</h1>
+        <h2>{{ uiLabels.subHeading }}</h2>
+    </header>
+    <main>
+        <div class="button-group">
+            <button
+                v-if="!showPollInput"
+                class="play-btn"
+                @click="showPollInput = true"
+            >
+                {{ uiLabels.play || "PLAY" }}
+            </button>
 
             <div v-else class="poll-input-area">
                 <div class="play-btn input-wrapper">
@@ -23,19 +23,21 @@
                     />
                 </div>
 
-                <button class="play-btn" @click="$router.push('/lobby/' + newPollId)">
+                <button
+                    class="play-btn"
+                    @click="$router.push('/lobby/' + newPollId)"
+                >
                     {{ uiLabels.join || "JOIN" }}
                 </button>
 
-                <button 
-  v-if="showPollInput" 
-  class="back-btn"
-  @click="showPollInput = false"
->
-  X
-</button>
-
-      </div>
+                <button
+                    v-if="showPollInput"
+                    class="back-btn"
+                    @click="showPollInput = false"
+                >
+                    X
+                </button>
+            </div>
 
             <button
                 v-if="!showPollInput"
@@ -48,16 +50,18 @@
     </main>
     <FooterComponent></FooterComponent>
     <ResponsiveNav>
+        <router-link to="/about/">
+            {{ uiLabels.about || "ABOUT" }}
+        </router-link>
+        <router-link to="/lobby/1">
+            {{ uiLabels.play || "PLAY" }}
+        </router-link>
+        <router-link to="/create/">
+            {{ uiLabels["createGame"] || "CREATE" }}
+        </router-link>
         <button v-on:click="switchLanguage">
             {{ uiLabels.changeLanguage }}
         </button>
-        <router-link to="/create/">
-            {{ uiLabels.createPoll }}
-        </router-link>
-        <a href="#">
-            {{ uiLabels.about }}
-        </a>
-        <a href="#">FAQ</a>
     </ResponsiveNav>
 </template>
 
@@ -104,24 +108,11 @@ export default {
 </script>
 
 <style scoped>
-*,
-body,
-main,
-header {
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    height: 100%;
-}
-
 header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 3rem;
-    background-color: var(--background-color);
+    padding-top: 4rem;
 }
 
 header img {
@@ -141,10 +132,9 @@ h2 {
 }
 
 main {
-    background-color: var(--background-color);
     color: white;
-    min-height: 30rem;
     padding-top: 5rem;
+    padding-bottom: 10rem;
 }
 
 main a {
@@ -185,7 +175,6 @@ main a {
     transform: scale(1.15);
     box-shadow: 0 0 20px gold;
 }
-
 
 .play-btn {
     background: var(--button-background-color);
