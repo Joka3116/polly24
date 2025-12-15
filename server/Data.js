@@ -5,7 +5,7 @@ import mysql from "mysql2/promise";
 const pool = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "YOUR_PASSWORD_HERE",
+  password: "PaSswOrD",
   database: "quizgame"
 });
 
@@ -90,7 +90,7 @@ Data.prototype.participateInPoll = function (pollId, name) {
     this.polls[pollId].participants.push({ name: name, answers: [], isReady: false });
   }
 }
-Data.prototype.setPlayerReady = function(pollId, name, isReady) {
+Data.prototype.setPlayerReady = function (pollId, name, isReady) {
   if (this.pollExists(pollId)) {
     const participants = this.polls[pollId].participants;
     // Hitta rätt deltagare och uppdatera status
