@@ -21,16 +21,25 @@
       </div>
 
     <div class="question-container">
+      <div class="question-container" v-if="question.text">
       <QuestionComponent 
         v-bind:question="question"
+        v-bind:isHost="isHost"
         v-on:answer="submitAnswer($event)"
       />
     </div>
 
-    <button class="action-btn start-btn">
-      START GAME
-    </button>
+    <div v-else class="waiting-screen">
+       <h2 v-if="!isHost">Väntar på fråga...</h2>
+       <h2 v-else>Redo att starta?</h2>
+    </div>
 
+    <div v-if="isHost" class="host-controls">
+      <button class="action-btn" @click="runNextQuestion">
+        {{ !question.text ? 'START GAME' : 'NÄSTA FRÅGA' }}
+      </button>
+    </div>
+    </div>
   </div>
 </template>
 
@@ -47,17 +56,19 @@ export default {
   data: function () {
     return {
       question: {
-        q: "",
-        a: []
+        text: "",   
+        answers: []  
       },
       pollId: "inactive poll",
       submittedAnswers: {},
       participants: [], // Ny array för deltagare
-      uiLabels: {}
+      uiLabels: {},
+      isHost: false
     }
   },
   created: function () {
     this.pollId = this.$route.params.id;
+    this.isHost = localStorage.getItem("isHost") === "true";
     
     socket.on( "questionUpdate", q => this.question = q );
     socket.on( "submittedAnswersUpdate", answers => this.submittedAnswers = answers );
@@ -71,7 +82,10 @@ export default {
   },
   methods: {
     submitAnswer: function (answer) {
-      socket.emit("submitAnswer", {pollId: this.pollId, answer: answer})
+      socket.emit("submitAnswer", {pollId: this.pollId, answer: answer, name: localStorage.getItem("userName")})
+    },
+    runNextQuestion: function () {
+      socket.emit("runQuestion", { pollId: this.pollId });
     }
   }
 }
@@ -103,7 +117,8 @@ export default {
 
 .info-container {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 5rem;
+  max-height: 100px;
 }
 
 .poll-logo {
