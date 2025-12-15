@@ -33,4 +33,19 @@ npm run build
 npm run lint
 ```
 
-### TEST hkahkfshkfh hej jag lyckades pulla
+# TODO LIST
+# Hamburger ska inte ta upp hela skärmen, ändra färg på burgir
+# Pollview: Ändra så knappar är enhetlig med lobbyview, hämta ready/not ready info. 
+# Ready knapp gör inget, host kan starta ändå -> Men spelare som klickar ready får bonuspoäng.
+# 
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
