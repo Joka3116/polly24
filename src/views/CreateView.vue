@@ -88,13 +88,22 @@ export default {
       socket.emit("joinPoll", this.pollId);
     },
 startPoll() {
-  socket.emit("startPoll", {
-    pollId: this.pollId,
-    difficulty: this.selectedDifficulty,
-    nrOfQuestions: this.selectedNrOfQuestions
-  });
+    // 1. Skicka inställningarna till servern
+    socket.emit("startPoll", {
+      pollId: this.pollId,
+      difficulty: this.selectedDifficulty,
+      nrOfQuestions: this.selectedNrOfQuestions
+    });
 
-  this.$router.push(`/poll/${this.pollId}`);
+    // 2. VIKTIGT: Spara att denna klient är HOST
+    // Detta behövs för att GameView ska veta att den ska visa frågorna
+    localStorage.setItem("isHost", "true"); 
+
+    // 3. Navigera till lobbyn (eller direkt till spelet om du föredrar)
+    // Enligt din plan: "när hosten trycker på 'start poll' så skickas den in i lobbyn"
+    this.$router.push(`/lobby/${this.pollId}`); 
+  },
+
 
 
     },
@@ -108,7 +117,6 @@ startPoll() {
       socket.emit("runQuestion", {pollId: this.pollId, questionNumber: this.questionNumber})
     }
   }
-}
 </script>
 
 <style scoped> 

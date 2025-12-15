@@ -25,11 +25,23 @@
         <span class="highlight">{{ userName }}</span>!
       </h2>
 
-      <h3 class="pulsing-text">{{ uiLabels["waiting"] || "Waiting..." }}</h3>
-
-      <button class="action-btn ready-btn" :class="{ 'not-ready-btn': isReady }" v-on:click="toggleReady">
+      <button 
+        v-if="!isHost" 
+        class="action-btn ready-btn" 
+        :class="{ 'not-ready-btn': isReady }" 
+        v-on:click="toggleReady">
         {{ isReady ? (uiLabels.notReady || "NOT READY") : (uiLabels.ready || "READY") }}
       </button>
+      <div v-if="isHost" class="host-controls">
+        <h3 style="color: gold;">You are the Host</h3>
+        <button class="action-btn start-btn" v-on:click="runQuiz">
+          START GAME
+        </button>
+      </div>
+
+      <h3 v-else class="pulsing-text">
+        {{ uiLabels["waiting"] || "Waiting for host to start..." }}
+      </h3>
 
       <h3>{{ uiLabels.participants || "Participants" }}:</h3>
 
@@ -59,14 +71,21 @@ export default {
       joined: false,
       isReady: false,
       lang: localStorage.getItem("lang") || "en",
-      participants: []
+      participants: [],
+      isHost: false
     }
   },
   computed: {
     displayParticipants() {
+      // Om jag är Host vill jag bara se listan från servern, 
+      // jag ska inte lägga till mig själv manuellt.
+      if (this.isHost) {
+        return this.participants;
+      }
+
+      // För vanliga spelare: Visa serverlistan + mig själv (innan servern hunnit uppdatera)
       const list = [...this.participants];
       const me = list.find(p => p.name === this.userName);
-      // Lägg till isReady: this.isReady här så det syns direkt för dig själv
       if (this.joined && !me && this.userName) {
         list.push({ name: this.userName, isReady: this.isReady });
       }
@@ -75,6 +94,16 @@ export default {
   },
   created: function () {
     this.pollId = this.$route.params.id;
+    this.isHost = localStorage.getItem("isHost") === "true";
+
+    // --- NY KOD HÄR ---
+    // Om vi är host, hoppa över inloggningsskärmen direkt
+    if (this.isHost) {
+      this.joined = true;
+      this.userName = "Host"; // Sätts bara lokalt för att variabler inte ska vara tomma
+    }
+    // ------------------
+
     socket.on("uiLabels", labels => this.uiLabels = labels);
     socket.on("participantsUpdate", p => this.participants = p);
     socket.on("startPoll", () => this.$router.push("/poll/" + this.pollId));
@@ -90,17 +119,19 @@ export default {
     },
     toggleReady: function () {
       this.isReady = !this.isReady;
-      // Skicka statusuppdatering till servern
       socket.emit("playerReady", {
         pollId: this.pollId,
         name: this.userName,
         isReady: this.isReady
       });
+    }, // <--- HÄR SAKNADES ETT KOMMATECKEN OCH EN SLUTPARANTES
+    
+    runQuiz: function() {
+      socket.emit("startPoll", this.pollId);
     }
   }
 }
 </script>
-
 <style scoped>
 .lobby-view {
   background-color: var(--background-color);
