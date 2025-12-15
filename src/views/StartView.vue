@@ -72,7 +72,9 @@
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
 import io from "socket.io-client";
-const socket = io("localhost:3000");
+sessionStorage.setItem("dataServer", "172.20.10.3:3000")
+sessionStorage.setItem("localServer", "localhost:3000")
+const socket = io(sessionStorage.getItem("dataServer"));
 
 export default {
     name: "StartView",
