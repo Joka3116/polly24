@@ -11,13 +11,14 @@ const currentYear = new Date().getFullYear();
 
 <style scoped>
 footer {
-    padding: 3rem;
-    background-color: var(--background-alt-color);
+    margin: 0;
+    padding: 0;
     text-align: left;
 }
 
 footer p {
-    color: var(--foreground-alt-color);
-    margin: 0; /* Good practice to remove default browser margins in footers */
+    color: white;
+    margin: 0;
+    padding: 3rem;
 }
 </style>
