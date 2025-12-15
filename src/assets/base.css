@@ -1,6 +1,6 @@
 :root {
     --foreground-color: white;
-    --background-color: #3a0b3a;
+    --background-color: radial-gradient(#0f2845, #02050a);
 
     --foreground-alt-color: #3a0b3a;
     --background-alt-color: #ff8db1;

@@ -151,7 +151,7 @@ export default {
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
-  background-color: rgba(58, 11, 58, 0.85);
+  background-color: rgba(10, 48, 76, 0.85);
   padding: 3rem;
   border-radius: 20px;
   border: 2px solid gold;
