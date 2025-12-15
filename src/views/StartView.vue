@@ -1,47 +1,32 @@
 <template>
-  <header>
-    <img src="/img/logo.png" alt="Logo" />
-    <h1>{{ uiLabels["sales-pitch"] }}</h1>
-    <h2>{{ uiLabels.subHeading }}</h2>
-  </header>
-  <main>
-    <div class="button-group">
-      
-      <button 
-        v-if="!showPollInput" 
-        class="play-btn" 
-        @click="showPollInput = true">
-        {{ uiLabels.play || "PLAY" }}
-      </button>
+    <header>
+        <img src="/img/logo.png" alt="Logo" />
+        <h1>{{ uiLabels["sales-pitch"] }}</h1>
+        <h2>{{ uiLabels.subHeading }}</h2>
+    </header>
+    <main>
+        <div class="button-group">
+
+            <button v-if="!showPollInput" class="play-btn" @click="showPollInput = true">
+                {{ uiLabels.play || "PLAY" }}
+            </button>
 
             <div v-else class="poll-input-area">
                 <div class="play-btn input-wrapper">
-                    <input
-                        type="text"
-                        v-model="newPollId"
-                        :placeholder="uiLabels['gameID'] || 'Game ID'"
-                    />
+                    <input type="text" v-model="newPollId" :placeholder="uiLabels['gameID'] || 'Game ID'" />
                 </div>
 
                 <button class="play-btn" @click="$router.push('/lobby/' + newPollId)">
                     {{ uiLabels.join || "JOIN" }}
                 </button>
 
-                <button 
-  v-if="showPollInput" 
-  class="back-btn"
-  @click="showPollInput = false"
->
-  X
-</button>
+                <button v-if="showPollInput" class="back-btn" @click="showPollInput = false">
+                    X
+                </button>
 
-      </div>
+            </div>
 
-            <button
-                v-if="!showPollInput"
-                class="play-btn"
-                @click="$router.push('/create')"
-            >
+            <button v-if="!showPollInput" class="play-btn" @click="$router.push('/create')">
                 {{ uiLabels["createGame"] || "CREATE" }}
             </button>
         </div>
@@ -241,6 +226,7 @@ main a {
 .input-wrapper input::placeholder {
     color: rgba(255, 215, 0, 0.6);
     text-transform: uppercase;
-    font-size: 1.4rem; /* Något mindre font på placeholdern om den är lång */
+    font-size: 1.4rem;
+    /* Något mindre font på placeholdern om den är lång */
 }
 </style>
