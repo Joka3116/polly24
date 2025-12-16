@@ -33,3 +33,4 @@
 - [ ] Stjärnhimmel bg
 - [ ] Bubblor att poppa
 - [ ] Ready knapp gör inget, host kan starta ändå -> Men spelare som klickar ready får bonuspoäng.
+

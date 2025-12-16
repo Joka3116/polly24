@@ -113,6 +113,7 @@ export default {
   methods: {
     participateInPoll: function () {
       if (this.userName.length > 0) {
+        localStorage.setItem("userName", this.userName);
         socket.emit("participateInPoll", { pollId: this.pollId, name: this.userName })
         this.joined = true;
       }
@@ -124,10 +125,15 @@ export default {
         name: this.userName,
         isReady: this.isReady
       });
-    }, // <--- HÄR SAKNADES ETT KOMMATECKEN OCH EN SLUTPARANTES
+    }, 
     
     runQuiz: function() {
-      socket.emit("startPoll", this.pollId);
+      socket.emit("startPoll", {
+        pollId: this.pollId,
+        nrOfQuestions: parseInt(localStorage.getItem("nrOfQuestions") || 5),
+        difficulty: localStorage.getItem("difficulty") || "medium",
+        language: this.lang
+      });
     }
   }
 }

@@ -131,17 +131,17 @@ Data.prototype.submitAnswer = function (pollId, answer) {
   if (this.pollExists(pollId)) {
     const poll = this.polls[pollId];
     let answers = poll.answers[poll.currentQuestion];
-    // create answers object if no answers have yet been submitted
+
     if (typeof answers !== 'object') {
       answers = {};
       answers[answer] = 1;
       poll.answers.push(answers);
     }
-    // create answer property if that specific answer has not yet been submitted
+
     else if (typeof answers[answer] === 'undefined') {
       answers[answer] = 1;
     }
-    // if the property already exists, increase the number
+
     else
       answers[answer] += 1
     console.log("answers looks like ", answers, typeof answers);
