@@ -11,7 +11,7 @@
         v-if="!showPollInput" 
         class="play-btn" 
         @click="showPollInput = true">
-        {{ uiLabels.play || "PLAY" }}
+        {{ uiLabels.play || "PLAY!" }}
       </button>
 
             <div v-else class="poll-input-area">
@@ -23,7 +23,7 @@
                     class="play-btn"
                     @click="$router.push('/lobby/' + newPollId)"
                 >
-                    {{ uiLabels.join || "JOIN" }}
+                    {{ uiLabels.join || "JOIN!" }}
                 </button>
 
                 <button 
@@ -37,23 +37,23 @@
       </div>
 
             <button v-if="!showPollInput" class="play-btn" @click="$router.push('/create')">
-                {{ uiLabels["createGame"] || "CREATE" }}
+                {{ uiLabels["createGame"] || "CREATE!" }}
             </button>
         </div>
     </main>
     <FooterComponent></FooterComponent>
     <ResponsiveNav>
         <router-link to="/">
-            {{ uiLabels.home || "HOME" }}
+            {{ uiLabels.home || "HOME!" }}
         </router-link>
         <router-link to="/about/">
-            {{ uiLabels.about || "ABOUT" }}
+            {{ uiLabels.about || "ABOUT!" }}
         </router-link>
         <router-link to="/lobby/1">
-            {{ uiLabels.play || "PLAY" }}
+            {{ uiLabels.play || "PLAY!" }}
         </router-link>
         <router-link to="/create/">
-            {{ uiLabels["createGame"] || "CREATE" }}
+            {{ uiLabels["createGame"] || "CREATE!" }}
         </router-link>
         <button v-on:click="switchLanguage">
             {{ uiLabels.changeLanguage }}
@@ -64,10 +64,8 @@
 <script>
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
-import io from "socket.io-client";
-sessionStorage.setItem("dataServer", "172.20.10.3:3000")
-sessionStorage.setItem("localServer", "localhost:3000")
-const socket = io(sessionStorage.getItem("dataServer"));
+import socket from "@/socket.js";
+
 
 export default {
     name: "StartView",

@@ -55,8 +55,7 @@
 </template>
 
 <script>
-import io from 'socket.io-client';
-const socket = io(sessionStorage.getItem("dataServer"));
+import socket from "@/socket.js";
 
 export default {
   name: 'CreateView',

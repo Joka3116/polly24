@@ -13,16 +13,16 @@
     <FooterComponent></FooterComponent>
     <ResponsiveNav>
         <router-link to="/">
-            {{ uiLabels.home || "HOME" }}
+            {{ uiLabels.home || "HOME!" }}
         </router-link>
         <router-link to="/about/">
-            {{ uiLabels.about || "ABOUT" }}
+            {{ uiLabels.about || "ABOUT!" }}
         </router-link>
         <router-link to="/lobby/1">
-            {{ uiLabels.play || "PLAY" }}
+            {{ uiLabels.play || "PLAY!" }}
         </router-link>
         <router-link to="/create/">
-            {{ uiLabels["createGame"] || "CREATE" }}
+            {{ uiLabels["createGame"] || "CREATE!" }}
         </router-link>
         <button v-on:click="switchLanguage">
             {{ uiLabels.changeLanguage }}
@@ -31,10 +31,9 @@
 </template>
 
 <script>
+import socket from "@/socket.js";
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
-import io from "socket.io-client";
-const socket = io(sessionStorage.getItem("dataServer"));
 
 export default {
     name: "AboutView",
@@ -53,9 +52,7 @@ export default {
     },
     created: function () {
         socket.on("uiLabels", (labels) => (this.uiLabels = labels));
-        setTimeout(() => {
-            socket.emit("getUILabels", this.lang);
-        }, 500);
+        socket.emit("getUILabels", this.lang);
     },
     methods: {
         switchLanguage: function () {
