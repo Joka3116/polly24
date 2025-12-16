@@ -72,21 +72,32 @@ export default {
 </script>
 
 <style scoped>
-
-header img {
-    
-    width: 20%; 
-    max-width: 10rem; 
-    padding-bottom: 1rem; 
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 4rem;
 }
 
-header h1 {
-    font-size: 2.5rem; 
-    color: gold;
+header img {
+    width: 60%;
+    height: auto;
+    max-width: 30rem;
+    max-height: 30rem;
+    aspect-ratio: 1;
+    padding-bottom: 1.5rem;
+}
+
+
+header h1,
+h2 {
+    font-size: 2rem;
+    color: var(--headline-color);
     text-align: center;
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.9);
     margin-bottom: 2rem;
 }
+
 .about-content {
     max-width: 700px;
     margin: 0 auto; 

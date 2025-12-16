@@ -66,7 +66,6 @@ import ResponsiveNav from "@/components/ResponsiveNav.vue";
 import FooterComponent from "@/components/FooterComponent.vue";
 import socket from "@/socket.js";
 
-
 export default {
     name: "StartView",
     components: {
@@ -112,18 +111,18 @@ header {
 }
 
 header img {
-    width: 70%;
+    width: 60%;
     height: auto;
     max-width: 30rem;
     max-height: 30rem;
     aspect-ratio: 1;
-    padding-bottom: 1rem;
+    padding-bottom: 1.5rem;
 }
 
 header h1,
 h2 {
     font-size: 2rem;
-    color: white;
+    color: var(--headline-color);
     text-align: center;
 }
 
