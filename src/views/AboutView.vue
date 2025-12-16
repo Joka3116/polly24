@@ -1,9 +1,15 @@
 <template>
     <header>
         <img src="/img/logo.png" alt="Logo" />
-        <h1>{{ uiLabels.about }}</h1>
+        <h1>{{ uiLabels.aboutTitle }}</h1>
     </header>
-    <main></main>
+    <main>
+        <div class="about-content">
+            <p>{{ uiLabels.aboutText1 }}</p>
+            <p>{{ uiLabels.aboutText2 }}</p>
+            <p>{{ uiLabels.aboutText3 }}</p>
+        </div>
+    </main>
     <FooterComponent></FooterComponent>
     <ResponsiveNav>
         <router-link to="/">
@@ -47,7 +53,9 @@ export default {
     },
     created: function () {
         socket.on("uiLabels", (labels) => (this.uiLabels = labels));
-        socket.emit("getUILabels", this.lang);
+        setTimeout(() => {
+            socket.emit("getUILabels", this.lang);
+        }, 500);
     },
     methods: {
         switchLanguage: function () {
@@ -67,36 +75,35 @@ export default {
 </script>
 
 <style scoped>
-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 4rem;
-}
 
 header img {
-    width: 70%;
-    height: auto;
-    max-width: 30rem;
-    max-height: 30rem;
-    aspect-ratio: 1;
-    padding-bottom: 1rem;
+    
+    width: 20%; 
+    max-width: 10rem; 
+    padding-bottom: 1rem; 
 }
 
-header h1,
-h2 {
-    font-size: 2rem;
-    color: white;
+header h1 {
+    font-size: 2.5rem; 
+    color: gold;
     text-align: center;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.9);
+    margin-bottom: 2rem;
+}
+.about-content {
+    max-width: 700px;
+    margin: 0 auto; 
+    padding: 30px; 
+    background-color: rgba(10, 48, 76, 0.7); 
+    border-radius: 15px;
+    border: 1px solid gold; 
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
+    line-height: 1.8; 
 }
 
-main {
-    color: white;
-    padding-top: 5rem;
-    padding-bottom: 10rem;
-}
-
-main a {
-    color: white;
+main p {
+    font-size: 1.1rem;
+    color: #e0e0e0; 
+    margin-bottom: 1.5rem;
 }
 </style>
