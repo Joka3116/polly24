@@ -165,6 +165,7 @@ nav ul {
     transition: all 0.4s ease-in-out;
     z-index: 100;
 
+    /* Mobile Default: Fade and cover */
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -174,6 +175,27 @@ nav ul {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
+}
+
+/* Desktop Slide-in Override */
+@media (min-width: 769px) {
+    #nav-overlay {
+        width: 400px;
+        left: auto;
+        right: 0;
+        transform: translateX(100%);
+        
+        /* Reset mobile fade styles */
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto; /* Managed by transform */
+        
+        box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+    }
+    
+    #nav-overlay.active {
+        transform: translateX(0);
+    }
 }
 
 #nav-overlay-container {
@@ -213,6 +235,14 @@ nav ul {
     outline-offset: -1px;
 
     margin: 30px 0;
+}
+
+@media (min-width: 769px) {
+    #nav-overlay-container ul :deep(li a) {
+        min-width: 250px; /* Reduced width for side panel */
+        font-size: 24px;
+        padding: 15px;
+    }
 }
 
 #nav-overlay-container ul :deep(li a:hover) {
