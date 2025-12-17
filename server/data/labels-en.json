@@ -1,5 +1,5 @@
 {
-  "sales-pitch": "Are you ready to becomee a billionaire?",
+  "sales-pitch": "Are you ready to become a billionaire?",
   "subHeading": "The greatest quiz game of our time",
   "invite": "Invite participants with this link:",
   "createPoll": "Create poll",
@@ -26,6 +26,4 @@
   "errorTitle": "USER ERROR",
   "serverMissing": "Impressively incorrect. This node is deader than the code it’s running on. The Billionaire Engine doesn't open doors for operators who can't follow simple instructions.",
   "okButton": "UNDERSTOOD"
-
-
 }
