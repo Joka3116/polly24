@@ -21,7 +21,7 @@
 
                 <button
                     class="play-btn"
-                    @click="$router.push('/lobby/' + newPollId)"
+                    @click="joinGame"
                 >
                     {{ uiLabels.join || "JOIN!" }}
                 </button>
@@ -60,12 +60,15 @@
         </button>
     </ResponsiveNav>
 
-    <div v-if="showErrorModal" class="modal-overlay" @click="showErrorModal = false">
+ <div v-if="showErrorModal" class="modal-overlay" @click="showErrorModal = false">
   <div class="modal-content" @click.stop>
-    <div class="modal-icon">!</div>
-    <h2>{{ uiLabels.errorTitle || "SYSTEMFEL" }}</h2>
-    <p>{{ uiLabels.serverMissing || "Servern existerar inte. Kontrollera ID." }}</p>
-    <button class="play-btn modal-btn" @click="showErrorModal = false">OK</button>
+    <h2>{{ uiLabels.errorTitle || "TEKNISKT FEL" }}</h2>
+    
+    <p>{{ uiLabels.serverMissing || "Sändningen bröts! Vi hittar ingen studio med det ID:t. Kontrollera din frekvens." }}</p>
+    
+    <button class="play-btn modal-btn" @click="showErrorModal = false">
+        {{ uiLabels.okButton || "UPPFATTAT" }}
+    </button>
   </div>
 </div>
 </template>
@@ -267,24 +270,48 @@ main a {
     z-index: 1000;
 }
 
-
 .modal-content {
-    background: linear-gradient(145deg, #0a304c, #0d47a1);
+
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)),
+                linear-gradient(145deg, #0a304c, #0d47a1);
+    background-size: 100% 2px, 3px 100%, 100% 100%;
+    
     border: 3px solid gold;
     border-radius: 20px;
     padding: 3rem;
     text-align: center;
     max-width: 400px;
     box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
-    animation: pop-in 0.3s ease-out;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    animation: pop-in 0.9s infinite;
+animation: monitor-startup 0.6s ease-out forwards
 }
 
-.modal-icon {
-    font-size: 3rem;
-    color: gold;
-    margin-bottom: 1rem;
-    font-weight: bold;
+@keyframes monitor-startup {
+    0% { 
+        transform: scale(0.5) rotateX(90deg); 
+        opacity: 0; 
+        filter: brightness(5) blur(10px);
+    }
+    40% { 
+        transform: scale(1) rotateX(0deg); 
+        opacity: 1; 
+        filter: brightness(0.5) blur(2px);
+    }
+    50% { 
+        filter: brightness(2) blur(0px); 
+    }
+    60% { 
+        filter: brightness(0.8); 
+    }
+    100% { 
+        transform: scale(1); 
+        opacity: 1; 
+        filter: brightness(1); 
+    }
 }
+
 
 .modal-content h2 {
     color: gold;
@@ -304,8 +331,5 @@ main a {
     font-size: 1.2rem !important;
 }
 
-@keyframes pop-in {
-    0% { transform: scale(0.8); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-}
+
 </style>

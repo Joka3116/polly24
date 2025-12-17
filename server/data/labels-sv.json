@@ -22,5 +22,9 @@
   "aboutTitle": "Bakom kulisserna: Miljardärsdrömmarna!",
   "aboutText1": "Välkommen till Nätverk 24. Denna simuleringskammare är det enda återstående gränssnittet till 'The Billionaire Engine'. Systemet, som utvecklades för att testa mänsklighetens gränser för kunskap och girighet, övergavs för årtionden sedan, men dess kärna driver fortfarande denna utmaning. Du är en av de få som har hittat tillbaka till den aktiva noden.",
   "aboutText2": "Systemet är gammalt. Mycket gammalt. Våra utvecklare har identifierat att dess ålder har skapat egna 'personligheter' i koden, vilka vi kallar minispel och dolda funktioner. Dessa är inte buggar – de är Feature Documentation från en svunnen era. De belönar (eller straffar) dem som vågar utforska bortom de vanliga frågorna.",
-  "aboutText3": "Detta gränssnitt, skapat med Vue.js och Socket.IO, är vårt försök att stabilisera motorn. Om du stöter på en oväntad krasch, en felaktig fråga eller en glödande skärm, tveka inte att rapportera det! Du hjälper oss att tämja Den. (Men glöm inte, vi betalar fortfarande inte ut några riktiga miljonvinster... ännu.)"
+  "aboutText3": "Detta gränssnitt, skapat med Vue.js och Socket.IO, är vårt försök att stabilisera motorn. Om du stöter på en oväntad krasch, en felaktig fråga eller en glödande skärm, tveka inte att rapportera det! Du hjälper oss att tämja Den. (Men glöm inte, vi betalar fortfarande inte ut några riktiga miljonvinster... ännu.)",
+
+  "errorTitle": "ANVÄNDARFEL",
+  "serverMissing": "Imponerande felaktigt. Denna nod är mer död än koden den körs på. Billionaire-motorn öppnar inga dörrar åt operatörer som inte kan läsa enkla instruktioner.",
+  "okButton": "UPPFATTAT"
 }
