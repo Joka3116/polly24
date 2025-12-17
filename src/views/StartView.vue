@@ -16,7 +16,7 @@
 
             <div v-else class="poll-input-area">
                 <div class="play-btn input-wrapper">
-                    <input type="text" v-model="newPollId" :placeholder="uiLabels['gameID'] || 'Game ID'" />
+                    <input type="text" v-model="newPollId" :placeholder="uiLabels['gameID'] || 'Game ID'" v-on:keyup.enter="joinGame"/>
                 </div>
 
                 <button
@@ -59,6 +59,15 @@
             {{ uiLabels.changeLanguage }}
         </button>
     </ResponsiveNav>
+
+    <div v-if="showErrorModal" class="modal-overlay" @click="showErrorModal = false">
+  <div class="modal-content" @click.stop>
+    <div class="modal-icon">!</div>
+    <h2>{{ uiLabels.errorTitle || "SYSTEMFEL" }}</h2>
+    <p>{{ uiLabels.serverMissing || "Servern existerar inte. Kontrollera ID." }}</p>
+    <button class="play-btn modal-btn" @click="showErrorModal = false">OK</button>
+  </div>
+</div>
 </template>
 
 <script>
@@ -79,6 +88,7 @@ export default {
             lang: localStorage.getItem("lang") || "en",
             hideNav: true,
             showPollInput: false,
+            showErrorModal: false,
         };
     },
     created: function () {
@@ -86,6 +96,20 @@ export default {
         socket.emit("getUILabels", this.lang);
     },
     methods: {
+        joinGame: function () {
+            if (!this.newPollId) return;
+
+            socket.emit('checkPollExists', this.newPollId);
+
+            socket.once('pollExistsResponse', (exists) => {
+                if (exists) {
+                    this.$router.push('/lobby/' + this.newPollId);
+                } else {
+                    this.showErrorModal = true;
+                }
+            });
+        },
+        
         switchLanguage: function () {
             if (this.lang === "en") {
                 this.lang = "sv";
@@ -200,7 +224,7 @@ main a {
     cursor: text;
 }
 
-/* Ta bort hover-effekt på just input-rutan */
+
 .input-wrapper:hover {
     transform: none;
 }
@@ -209,7 +233,7 @@ main a {
     background: transparent;
     border: none;
     color: var(--button-color);
-    /* Minskad font-storlek för att få plats bättre */
+ 
     font-size: 1.5rem;
     font-weight: bold;
     text-align: center;
@@ -218,7 +242,7 @@ main a {
     outline: none;
     font-family: inherit;
     letter-spacing: 2px;
-    /* Nollställ padding för att undvika att texten klipps */
+
     padding: 0;
 }
 
@@ -226,6 +250,62 @@ main a {
     color: rgba(255, 215, 0, 0.6);
     text-transform: uppercase;
     font-size: 1.4rem;
-    /* Något mindre font på placeholdern om den är lång */
+
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); 
+    backdrop-filter: blur(5px); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+
+.modal-content {
+    background: linear-gradient(145deg, #0a304c, #0d47a1);
+    border: 3px solid gold;
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    max-width: 400px;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+    animation: pop-in 0.3s ease-out;
+}
+
+.modal-icon {
+    font-size: 3rem;
+    color: gold;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+.modal-content h2 {
+    color: gold;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.modal-content p {
+    color: white;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+.modal-btn {
+    width: 100% !important;
+    height: 3.5rem !important;
+    font-size: 1.2rem !important;
+}
+
+@keyframes pop-in {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
 }
 </style>

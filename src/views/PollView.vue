@@ -197,34 +197,19 @@ export default {
 }
 
 .answer-btn.selected {
-  background: linear-gradient(180deg, #ff9d00 0%, #ff6a00 100%) !important;
-  color: #000 !important; /* Svart text ger bättre kontrast mot orange */
-  border-color: #ffffff;
-  box-shadow: 0 0 20px #ff9d00, inset 0 0 10px rgba(255, 255, 255, 0.5);
-  transform: scale(1.05);
+  border-color: white;
+  box-shadow: 0 0 15px white;
 }
 
-/* Rätt svar - Miljonärs-Grön */
 .answer-btn.correct {
-  background: linear-gradient(180deg, #00ff00 0%, #008000 100%) !important;
-  color: #000 !important;
-  border-color: #ccffcc;
-  box-shadow: 0 0 30px #00ff00, inset 0 0 15px rgba(255, 255, 255, 0.6);
-  animation: pulse-green 1.5s infinite;
+  background: linear-gradient(145deg, #2e7d32, #43a047) !important;
+  border-color: #a5d6a7;
+  color: white;
 }
 
-/* Fel svar - Miljonärs-Röd */
 .answer-btn.wrong {
-  background: linear-gradient(180deg, #ff0000 0%, #800000 100%) !important;
-  color: #fff !important;
-  border-color: #ffcccc;
-  box-shadow: 0 0 20px #ff0000;
-}
-
-/* Valfri: Animation för det rätta svaret för extra effekt */
-@keyframes pulse-green {
-  0% { box-shadow: 0 0 20px #00ff00; }
-  50% { box-shadow: 0 0 40px #00ff00; }
-  100% { box-shadow: 0 0 20px #00ff00; }
+  background: linear-gradient(145deg, #c62828, #d32f2f) !important;
+  border-color: #ef9a9a;
+  color: white;
 }
 </style>

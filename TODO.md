@@ -5,8 +5,8 @@
 - [ ] Ändra färg på burgir
 - [ ] Navigation på alla views ALT exit-knapp
 - [ ] Språkknapp 
-- [ ] Kolla att det finns ett spel/server med id=?
-- [ ] ENTER efter man matat in id
+- [x] Kolla att det finns ett spel/server med id=?
+- [x] ENTER efter man matat in id
 
 ## Footer
 - [ ] Fixa Footer på alla views

@@ -39,18 +39,27 @@ function sockets(io, socket, data) {
     io.to(d.pollId).emit('submittedAnswersUpdate', {});
   })
 
-  socket.on('runQuestion', async function (d) {
-    let poll = data.getPoll(d.pollId);
+socket.on('runQuestion', async function (d) {
+    let poll = data.getPoll(d.pollId); 
     
-    if (poll.settings && poll.questions.length >= poll.settings.nrOfQuestions) {
+    if (!poll || !poll.settings) return; // Säkerhetskoll
+
+    if (poll.questions.length >= poll.settings.nrOfQuestions) {
       io.to(d.pollId).emit('gameOver', { reason: 'Limit reached' });
       return;
     }
+
     let question = await data.getRandomQuestion(d.language || "sv");
     data.addQuestion(d.pollId, question);
-    data.polls[d.pollId].answers = [];
+    
+
+    if (poll.answers) {
+      poll.answers = []; 
+    }
+
     io.to(d.pollId).emit('questionUpdate', question);
     io.to(d.pollId).emit('submittedAnswersUpdate', {});
+    io.to(d.pollId).emit('hideResults'); 
   });
 
   socket.on('submitAnswer', function (d) {
@@ -60,6 +69,11 @@ function sockets(io, socket, data) {
   socket.on('showResults', function (d) {
   io.to(d.pollId).emit('showResults');
 });
+
+socket.on('checkPollExists', function (pollId) {
+    const exists = data.pollExists(pollId);
+    socket.emit('pollExistsResponse', exists);
+  });
 }
 
 export { sockets };
