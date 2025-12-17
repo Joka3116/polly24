@@ -130,7 +130,9 @@ methods: {
   border-color: #a5d6a7;
 }
 .answer-btn.wrong {
-  background: linear-gradient(145deg, #c62828, #d32f2f) !important;
-  border-color: #ef9a9a;
+ color: gold;
+  border-color: gold;
+  transform: scale(1.05);
+  box-shadow: 0 0 20px white;
 }
 </style>
