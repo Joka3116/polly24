@@ -1,4 +1,5 @@
 <template>
+    <div class="content-container">
   <header>
     <img src="/img/logo.png" alt="Logo" />
     <h1>{{ uiLabels["sales-pitch"] }}</h1>
@@ -6,7 +7,6 @@
   </header>
   <main>
     <div class="button-group">
-      
       <button 
         v-if="!showPollInput" 
         class="play-btn" 
@@ -31,7 +31,7 @@
   class="back-btn"
   @click="showPollInput = false"
 >
-  X
+  <i class="bi bi-x-lg"></i>
 </button>
 
       </div>
@@ -41,6 +41,7 @@
             </button>
         </div>
     </main>
+    </div>
     <FooterComponent></FooterComponent>
     <ResponsiveNav>
         <router-link to="/">
@@ -130,6 +131,7 @@ export default {
 </script>
 
 <style scoped>
+    
 header {
     display: flex;
     flex-direction: column;
@@ -148,8 +150,8 @@ header img {
 
 header h1,
 h2 {
-    font-size: 2rem;
     color: var(--headline-color);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.9);
     text-align: center;
 }
 
@@ -311,7 +313,6 @@ animation: monitor-startup 0.6s ease-out forwards
         filter: brightness(1); 
     }
 }
-
 
 .modal-content h2 {
     color: gold;

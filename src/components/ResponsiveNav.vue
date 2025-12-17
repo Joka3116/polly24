@@ -217,7 +217,7 @@ nav ul {
     white-space: nowrap;
 
     font-family: bebas-kai, sans-serif;
-    font-size: 32px;
+    font-size: 2.5rem;
     line-height: 36px;
 
     border: 2px solid var(--foreground-alt-color);
@@ -240,7 +240,7 @@ nav ul {
 @media (min-width: 769px) {
     #nav-overlay-container ul :deep(li a) {
         min-width: 250px; /* Reduced width for side panel */
-        font-size: 24px;
+        font-size: 2rem;
         padding: 15px;
     }
 }

@@ -1,9 +1,10 @@
 :root {
     --foreground-color: white;
-    --background-color: radial-gradient(#0f2845, #02050a);
+    --background-color-gradient: radial-gradient(circle, #0f2845, #02050a);
+    --background-color: #02050a;
 
-    --foreground-alt-color: #3a0b3a;
-    --background-alt-color: #ff8db1;
+    --foreground-alt-color: #02050a;
+    --background-alt-color: #f09445;
     --button-background-color: radial-gradient(circle, #512da8, #311b92);
     --button-color: gold;
     --headline-color: gold;
@@ -18,7 +19,11 @@ header {
 }
 
 body {
-    background: radial-gradient(#0f2845, #02050a);
     height: 100%;
+    background-color: var(--background-color);
+}
+
+.content-container {
+    background: var(--background-color-gradient);
     min-height: 100vh;
 }

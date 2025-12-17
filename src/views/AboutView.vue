@@ -1,4 +1,5 @@
 <template>
+    <div class="content-container">
     <header>
         <img src="/img/logo.png" alt="Logo" />
         <h1>{{ uiLabels.aboutTitle }}</h1>
@@ -10,6 +11,7 @@
             <p>{{ uiLabels.aboutText3 }}</p>
         </div>
     </main>
+    </div>
     <FooterComponent></FooterComponent>
     <ResponsiveNav>
         <router-link to="/">
@@ -85,13 +87,12 @@ header img {
     max-width: 30rem;
     max-height: 30rem;
     aspect-ratio: 1;
-    padding-bottom: 1.5rem;
+    padding-bottom: 2rem;
 }
 
 
 header h1,
 h2 {
-    font-size: 2rem;
     color: var(--headline-color);
     text-align: center;
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.9);
