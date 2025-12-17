@@ -1,6 +1,5 @@
 <template>
   <div class="question-wrapper">
-    
     <h1 v-if="isHost" class="question-text">
       {{ question.text }}
     </h1>
@@ -13,22 +12,26 @@
           v-for="(answer, index) in question.answers" 
           :key="index"
           class="answer-btn"
-          :class="{ 'selected': selectedAnswer === answer }" 
+          :class="{ 
+            'selected': selectedAnswer === answer,
+            'correct': showResults && answer.is_correct,
+            'wrong': showResults && selectedAnswer === answer && !answer.is_correct 
+          }" 
           @click="clicked(answer)"
         >
           {{ answer.text }}
         </button>
       </div>
     </div>
-
-  </div>
+    </div>
 </template>
 <script>
 export default {
   name: 'QuestionComponent',
   props: {
     question: Object,
-    isHost: Boolean 
+    isHost: Boolean,
+    showResults: Boolean
   },
   emits: ["answer"],
   data: function () {
@@ -41,15 +44,16 @@ export default {
       this.selectedAnswer = null;
     }
   },
-  methods: {
+methods: {
     clicked: function (answer) {
-      if (this.selectedAnswer || this.isHost) return;
+      if (this.selectedAnswer || this.isHost || this.showResults) return;
 
       this.selectedAnswer = answer;
       this.$emit("answer", answer);
     } 
   }
 }
+
 </script>
 
 <style scoped>
@@ -110,7 +114,6 @@ export default {
 }
 
 .answer-btn.selected {
-  background: color;
   color: gold;
   border-color: gold;
   transform: scale(1.05);
@@ -120,5 +123,14 @@ export default {
 .answers-grid:has(.selected) .answer-btn:not(.selected) {
   opacity: 0.4;
   cursor: default;
+}
+
+.answer-btn.correct {
+  background: linear-gradient(145deg, #2e7d32, #43a047) !important;
+  border-color: #a5d6a7;
+}
+.answer-btn.wrong {
+  background: linear-gradient(145deg, #c62828, #d32f2f) !important;
+  border-color: #ef9a9a;
 }
 </style>

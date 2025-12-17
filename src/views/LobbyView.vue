@@ -136,7 +136,9 @@ export default {
         nrOfQuestions: parseInt(localStorage.getItem("nrOfQuestions") || 5),
         difficulty: localStorage.getItem("difficulty") || "medium",
         language: this.lang
+      
       });
+      this.$router.push("/poll/" + this.pollId);
     }
   }
 }

@@ -1,15 +1,15 @@
 <template>
   <div class="poll-view">
-    
+
     <header class="poll-header">
       <h1>Lobby ID: <span class="highlight">{{ pollId }}</span></h1>
     </header>
 
-<div class="info-container">
+    <div class="info-container">
       <img src="/img/logo.png" alt="Logo" class="poll-logo" />
-      
+
       <h3>
-        {{ uiLabels.participants || "Participants" }}: 
+        {{ uiLabels.participants || "Participants" }}:
         <span class="highlight">{{ participants.length }}</span>
       </h3>
 
@@ -18,28 +18,31 @@
           {{ person.name }}
         </div>
       </div>
-      </div>
-
-    <div class="question-container">
-      <div class="question-container" v-if="question.text">
-      <QuestionComponent 
-        v-bind:question="question"
-        v-bind:isHost="isHost"
-        v-on:answer="submitAnswer($event)"
-      />
     </div>
 
-    <div v-else class="waiting-screen">
-       <h2 v-if="!isHost">Väntar på fråga...</h2>
-       <h2 v-else>Redo att starta?</h2>
-    </div>
-
+<div class="question-container">
+  <div v-if="question.text">
+    <QuestionComponent
+      v-bind:question="question" 
+      v-bind:isHost="isHost" 
+      v-bind:showResults="showResults"
+      v-on:answer="submitAnswer($event)" 
+    />
+    
     <div v-if="isHost" class="host-controls">
-      <button class="action-btn" @click="runNextQuestion">
-        {{ !question.text ? 'START GAME' : 'NÄSTA FRÅGA' }}
-      </button>
+      <button v-if="!showResults" class="action-btn" @click="revealAnswer">VISA SVAR</button>
+      <button v-else class="action-btn" @click="runNextQuestion">NÄSTA FRÅGA</button>
     </div>
+  </div>
+
+  <div v-else class="waiting-screen">
+    <h2 v-if="!isHost">Väntar på fråga...</h2>
+    <div v-else>
+      <h2>Redo att starta?</h2>
+      <button class="action-btn" @click="runNextQuestion">START GAME</button>
     </div>
+  </div>
+</div>
   </div>
 </template>
 
@@ -54,46 +57,59 @@ export default {
   },
   data: function () {
     return {
-      question: {
-        text: "",   
-        answers: []  
-      },
+      question: { text: "", answers: [] },
       pollId: "inactive poll",
       submittedAnswers: {},
-      participants: [], // Ny array för deltagare
+      participants: [],
       uiLabels: {},
-      isHost: false
+      isHost: false,
+      showResults: false 
     }
   },
   created: function () {
     this.pollId = this.$route.params.id;
     this.isHost = localStorage.getItem("isHost") === "true";
-    
-    socket.on( "questionUpdate", q => this.question = q );
-    socket.on( "submittedAnswersUpdate", answers => this.submittedAnswers = answers );
-    socket.on( "uiLabels", labels => this.uiLabels = labels );
-    
-    // NYTT: Lyssna på deltagare så vi kan räkna dem
-    socket.on( "participantsUpdate", p => this.participants = p );
 
-    socket.emit( "getUILabels", this.lang );
-    socket.emit( "joinPoll", this.pollId );
+    socket.on("questionUpdate", q => {
+      this.question = q;
+      this.showResults = false; 
+    });
+    
+    socket.on("showResults", () => {
+      this.showResults = true; 
+    });
+    
+    socket.on("hideResults", () => {
+      this.showResults = false;
+    });
+
+    socket.on("submittedAnswersUpdate", answers => this.submittedAnswers = answers);
+    socket.on("uiLabels", labels => this.uiLabels = labels);
+    socket.on("participantsUpdate", p => this.participants = p);
+
+    socket.emit("getUILabels", this.lang);
+    socket.emit("joinPoll", this.pollId);
   },
-  methods: {
+  methods: { 
     submitAnswer: function (answer) {
-      socket.emit("submitAnswer", {pollId: this.pollId, answer: answer, name: localStorage.getItem("userName")})
+      socket.emit("submitAnswer", { pollId: this.pollId, answer: answer, name: localStorage.getItem("userName") })
     },
     runNextQuestion: function () {
       socket.emit("runQuestion", { pollId: this.pollId });
+    },
+    revealAnswer: function () { 
+      socket.emit("showResults", { pollId: this.pollId });
     }
   }
 }
+
 </script>
 
 <style scoped>
-/* Grundlayout (Samma som Lobby) */
+
 .poll-view {
-  background-color: var(--background-color, #3a0b3a); /* Fallback färg */
+  background-color: var(--background-color, #3a0b3a);
+
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -106,7 +122,7 @@ export default {
 .poll-header {
   margin-top: 1rem;
   margin-bottom: 2rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .highlight {
@@ -121,7 +137,8 @@ export default {
 }
 
 .poll-logo {
-  width: 120px; /* Lite mindre logga här än i lobbyn */
+  width: 120px;
+  /* Lite mindre logga här än i lobbyn */
   height: auto;
   margin-bottom: 1rem;
 }
@@ -172,8 +189,26 @@ export default {
   border-radius: 20px;
   padding: 5px 15px;
   color: white;
-  font-size: 0.9rem; /* Lite mindre text än i lobbyn */
+  font-size: 0.9rem;
+  /* Lite mindre text än i lobbyn */
   font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.answer-btn.selected {
+  border-color: white;
+  box-shadow: 0 0 15px white;
+}
+
+.answer-btn.correct {
+  background: linear-gradient(145deg, #2e7d32, #43a047) !important;
+  border-color: #a5d6a7;
+  color: white;
+}
+
+.answer-btn.wrong {
+  background: linear-gradient(145deg, #c62828, #d32f2f) !important;
+  border-color: #ef9a9a;
+  color: white;
 }
 </style>

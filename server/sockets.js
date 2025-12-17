@@ -41,6 +41,7 @@ function sockets(io, socket, data) {
 
   socket.on('runQuestion', async function (d) {
     let poll = data.getPoll(d.pollId);
+    
     if (poll.settings && poll.questions.length >= poll.settings.nrOfQuestions) {
       io.to(d.pollId).emit('gameOver', { reason: 'Limit reached' });
       return;
@@ -56,6 +57,9 @@ function sockets(io, socket, data) {
     data.submitAnswer(d.pollId, d.answer);
     io.to(d.pollId).emit('submittedAnswersUpdate', data.getSubmittedAnswers(d.pollId));
   });
+  socket.on('showResults', function (d) {
+  io.to(d.pollId).emit('showResults');
+});
 }
 
 export { sockets };
