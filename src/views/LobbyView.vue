@@ -6,12 +6,10 @@
 
     <div v-if="!joined" class="join-container">
       <h2>{{ uiLabels.participateInPoll || "Enter Name" }}</h2>
-
       <div class="input-wrapper">
         <input type="text" v-model="userName" :placeholder="uiLabels['name'] || 'NAME'"
           v-on:keyup.enter="participateInPoll">
       </div>
-
       <button class="action-btn" v-on:click="participateInPoll" :disabled="userName.length < 1">
         {{ uiLabels["join"] || "JOIN" }}
       </button>
@@ -20,30 +18,31 @@
     <div v-if="joined" class="waiting-container">
       <img src="/img/logo.png" alt="Logo" class="lobby-logo" />
 
-      <h2>
+      <h2 v-if="!isHost">
         {{ uiLabels.welcome || "Welcome" }}
         <span class="highlight">{{ userName }}</span>!
       </h2>
+
 
       <button 
         v-if="!isHost" 
         class="action-btn ready-btn" 
         :class="{ 'not-ready-btn': isReady }" 
         v-on:click="toggleReady">
-        {{ isReady ? (uiLabels.notReady || "NOT READY") : (uiLabels.ready || "READY") }}
+        {{ isReady ? (uiLabels.notReady || "INTE REDO") : (uiLabels.ready || "REDO") }}
       </button>
+
       <div v-if="isHost" class="host-controls">
-        <h3 style="color: gold;">You are the Host</h3>
         <button class="action-btn start-btn" v-on:click="runQuiz">
-          START GAME
+          STARTA SPELET
         </button>
       </div>
 
-      <h3 v-else class="pulsing-text">
+      <h3 v-if="!isHost && !isReady" class="pulsing-text">
         {{ uiLabels["waiting"] || "Waiting for host to start..." }}
       </h3>
 
-      <h3>{{ uiLabels.participants || "Participants" }}:</h3>
+      <h3>{{ uiLabels.participants || "Deltagare" }}: {{ participants.length }}</h3>
 
       <div class="participants-grid">
         <div v-for="(participant, index) in displayParticipants" :key="index" class="participant-card" :class="{
@@ -105,7 +104,12 @@ export default {
 
     socket.on("uiLabels", labels => this.uiLabels = labels);
     socket.on("participantsUpdate", p => this.participants = p);
-    socket.on("startPoll", () => this.$router.push("/poll/" + this.pollId));
+  socket.on("startPoll", () => {
+  // Endast deltagare ska tvingas vidare automatiskt
+  if (!this.isHost) {
+    this.$router.push("/poll/" + this.pollId);
+  }
+});
     socket.emit("joinPoll", this.pollId);
     socket.emit("getUILabels", this.lang);
   },
@@ -164,7 +168,7 @@ export default {
 .lobby-logo {
   width: 180px;
   height: auto;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   animation: float 6s ease-in-out infinite;
 }
 
@@ -186,7 +190,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1.1rem;
   background-color: rgba(10, 48, 76, 0.85);
   padding: 3rem;
   border-radius: 20px;
@@ -249,6 +253,8 @@ input::placeholder {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 2rem; 
+  padding: 20px 0;
 }
 
 .pulsing-text {
@@ -276,6 +282,12 @@ input::placeholder {
   box-shadow: 0 0 20px rgba(255, 0, 0, 0.6) !important;
 }
 
+.ready-btn, .not-ready-btn {
+  margin: 1rem;
+  min-width: 100px;
+  padding: 15px 45px;
+}
+
 @keyframes pulse {
   0% {
     opacity: 0.6;
@@ -298,11 +310,10 @@ input::placeholder {
   width: 100%;
 }
 
-/* Hitta detta block och ersätt det */
+
 .participant-card {
-  /* ÄNDRAT: Från blå gradient till grå */
+
   background: grey;
-  /* ÄNDRAT: Bytt kantfärg från ljusblå till en ljusgrå för att matcha bättre */
   border: 2px solid #bbb;
   border-radius: 50px;
   padding: 8px 20px;
@@ -322,7 +333,7 @@ input::placeholder {
   color: white;
   transform: scale(1.05);
   box-shadow: 0 0 10px gold;
-  /* Lade till en liten guldeffekt för att markera dig */
+ 
 }
 
 .participant-card.ready {
@@ -344,5 +355,9 @@ input::placeholder {
   100% {
     transform: scale(1);
   }
+}
+
+h2 {
+  margin-bottom: 1rem;
 }
 </style>
