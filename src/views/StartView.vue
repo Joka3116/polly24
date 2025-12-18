@@ -42,7 +42,6 @@
         </div>
     </main>
     </div>
-    <FooterComponent></FooterComponent>
     <ResponsiveNav>
         <router-link to="/">
             {{ uiLabels.home || "HOME!" }}
@@ -76,14 +75,12 @@
 
 <script>
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
-import FooterComponent from "@/components/FooterComponent.vue";
 import socket from "@/socket.js";
 
 export default {
     name: "StartView",
     components: {
         ResponsiveNav,
-        FooterComponent,
     },
     data: function () {
         return {
