@@ -27,5 +27,7 @@
 
   "errorTitle": "ANVÄNDARFEL",
   "serverMissing": "Imponerande felaktigt. Denna nod är mer död än koden den körs på. Billionaire-motorn öppnar inga dörrar åt operatörer som inte kan läsa enkla instruktioner.",
-  "okButton": "UPPFATTAT"
+  "okButton": "UPPFATTAT",
+  "nameErrorTitle": "IDENTITETSSTÖLD",
+  "nameTakenMsg": "Denna operatörsprofil är redan aktiv i noden. Billionaire-motorn tillåter inga digitala kloner. Välj en unik beteckning eller avlägsna dig."
 }

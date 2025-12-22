@@ -84,16 +84,20 @@ Data.prototype.getPoll = function (pollId) {
 }
 
 Data.prototype.participateInPoll = function (pollId, name) {
-  console.log("participant will be added to", pollId, name);
   if (this.pollExists(pollId)) {
-    // LÄGG TILL: isReady: false
-    this.polls[pollId].participants.push({ name: name, answers: [], isReady: false });
+    this.polls[pollId].participants.push({ 
+      name: name, 
+      answers: [], 
+      isReady: false, 
+      points: 0       
+    });
   }
 }
+
 Data.prototype.setPlayerReady = function (pollId, name, isReady) {
   if (this.pollExists(pollId)) {
     const participants = this.polls[pollId].participants;
-    // Hitta rätt deltagare och uppdatera status
+  
     const participant = participants.find(p => p.name === name);
     if (participant) {
       participant.isReady = isReady;
@@ -174,6 +178,17 @@ Data.prototype.getRandomQuestion = async function (language = "sv") {
     text: q.text,
     answers: shuffleArray(answers)
   };
+};
+
+Data.prototype.nameAvailable = function (pollId, name) {
+  if (this.pollExists(pollId)) {
+
+    const exists = this.polls[pollId].participants.some(
+      p => p.name.toLowerCase() === name.toLowerCase()
+    );
+    return !exists; 
+  }
+  return true;
 };
 
 export { Data };

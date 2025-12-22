@@ -15,10 +15,22 @@ function sockets(io, socket, data) {
     socket.emit('submittedAnswersUpdate', data.getSubmittedAnswers(pollId));
   });
 
-  socket.on('participateInPoll', function (d) {
-    data.participateInPoll(d.pollId, d.name);
-    io.to(d.pollId).emit('participantsUpdate', data.getParticipants(d.pollId));
+socket.on('participateInPoll', function (d) {
+
+    if (data.nameAvailable(d.pollId, d.name)) {
+      data.participateInPoll(d.pollId, d.name);
+
+      io.to(d.pollId).emit('participantsUpdate', data.getParticipants(d.pollId));
+
+      socket.emit('joinSuccess'); 
+    } else {
+      socket.emit('nameTaken', {
+        title: "IDENTITETSSTÖLD",
+        message: "En operatör med det namnet är redan inloggad. Billionaire-motorn tillåter inga digitala kloner."
+      });
+    }
   });
+
   socket.on('playerReady', function (d) {
     data.setPlayerReady(d.pollId, d.name, d.isReady);
     io.to(d.pollId).emit('participantsUpdate', data.getParticipants(d.pollId));

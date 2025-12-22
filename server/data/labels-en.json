@@ -26,5 +26,11 @@
   "aboutText3": "This current interface, built using Vue.js and Socket.IO, is our attempt to stabilize the Engine. If you encounter an unexpected crash, a flawed question, or a glowing screen, please report it! You are helping us tame the machine. (But remember, we still aren't paying out real cash prizes... yet.)",
   "errorTitle": "USER ERROR",
   "serverMissing": "Impressively incorrect. This node is deader than the code it’s running on. The Billionaire Engine doesn't open doors for operators who can't follow simple instructions.",
-  "okButton": "UNDERSTOOD"
+  "okButton": "UNDERSTOOD",
+
+  "nameErrorTitle": "IDENTITY THEFT",
+  "nameTakenMsg": "This operator profile is already active in the node. The Billionaire Engine permits no digital clones. Choose a unique designation or vacate the premises."
+
+
+  
 }

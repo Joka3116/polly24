@@ -57,11 +57,21 @@
         </div>
       </div>
     </div>
+      <div v-if="showErrorModal" class="modal-overlay" @click="showErrorModal = false">
+  <div class="modal-content" @click.stop>
+    <h2 class="error-title">{{ errorTitle }}</h2>
+    <p class="error-msg">{{ errorMessage }}</p>
+    <button class="action-btn" @click="showErrorModal = false">
+      {{ uiLabels.okButton || "UPPFATTAT" }}
+    </button>
+  </div>
+</div>
   </div>
 </template>
 
 <script>
 import socket from "@/socket.js";
+import { errorMessages } from "vue/compiler-sfc";
 
 export default {
   name: 'LobbyView',
@@ -74,40 +84,37 @@ export default {
       isReady: false,
       lang: localStorage.getItem("lang") || "en",
       participants: [],
-      isHost: false
-    }
-  },
-  computed: {
-    displayParticipants() {
-      // Om jag är Host vill jag bara se listan från servern, 
-      // jag ska inte lägga till mig själv manuellt.
-      if (this.isHost) {
-        return this.participants;
-      }
+      isHost: false,
+      showErrorModal: false,
+      errorTitle: "",
+      errorMessages: "",
 
-      // För vanliga spelare: Visa serverlistan + mig själv (innan servern hunnit uppdatera)
-      const list = [...this.participants];
-      const me = list.find(p => p.name === this.userName);
-      if (this.joined && !me && this.userName) {
-        list.push({ name: this.userName, isReady: this.isReady });
-      }
-      return list;
     }
   },
+computed: {
+    displayParticipants() {
+      // Ganska stor ändring här för att programmet ska godkänna unika användarnamn. 
+      return this.participants;
+    }
+  },
+
   created: function () {
     this.pollId = this.$route.params.id;
     this.isHost = localStorage.getItem("isHost") === "true";
 
-    // --- NY KOD HÄR ---
-    // Om vi är host, hoppa över inloggningsskärmen direkt
+  
     if (this.isHost) {
       this.joined = true;
-      this.userName = "Host"; // Sätts bara lokalt för att variabler inte ska vara tomma
+      this.userName = "Host"; 
     }
-    // ------------------
+
 
     socket.on("uiLabels", labels => this.uiLabels = labels);
-    socket.on("participantsUpdate", p => this.participants = p);
+
+    socket.on("participantsUpdate", p => {
+      this.participants = [...p];
+    });
+
   socket.on("startPoll", () => {
   // Endast deltagare ska tvingas vidare automatiskt
   if (!this.isHost) {
@@ -116,13 +123,24 @@ export default {
 });
     socket.emit("joinPoll", this.pollId);
     socket.emit("getUILabels", this.lang);
+
+    socket.on("joinSuccess", () => {
+  this.joined = true;
+});
+
+socket.on("nameTaken", (error) => {
+this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
+  this.errorMessage = this.uiLabels.nameTakenMsg || "This operator profile is already active in the node. The Billionaire Engine permits no digital clones. Choose a unique designation or vacate the premises."
+  this.showErrorModal = true;
+  this.joined = false;
+});
   },
   methods: {
     participateInPoll: function () {
       if (this.userName.length > 0) {
         localStorage.setItem("userName", this.userName);
         socket.emit("participateInPoll", { pollId: this.pollId, name: this.userName })
-        this.joined = true;
+
       }
     },
     toggleReady: function () {
@@ -232,7 +250,7 @@ input::placeholder {
   font-size: 1.2rem;
   font-weight: bold;
   padding: 12px 40px;
-  border: 2px solid gold;
+  border: 3px solid gold;
   border-radius: 30px;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
@@ -365,5 +383,36 @@ input::placeholder {
 
 h2 {
   margin-bottom: 1rem;
+}
+
+.modal-content {
+  background: linear-gradient(145deg, #051928, #0a304c); 
+  border: 4px solid #ffcc00; 
+  padding: 3rem;
+  border-radius: 5px; 
+  box-shadow: 0 0 60px rgba(255, 204, 0, 0.2);
+  max-width: 600px; 
+}
+
+.error-title {
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: 5px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(5px);
+}
+
+.error-msg {
+  margin-bottom: 2.5rem; 
 }
 </style>
