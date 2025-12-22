@@ -133,8 +133,8 @@ export default {
 
 .info-container {
   text-align: center;
-  margin-bottom: 5rem;
-  max-height: 100px;
+  margin-bottom: 3rem;
+
 }
 
 .poll-logo {
@@ -212,4 +212,5 @@ export default {
   border-color: #ef9a9a;
   color: white;
 }
+
 </style>

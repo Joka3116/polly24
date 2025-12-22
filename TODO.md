@@ -11,6 +11,7 @@
 ## UI/CSS
 - [x] Ändra färg på burgir
 - [x] BG gradient
+- [x] Fixa lobbyview så den inte hoppar när man klickar ready. 
 
 ## Pollview/Spelview
 - [x] Ändra så knappar är enhetlig med lobbyview, hämta ready/not ready info.

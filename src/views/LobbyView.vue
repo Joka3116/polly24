@@ -39,7 +39,11 @@
       </div>
 
       <h3 v-if="!isHost && !isReady" class="pulsing-text">
-        {{ uiLabels["waiting"] || "Waiting for host to start..." }}
+        {{ uiLabels["waitingplayer"] || "CONFIRM PRESENCE, OPERATOR." }}
+      </h3>
+
+      <h3 v-else-if="!isHost && isReady" class="pulsing-text">
+        {{ uiLabels["waitingwaitinghost"] || "AWAITING INITIATION..." }}
       </h3>
 
       <h3>{{ uiLabels.participants || "Deltagare" }}: {{ participants.length }}</h3>
