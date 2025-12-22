@@ -21,7 +21,7 @@ import { sockets } from "./sockets.js";
 let data = new Data();
 
 io.on('connection', function (socket) {
-  sockets(this, socket, data);
+  sockets(io, socket, data);
 });
 
 const PORT = process.env.PORT || 3000;

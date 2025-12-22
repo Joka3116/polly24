@@ -1,3 +1,6 @@
+
+let timers = {};
+
 function sockets(io, socket, data) {
 
   socket.on('getUILabels', function (lang) {
@@ -36,43 +39,40 @@ socket.on('participateInPoll', function (d) {
     io.to(d.pollId).emit('participantsUpdate', data.getParticipants(d.pollId));
   });
 
-  socket.on('startPoll', async function (d) {
+socket.on('startPoll', async function (d) {
+  let poll = data.getPoll(d.pollId);
+
+  // 1. Spara BARA inställningar om de skickas med (från CreateView)
+  if (d.difficulty && d.nrOfQuestions) {
     data.saveSettings(d.pollId, {
       nrOfQuestions: d.nrOfQuestions,
       difficulty: d.difficulty
     });
-    io.to(d.pollId).emit('startPoll', d.pollId);
-    let question = await data.getRandomQuestion(d.language || "en");
-    data.addQuestion(d.pollId, question);
-    if (data.polls[d.pollId]) {
-      data.polls[d.pollId].answers = [];
-    }
-    io.to(d.pollId).emit('questionUpdate', question);
-    io.to(d.pollId).emit('submittedAnswersUpdate', {});
-  })
+  }
 
-socket.on('runQuestion', async function (d) {
-    let poll = data.getPoll(d.pollId); 
-    
-    if (!poll || !poll.settings) return; // Säkerhetskoll
+  // 2. Hämta nu den slutgiltiga svårighetsgraden från sparad data 
+  // (eller fallbacks om allt annat skiter sig)
+  const finalDifficulty = poll.settings?.difficulty || d.difficulty || 'medium';
+  
+  console.log("--- STARTAR SPELET ---");
+  console.log("Vald svårighetsgrad som används:", finalDifficulty);
 
-    if (poll.questions.length >= poll.settings.nrOfQuestions) {
-      io.to(d.pollId).emit('gameOver', { reason: 'Limit reached' });
-      return;
-    }
+  io.to(d.pollId).emit('startPoll', d.pollId);
+  
+  let question = await data.getRandomQuestion(d.language || "en");
+  data.addQuestion(d.pollId, question);
+  
+  if (poll) {
+    poll.answers = [];
+  }
 
-    let question = await data.getRandomQuestion(d.language || "sv");
-    data.addQuestion(d.pollId, question);
-    
+  io.to(d.pollId).emit('questionUpdate', question);
+  io.to(d.pollId).emit('submittedAnswersUpdate', {});
 
-    if (poll.answers) {
-      poll.answers = []; 
-    }
+  // 3. Starta timern med den bekräftade svårighetsgraden
+  startTimer(d.pollId, finalDifficulty);
+});
 
-    io.to(d.pollId).emit('questionUpdate', question);
-    io.to(d.pollId).emit('submittedAnswersUpdate', {});
-    io.to(d.pollId).emit('hideResults'); 
-  });
 
   socket.on('submitAnswer', function (d) {
     data.submitAnswer(d.pollId, d.answer);
@@ -85,6 +85,59 @@ socket.on('runQuestion', async function (d) {
 socket.on('checkPollExists', function (pollId) {
     const exists = data.pollExists(pollId);
     socket.emit('pollExistsResponse', exists);
+  });
+
+function startTimer(pollId, difficulty) {
+  // 1. Rensa ALLTID den specifika timern om den redan körs för detta ID
+  if (timers[pollId]) {
+    clearInterval(timers[pollId]);
+    console.log("Stoppade gammal timer för:", pollId);
+  }
+
+  const times = { easy: 60, medium: 45, hard: 30 };
+  const diffKey = difficulty ? difficulty.toLowerCase() : 'medium';
+  let timeLeft = times[diffKey] || 45;
+
+  io.to(pollId).emit('timerUpdate', timeLeft);
+
+  timers[pollId] = setInterval(() => {
+    timeLeft -= 1;
+    io.to(pollId).emit('timerUpdate', timeLeft);
+
+    if (timeLeft <= 0) {
+      clearInterval(timers[pollId]);
+      delete timers[pollId]; 
+      io.to(pollId).emit('showResults');
+    }
+  }, 1000);
+}
+
+  socket.on('runQuestion', async function (d) {
+    let poll = data.getPoll(d.pollId);
+    if (!poll || !poll.settings) return;
+
+    if (poll.questions.length >= poll.settings.nrOfQuestions) {
+      io.to(d.pollId).emit('gameOver', { reason: 'Limit reached' });
+      return;
+    }
+
+    let question = await data.getRandomQuestion(poll.lang || "sv");
+    data.addQuestion(d.pollId, question);
+    
+    if (poll.answers) poll.answers = [];
+
+    io.to(d.pollId).emit('questionUpdate', question);
+    io.to(d.pollId).emit('submittedAnswersUpdate', {});
+    io.to(d.pollId).emit('hideResults');
+
+
+    startTimer(d.pollId, poll.settings.difficulty);
+  });
+  
+
+  socket.on('showResults', function (d) {
+    if (timers[d.pollId]) clearInterval(timers[d.pollId]);
+    io.to(d.pollId).emit('showResults');
   });
 }
 

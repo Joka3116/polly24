@@ -7,7 +7,10 @@
 
     <div class="info-container">
       <img src="/img/logo.png" alt="Logo" class="poll-logo" />
-
+<div class="timer-wrapper" v-if="question.text && !showResults">
+    <h2 :class="{'critical': timer < 10}">TID KVAR: {{ timer }}s</h2>
+    <div class="timer-bar" :style="{width: (timer/60)*100 + '%'}"></div>
+  </div>
       <h3>
         {{ uiLabels.participants || "Participants" }}:
         <span class="highlight">{{ participants.length }}</span>
@@ -26,6 +29,7 @@
       v-bind:question="question" 
       v-bind:isHost="isHost" 
       v-bind:showResults="showResults"
+      v-bind:timeExpired="timeExpired"
       v-on:answer="submitAnswer($event)" 
     />
     
@@ -64,7 +68,9 @@ export default {
       participants: [],
       uiLabels: {},
       isHost: false,
-      showResults: false 
+      showResults: false,
+      timer: 0,
+      timeExpired: false
     }
   },
   created: function () {
@@ -83,6 +89,16 @@ export default {
     socket.on("hideResults", () => {
       this.showResults = false;
     });
+
+    socket.on("timerUpdate", t => {
+  this.timer = t;
+  this.timeExpired = (t <= 0);
+});
+
+socket.on("hideResults", () => {
+  this.showResults = false;
+  this.timeExpired = false; 
+});
 
     socket.on("submittedAnswersUpdate", answers => this.submittedAnswers = answers);
     socket.on("uiLabels", labels => this.uiLabels = labels);
@@ -211,6 +227,32 @@ export default {
   background: linear-gradient(145deg, #c62828, #d32f2f) !important;
   border-color: #ef9a9a;
   color: white;
+}
+
+.timer-wrapper {
+  margin: 1rem 0;
+  color: gold;
+}
+
+.timer-wrapper h2.critical {
+  color: #ff3e3e;
+  animation: pulse 0.5s infinite;
+}
+
+.timer-bar {
+  height: 8px;
+  background: linear-gradient(90deg, gold, orange);
+  border-radius: 4px;
+  transition: width 1s linear;
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  margin: 0 auto;
+  max-width: 300px;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
 </style>

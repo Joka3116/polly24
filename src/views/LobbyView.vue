@@ -71,7 +71,7 @@
 
 <script>
 import socket from "@/socket.js";
-import { errorMessages } from "vue/compiler-sfc";
+
 
 export default {
   name: 'LobbyView',
@@ -87,7 +87,7 @@ export default {
       isHost: false,
       showErrorModal: false,
       errorTitle: "",
-      errorMessages: "",
+      errorMessage: "",
 
     }
   },
@@ -155,8 +155,6 @@ this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
     runQuiz: function() {
       socket.emit("startPoll", {
         pollId: this.pollId,
-        nrOfQuestions: parseInt(localStorage.getItem("nrOfQuestions") || 5),
-        difficulty: localStorage.getItem("difficulty") || "medium",
         language: this.lang
       
       });

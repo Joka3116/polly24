@@ -1,21 +1,21 @@
 <template>
   <div class="question-wrapper">
-    <h1 v-if="isHost" class="question-text">
+    <h1 class="question-text">
       {{ question.text }}
     </h1>
 
-    <div v-else class="player-view">
-      <h2 class="question-text">Välj ditt svar!</h2>
-      
+    <div v-if="!isHost || showResults" class="player-view">
       <div class="answers-grid">
         <button 
           v-for="(answer, index) in question.answers" 
           :key="index"
           class="answer-btn"
+          :disabled="timeExpired || showResults || isHost" 
           :class="{ 
             'selected': selectedAnswer === answer,
             'correct': showResults && answer.is_correct,
-            'wrong': showResults && selectedAnswer === answer && !answer.is_correct 
+            'wrong': showResults && selectedAnswer === answer && !answer.is_correct,
+            'time-out': timeExpired && !selectedAnswer && !showResults
           }" 
           @click="clicked(answer)"
         >
@@ -23,7 +23,11 @@
         </button>
       </div>
     </div>
+
+    <div v-else class="host-waiting-info">
+      <p class="pulsing-text">Operatörerna väljer sina svar...</p>
     </div>
+  </div>
 </template>
 <script>
 export default {
@@ -31,7 +35,8 @@ export default {
   props: {
     question: Object,
     isHost: Boolean,
-    showResults: Boolean
+    showResults: Boolean,
+    timeExpired: Boolean
   },
   emits: ["answer"],
   data: function () {
@@ -134,5 +139,16 @@ methods: {
   border-color: gold;
   transform: scale(1.05);
   box-shadow: 0 0 20px white;
+}
+
+.answer-btn:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.8);
+  opacity: 0.6;
+}
+
+.answer-btn.time-out {
+  border-color: #ff3e3e;
+  box-shadow: none;
 }
 </style>

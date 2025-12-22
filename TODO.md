@@ -8,12 +8,14 @@
 - [x] Kolla att det finns ett spel/server med id=?
 - [x] ENTER efter man matat in id
 
+
 ## UI/CSS
 - [x] Ändra färg på burgir
 - [x] BG gradient
 - [x] Fixa lobbyview så den inte hoppar när man klickar ready. 
 
 ## Pollview/Spelview
+- [z] unikt användarnamn
 - [x] Ändra så knappar är enhetlig med lobbyview, hämta ready/not ready info.
 - [ ] Gör leaderboard component (som används på olika views)
 - [ ] Övergång mellan frågor/Mellansida mellan frågor: leaderbord + rätt svar
