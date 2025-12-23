@@ -111,16 +111,15 @@ export default {
     });
   },
   methods: {
-submitAnswer: function (answerObject) { // Vi kallar den answerObject för tydlighet
+submitAnswer: function (answerObject) { 
   const user = localStorage.getItem("userName");
   
-  // Vi antar att objektet har en property som heter 'text'
-  // Om ditt svarsobjekt ser annorlunda ut, justera till rätt property (t.ex. .answer_text)
+ 
   const answerText = answerObject.text || answerObject; 
 
   socket.emit("submitAnswer", {
     pollId: this.pollId,
-    answer: answerText, // Nu skickar vi strängen istället för objektet
+    answer: answerText,
     userName: user,
     timeLeft: this.timer
   });

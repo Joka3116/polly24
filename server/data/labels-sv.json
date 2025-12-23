@@ -29,5 +29,16 @@
   "serverMissing": "Imponerande felaktigt. Denna nod är mer död än koden den körs på. Billionaire-motorn öppnar inga dörrar åt operatörer som inte kan läsa enkla instruktioner.",
   "okButton": "UPPFATTAT",
   "nameErrorTitle": "IDENTITETSSTÖLD",
-  "nameTakenMsg": "Denna operatörsprofil är redan aktiv i noden. Billionaire-motorn tillåter inga digitala kloner. Välj en unik beteckning eller avlägsna dig."
+  "nameTakenMsg": "Denna operatörsprofil är redan aktiv i noden. Billionaire-motorn tillåter inga digitala kloner. Välj en unik beteckning eller avlägsna dig.",
+"faqTitle": "TERMINAL_LOGGAR: FRÅGOR & SVAR",
+  "faqQ1": ">> STATUS: Hur ackumuleras 'Billionaire Cash'?",
+  "faqA1": "Motorn mäter din responstid. Ju snabbare du bekräftar sanningen, desto större andel av reserven allokeras till ditt konto.",
+  "faqQ2": ">> IDENTITET: Varför betecknas jag som 'Operatör'?",
+  "faqA2": "Du är en länk i kedjan. Som operatör interagerar du direkt med motorns logikskikt för att stabilisera instabila datafält.",
+  "faqQ3": ">> FELKOD: Vad sker vid inkorrekt datainmatning?",
+  "faqA3": "Systemet betraktar fel som korrupt kod. Inga poäng delas ut och din auktoritetsnivå i nätverket stagnerar.",
+  "faqQ4": ">> HISTORIK: Vem byggde 'The Billionaire Engine'?",
+  "faqA4": "Ursprunget är okänt. Vissa loggar pekar på anonyma arkitekter, andra att den uppstod spontant ur nätverksbruset.",
+  "faqQ5": ">> VARNING: Är vinsterna verkliga?",
+  "faqA5": "Värdet är bundet till din framgång i simuleringen. Systemet garanterar endast intellektuell dominans... än så länge."
 }
