@@ -120,6 +120,14 @@ Data.prototype.addQuestion = function (pollId, q) {
   }
 }
 
+Data.prototype.getAnsweredCount = function (pollId) {
+  if (this.pollExists(pollId)) {
+    const poll = this.polls[pollId];
+    return poll.participants.filter(p => p.answers[poll.currentQuestion] !== undefined).length;
+  }
+  return 0;
+};
+
 Data.prototype.getSubmittedAnswers = function (pollId) {
   if (this.pollExists(pollId)) {
     const poll = this.polls[pollId];
@@ -131,24 +139,36 @@ Data.prototype.getSubmittedAnswers = function (pollId) {
   return {}
 }
 
-Data.prototype.submitAnswer = function (pollId, answer) {
+Data.prototype.submitAnswer = function (pollId, name, answer, timeLeft) {
   if (this.pollExists(pollId)) {
     const poll = this.polls[pollId];
-    let answers = poll.answers[poll.currentQuestion];
+    const participant = poll.participants.find(p => p.name === name);
+    const question = poll.questions[poll.currentQuestion];
 
-    if (typeof answers !== 'object') {
-      answers = {};
-      answers[answer] = 1;
-      poll.answers.push(answers);
+    if (participant) {
+      participant.answers[poll.currentQuestion] = answer;
+
+  
+      const selectedOption = question.answers.find(a => 
+        a.text.toString().trim().toLowerCase() === answer.toString().trim().toLowerCase()
+      );
+
+
+      if (selectedOption && selectedOption.is_correct == 1) {
+        const pointsEarned = Math.round(timeLeft * 100);
+        participant.points += pointsEarned;
+        console.log(`KORREKT! ${name} tjänade ${pointsEarned} Cash. Totalt: ${participant.points}`);
+      } else {
+        console.log(`FEL SVAR från ${name}. Han valde: ${answer}`);
+      }
     }
 
-    else if (typeof answers[answer] === 'undefined') {
-      answers[answer] = 1;
+    // Statistik-logik för stapeldiagram
+    if (typeof poll.answers[poll.currentQuestion] !== 'object') {
+      poll.answers[poll.currentQuestion] = {};
     }
-
-    else
-      answers[answer] += 1
-    console.log("answers looks like ", answers, typeof answers);
+    let currentAnswers = poll.answers[poll.currentQuestion];
+    currentAnswers[answer] = (currentAnswers[answer] || 0) + 1;
   }
 }
 
@@ -165,6 +185,7 @@ Data.prototype.getRandomQuestion = async function (language = "sv") {
 
   const q = questions[0];
 
+
   const [answers] = await pool.query(
     `SELECT id, answer_text AS text, is_correct
      FROM answers
@@ -172,14 +193,14 @@ Data.prototype.getRandomQuestion = async function (language = "sv") {
     [q.id]
   );
 
+
   return {
     id: q.id,
     sharedId: q.shared_question_id,
     text: q.text,
-    answers: shuffleArray(answers)
+    answers: shuffleArray(answers) 
   };
 };
-
 Data.prototype.nameAvailable = function (pollId, name) {
   if (this.pollExists(pollId)) {
 

@@ -7,46 +7,36 @@
 
     <div class="info-container">
       <img src="/img/logo.png" alt="Logo" class="poll-logo" />
-<div class="timer-wrapper" v-if="question.text && !showResults">
-    <h2 :class="{'critical': timer < 10}">TID KVAR: {{ timer }}s</h2>
-    <div class="timer-bar" :style="{width: (timer/60)*100 + '%'}"></div>
-  </div>
-      <h3>
-        {{ uiLabels.participants || "Participants" }}:
-        <span class="highlight">{{ participants.length }}</span>
-      </h3>
 
-      <div class="participants-grid">
-        <div v-for="person in participants" v-bind:key="person.name" class="participant-card">
-          {{ person.name }}
+      <div class="timer-wrapper" v-if="question.text && !showResults">
+        <h2 :class="{ 'critical': timer < 10 }">TID KVAR: {{ timer }}s</h2>
+        <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
+
+        <div class="answers-count">
+          <h3>SVAR: <span class="highlight">{{ answersStatus.answered }}</span></h3>
         </div>
       </div>
     </div>
 
-<div class="question-container">
-  <div v-if="question.text">
-    <QuestionComponent 
-      v-bind:question="question" 
-      v-bind:isHost="isHost" 
-      v-bind:showResults="showResults"
-      v-bind:timeExpired="timeExpired"
-      v-on:answer="submitAnswer($event)" 
-    />
-    
-    <div v-if="isHost" class="host-controls">
-      <button v-if="!showResults" class="action-btn" @click="revealAnswer">VISA SVAR</button>
-      <button v-else class="action-btn" @click="runNextQuestion">NÄSTA FRÅGA</button>
-    </div>
-  </div>
+    <div class="question-container">
+      <div v-if="question.text">
+        <QuestionComponent v-bind:question="question" v-bind:isHost="isHost" v-bind:showResults="showResults"
+          v-bind:timeExpired="timeExpired" v-on:answer="submitAnswer($event)" />
 
-  <div v-else class="waiting-screen">
-    <h2 v-if="!isHost">Väntar på fråga...</h2>
-    <div v-else>
-      <h2>Redo att starta?</h2>
-      <button class="action-btn" @click="runNextQuestion">START GAME</button>
+        <div v-if="isHost" class="host-controls">
+          <button v-if="!showResults" class="btn-main" @click="revealAnswer">VISA SVAR</button>
+          <button v-else class="btn-main" @click="runNextQuestion">NÄSTA FRÅGA</button>
+        </div>
+      </div>
+
+      <div v-else class="waiting-screen">
+        <h2 v-if="!isHost">Väntar på fråga...</h2>
+        <div v-else>
+          <h2>Redo att starta?</h2>
+          <button class="btn-main" @click="runNextQuestion">START GAME</button>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
   </div>
 </template>
 
@@ -70,35 +60,37 @@ export default {
       isHost: false,
       showResults: false,
       timer: 0,
-      timeExpired: false
+      timeExpired: false,
+      answersStatus: { answered: 0, total: 0 }
     }
   },
+
   created: function () {
     this.pollId = this.$route.params.id;
     this.isHost = localStorage.getItem("isHost") === "true";
 
     socket.on("questionUpdate", q => {
       this.question = q;
-      this.showResults = false; 
+      this.showResults = false;
     });
-    
+
     socket.on("showResults", () => {
-      this.showResults = true; 
+      this.showResults = true;
     });
-    
+
     socket.on("hideResults", () => {
       this.showResults = false;
     });
 
     socket.on("timerUpdate", t => {
-  this.timer = t;
-  this.timeExpired = (t <= 0);
-});
+      this.timer = t;
+      this.timeExpired = (t <= 0);
+    });
 
-socket.on("hideResults", () => {
-  this.showResults = false;
-  this.timeExpired = false; 
-});
+    socket.on("hideResults", () => {
+      this.showResults = false;
+      this.timeExpired = false;
+    });
 
     socket.on("submittedAnswersUpdate", answers => this.submittedAnswers = answers);
     socket.on("uiLabels", labels => this.uiLabels = labels);
@@ -106,15 +98,38 @@ socket.on("hideResults", () => {
 
     socket.emit("getUILabels", this.lang);
     socket.emit("joinPoll", this.pollId);
+
+    socket.on("answersUpdate", (status) => {
+      this.answersStatus = status;
+    });
+
+
+    socket.on("questionUpdate", q => {
+      this.question = q;
+      this.showResults = false;
+      this.answersStatus.answered = 0;
+    });
   },
-  methods: { 
-    submitAnswer: function (answer) {
-      socket.emit("submitAnswer", { pollId: this.pollId, answer: answer, name: localStorage.getItem("userName") })
-    },
+  methods: {
+submitAnswer: function (answerObject) { // Vi kallar den answerObject för tydlighet
+  const user = localStorage.getItem("userName");
+  
+  // Vi antar att objektet har en property som heter 'text'
+  // Om ditt svarsobjekt ser annorlunda ut, justera till rätt property (t.ex. .answer_text)
+  const answerText = answerObject.text || answerObject; 
+
+  socket.emit("submitAnswer", {
+    pollId: this.pollId,
+    answer: answerText, // Nu skickar vi strängen istället för objektet
+    userName: user,
+    timeLeft: this.timer
+  });
+},
+
     runNextQuestion: function () {
       socket.emit("runQuestion", { pollId: this.pollId });
     },
-    revealAnswer: function () { 
+    revealAnswer: function () {
       socket.emit("showResults", { pollId: this.pollId });
     }
   }
@@ -123,7 +138,6 @@ socket.on("hideResults", () => {
 </script>
 
 <style scoped>
-
 .poll-view {
   background-color: var(--background-color, #3a0b3a);
 
@@ -155,33 +169,13 @@ socket.on("hideResults", () => {
 
 .poll-logo {
   width: 120px;
-  /* Lite mindre logga här än i lobbyn */
+
   height: auto;
   margin-bottom: 1rem;
 }
 
 
 
-/* Snygg knapp (Samma som Lobby) */
-.action-btn {
-  background: linear-gradient(145deg, #311b92, #512da8);
-  color: gold;
-  font-size: 1.5rem;
-  font-weight: bold;
-  padding: 15px 50px;
-  border: 3px solid gold;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
-}
-
-.action-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 25px gold;
-}
 
 .debug-text {
   margin-top: 2rem;
@@ -212,22 +206,6 @@ socket.on("hideResults", () => {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-.answer-btn.selected {
-  border-color: white;
-  box-shadow: 0 0 15px white;
-}
-
-.answer-btn.correct {
-  background: linear-gradient(145deg, #2e7d32, #43a047) !important;
-  border-color: #a5d6a7;
-  color: white;
-}
-
-.answer-btn.wrong {
-  background: linear-gradient(145deg, #c62828, #d32f2f) !important;
-  border-color: #ef9a9a;
-  color: white;
-}
 
 .timer-wrapper {
   margin: 1rem 0;
@@ -250,9 +228,26 @@ socket.on("hideResults", () => {
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
+.answers-count {
+  margin-top: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.answers-count h3 {
+  font-size: 1.4rem;
+}
 </style>

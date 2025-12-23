@@ -69,19 +69,23 @@ socket.on('startPoll', async function (d) {
   io.to(d.pollId).emit('questionUpdate', question);
   io.to(d.pollId).emit('submittedAnswersUpdate', {});
 
-  // 3. Starta timern med den bekräftade svårighetsgraden
+ //ÄNTLIGEN FUNGERAR DET (vi hade råkat hårdkoda svårighetsgrad i en annan view :D)
   startTimer(d.pollId, finalDifficulty);
 });
 
 
-  socket.on('submitAnswer', function (d) {
-    data.submitAnswer(d.pollId, d.answer);
-    io.to(d.pollId).emit('submittedAnswersUpdate', data.getSubmittedAnswers(d.pollId));
-  });
-  socket.on('showResults', function (d) {
-  io.to(d.pollId).emit('showResults');
-});
+socket.on('submitAnswer', function (d) {
 
+    data.submitAnswer(d.pollId, d.userName, d.answer, d.timeLeft);
+
+    const answeredCount = data.getAnsweredCount(d.pollId);
+    const totalPlayers = data.getParticipants(d.pollId).filter(p => p.name !== 'Host').length;
+    
+    io.to(d.pollId).emit('answersUpdate', {
+        answered: answeredCount,
+        total: totalPlayers
+    });
+});
 socket.on('checkPollExists', function (pollId) {
     const exists = data.pollExists(pollId);
     socket.emit('pollExistsResponse', exists);
