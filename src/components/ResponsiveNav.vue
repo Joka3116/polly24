@@ -1,6 +1,10 @@
 <template>
     <nav>
-        <div id="nav-overlay" :class="{ active: isMenuOpen }">
+        <div
+            id="nav-overlay"
+            :class="{ active: isMenuOpen }"
+            @click="handleOverlayClick"
+        >
             <div id="nav-overlay-container">
                 <ul>
                     <li>
@@ -28,11 +32,19 @@ export default {
         toggleMenu() {
             this.isMenuOpen = !this.isMenuOpen;
         },
+        handleOverlayClick(event) {
+            // NOT USED BUT COOL: Check if the clicked element (or its parents) is a link or button
+            // const clickedElement = event.target.closest("a, button");
+            this.isMenuOpen = false;
+        },
     },
 };
 </script>
 
 <style scoped>
+/* =========================================
+   Navigation Container
+   ========================================= */
 nav {
     position: relative;
     top: 0;
@@ -49,12 +61,19 @@ nav ul {
     text-align: center;
 }
 
+/* =========================================
+   Hamburger Button
+   ========================================= */
 #hamburger {
     position: fixed;
-    top: 40px;
-    right: 40px;
-    width: 78px;
-    height: 78px;
+    /* Use REM for positioning so it respects user base font settings */
+    top: 2.5rem; /* was 40px */
+    right: 2.5rem; /* was 40px */
+
+    /* Use REM for sizing the click target */
+    width: 4.875rem; /* was 78px */
+    height: 4.875rem; /* was 78px */
+
     border-radius: 50%;
     background-color: var(--background-alt-color);
     cursor: pointer;
@@ -67,82 +86,63 @@ nav ul {
     transform: scale(1.07);
 }
 
-#hamburger:hover #hamburger-line-two {
-    width: 28px;
-}
-
-#hamburger:hover #hamburger-line-one {
-    width: 20px;
-}
-
+/* =========================================
+   Hamburger Lines
+   ========================================= */
 #hamburger-line-one,
 #hamburger-line-two {
     position: absolute;
-    left: 32%;
+    left: 32%; /* Percentage keeps it aligned regardless of button size */
     background-color: var(--foreground-alt-color);
+
+    /* Keep PX for height to ensure lines stay sharp and don't blur */
     height: 2px;
     border-radius: 2px;
+
     transition: all 0.4s ease;
     transform-origin: left center;
 }
 
 #hamburger-line-one {
-    width: 28px;
+    /* Use % for width so lines grow if you change the button size */
+    width: 36%; /* approx 28px relative to 78px */
     top: 44%;
     transform: rotate(0deg);
 }
 
 #hamburger-line-two {
-    width: 20px;
+    width: 26%; /* approx 20px relative to 78px */
     top: 55%;
     transform: rotate(0deg);
 }
 
-/* Active States for Hamburger */
+/* Hover States: staggering the line lengths */
+#hamburger:hover #hamburger-line-two {
+    width: 36%; /* Matches line-one width */
+}
+
+#hamburger:hover #hamburger-line-one {
+    width: 26%; /* Shrinks */
+}
+
+/* =========================================
+   Active State (The "X")
+   ========================================= */
 #hamburger.active {
     background-color: var(--foreground-alt-color);
 }
+
 #hamburger.active #hamburger-line-one,
 #hamburger.active #hamburger-line-two {
     left: 50%;
     top: 50%;
-    width: 28px;
-    height: 3px;
+
+    /* Width logic for the X shape */
+    width: 36%;
+    height: 3px; /* Slightly thicker for the X is fine in px */
+
     transform-origin: center center;
     background-color: var(--background-alt-color);
-}
-
-@media (max-width: 768px) {
-    #hamburger {
-        width: 64px;
-        height: 64px;
-        top: 20px;
-        right: 20px;
-    }
-    #hamburger-line-one {
-        width: 24px;
-        transform: rotate(0deg);
-    }
-    #hamburger-line-two {
-        width: 16px;
-        transform: rotate(0deg);
-    }
-    #hamburger:hover #hamburger-line-two {
-        width: 24px;
-    }
-    #hamburger:hover #hamburger-line-one {
-        width: 16px;
-    }
-
-    #hamburger.active #hamburger-line-one,
-    #hamburger.active #hamburger-line-two {
-        left: 50%;
-        top: 50%;
-        width: 24px;
-        height: 3px;
-        transform-origin: center center;
-        background-color: var(--background-alt-color);
-    }
 }
 
 #hamburger.active #hamburger-line-one {
@@ -153,19 +153,50 @@ nav ul {
     transform: translate(-50%, -50%) rotate(-45deg);
 }
 
-/* Overlay */
+/* =========================================
+   Mobile Breakpoint
+   ========================================= */
+@media (max-width: 768px) {
+    #hamburger {
+        /* Scale down using REM */
+        width: 4rem; /* was 64px */
+        height: 4rem; /* was 64px */
+        top: 1.25rem; /* was 20px */
+        right: 1.25rem;
+    }
+
+    /*
+       Since we used percentages (%) for the line widths above,
+       we largely don't need to redefine widths here!
+       They will automatically scale down with the parent #hamburger.
+       However, if you want specific tweaks for mobile:
+    */
+
+    #hamburger-line-one {
+        width: 37%; /* approx 24px of 64px */
+    }
+    #hamburger-line-two {
+        width: 25%; /* approx 16px of 64px */
+    }
+}
+
+/* =========================================
+   Overlay
+   ========================================= */
 #nav-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%;
-    background-color: var(--background-alt-color);
 
+    /* BEST PRACTICE: Use dvh (Dynamic Viewport Height)
+       This prevents the mobile URL bar from hiding the bottom of your menu */
+    height: 100vh; /* Fallback */
+    height: 100dvh;
+
+    background-color: var(--background-alt-color);
     transition: all 0.4s ease-in-out;
     z-index: 100;
-
-    /* Mobile Default: Fade and cover */
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -177,27 +208,6 @@ nav ul {
     pointer-events: auto;
 }
 
-/* Desktop Slide-in Override */
-@media (min-width: 769px) {
-    #nav-overlay {
-        width: 400px;
-        left: auto;
-        right: 0;
-        transform: translateX(100%);
-        
-        /* Reset mobile fade styles */
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto; /* Managed by transform */
-        
-        box-shadow: -5px 0 15px rgba(0,0,0,0.5);
-    }
-    
-    #nav-overlay.active {
-        transform: translateX(0);
-    }
-}
-
 #nav-overlay-container {
     width: 100%;
     height: 100%;
@@ -207,6 +217,9 @@ nav ul {
     align-items: center;
 }
 
+/* =========================================
+   Menu Items (The Big Change)
+   ========================================= */
 #nav-overlay-container ul :deep(li a) {
     opacity: 1 !important;
     display: block;
@@ -217,13 +230,25 @@ nav ul {
     white-space: nowrap;
 
     font-family: bebas-kai, sans-serif;
-    font-size: 2.5rem;
-    line-height: 36px;
 
-    border: 2px solid var(--foreground-alt-color);
-    padding: 25px;
+    /* 1. Base Size: Use REM */
+    font-size: 2.5rem;
+
+    /* 2. Line Height: Use Unitless (multiplies font-size) */
+    line-height: 1.2;
+
+    /* 3. Spacing: Use EM so padding/radius scales if font-size grows */
+    padding: 0.625em; /* Replaces 25px */
+    border-radius: 1.2em; /* Replaces 45px (pill shape) */
+
+    /* 4. Layout Spacing: Use REM for distance between items */
+    margin: 2rem 0; /* Replaces 30px */
+
+    /* 5. Width: Viewport Width is good here */
     min-width: 60vw;
-    border-radius: 45px;
+
+    /* 6. Border: Keep PX for crisp lines */
+    border: 2px solid var(--foreground-alt-color);
 
     transition:
         border,
@@ -233,28 +258,89 @@ nav ul {
     outline-width: 0;
     outline-style: solid;
     outline-offset: -1px;
-
-    margin: 30px 0;
 }
 
-@media (min-width: 769px) {
-    #nav-overlay-container ul :deep(li a) {
-        min-width: 250px; /* Reduced width for side panel */
-        font-size: 2rem;
-        padding: 15px;
-    }
+/*
+   1. BASE STATE (Normal)
+   Links are SOLID by default.
+   We restore :deep(li a) so your layout does not break.
+*/
+#nav-overlay-container ul :deep(li a) {
+    opacity: 1;
+    display: block;
+    color: var(--foreground-alt-color); /* Solid by default */
+
+    /* Layout Properties (Restored) */
+    text-decoration: none;
+    text-align: center;
+    text-transform: uppercase;
+    white-space: nowrap;
+    font-family: bebas-kai, sans-serif;
+    font-size: 2.5rem;
+    line-height: 1.2;
+    padding: 0.625em;
+    border-radius: 1.2em;
+    margin: 2rem 0;
+    min-width: 60vw;
+    border: 2px solid var(--foreground-alt-color);
+
+    /* Add color to transition so it fades smoothly */
+    transition:
+        color 0.3s ease,
+        border 0.3s ease,
+        outline-width 0.3s ease;
+
+    cursor: pointer;
+    outline-width: 0;
+    outline-style: solid;
+    outline-offset: -1px;
 }
 
+/*
+   2. SPOTLIGHT LOGIC (Fixed)
+   When the UL contains a hovered link (:has(a:hover))...
+   ...dim every link that is NOT currently being hovered (:not(:hover)).
+*/
+#nav-overlay-container ul:has(a:hover) :deep(li a:not(:hover)) {
+    color: color-mix(
+        in srgb,
+        var(--foreground-alt-color),
+        transparent 60%
+    ) !important;
+}
+
+/*
+   3. HOVER STATE (Target)
+   The link you ARE hovering stays solid.
+*/
 #nav-overlay-container ul :deep(li a:hover) {
     border: 2px solid var(--foreground-alt-color);
     outline-width: 5px;
+    outline-color: var(--foreground-alt-color);
+
+    color: color-mix(
+        in srgb,
+        var(--foreground-alt-color),
+        transparent 0%
+    ) !important;
 }
 
-.active-menu-item {
-    background-color: white;
-    color: black !important;
-    border: 2px solid rgba(255, 255, 255, 1) !important;
-    outline-width: 0 !important;
-    opacity: 1 !important;
+/*
+   4. CURRENT PAGE (Active Link)
+   Keep this dimmed and unclickable as requested previously.
+*/
+#nav-overlay-container ul :deep(li a.router-link-exact-active) {
+    border: 2px solid var(--foreground-alt-color) !important;
+
+    /* Keep text dimmed */
+    color: color-mix(
+        in srgb,
+        var(--foreground-alt-color),
+        transparent 70%
+    ) !important;
+
+    pointer-events: none;
+    cursor: default;
+    background-color: transparent !important;
 }
 </style>
