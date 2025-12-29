@@ -33,7 +33,7 @@ export default {
             this.isMenuOpen = !this.isMenuOpen;
         },
         handleOverlayClick(event) {
-            // NOT USED BUT COOL: Check if the clicked element (or its parents) is a link or button
+            // NOT USED, BUT COOL: Check if the clicked element (or its parents) is a link or button
             // const clickedElement = event.target.closest("a, button");
             this.isMenuOpen = false;
         },
@@ -260,11 +260,6 @@ nav ul {
     outline-offset: -1px;
 }
 
-/*
-   1. BASE STATE (Normal)
-   Links are SOLID by default.
-   We restore :deep(li a) so your layout does not break.
-*/
 #nav-overlay-container ul :deep(li a) {
     opacity: 1;
     display: block;
@@ -296,23 +291,6 @@ nav ul {
     outline-offset: -1px;
 }
 
-/*
-   2. SPOTLIGHT LOGIC (Fixed)
-   When the UL contains a hovered link (:has(a:hover))...
-   ...dim every link that is NOT currently being hovered (:not(:hover)).
-*/
-#nav-overlay-container ul:has(a:hover) :deep(li a:not(:hover)) {
-    color: color-mix(
-        in srgb,
-        var(--foreground-alt-color),
-        transparent 60%
-    ) !important;
-}
-
-/*
-   3. HOVER STATE (Target)
-   The link you ARE hovering stays solid.
-*/
 #nav-overlay-container ul :deep(li a:hover) {
     border: 2px solid var(--foreground-alt-color);
     outline-width: 5px;
@@ -325,10 +303,6 @@ nav ul {
     ) !important;
 }
 
-/*
-   4. CURRENT PAGE (Active Link)
-   Keep this dimmed and unclickable as requested previously.
-*/
 #nav-overlay-container ul :deep(li a.router-link-exact-active) {
     border: 2px solid var(--foreground-alt-color) !important;
 
