@@ -10,6 +10,25 @@
     --headline-color: gold;
 }
 
+*,
+body,
+main,
+header {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100%;
+    background-color: var(--background-color);
+}
+
+/* If the body contains an element with ID #hamburger that has class .active... */
+body:has(#hamburger.active) {
+    background-color: var(--background-alt-color);
+    height: 100dvh;
+}
+
 .btn-main {
     background: var(--button-background-color);
     color: var(--button-color);
@@ -24,7 +43,9 @@
     text-transform: uppercase;
     letter-spacing: 2px;
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
     display: inline-block;
     text-align: center;
@@ -32,8 +53,8 @@
 
 .btn-main:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.6); 
-    filter: brightness(1.1); 
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+    filter: brightness(1.1);
 }
 
 .panel-card {
@@ -46,21 +67,7 @@
 }
 
 .btn-main:active {
-    transform: scale(0.98); 
-}
-
-*,
-body,
-
-main,
-header {
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    height: 100%;
-    background-color: var(--background-color);
+    transform: scale(0.98);
 }
 
 .content-container {
@@ -79,13 +86,15 @@ body {
     padding: 12px 25px;
     outline: none;
     width: 100%;
-    max-width: 300px; 
+    max-width: 300px;
     transition: all 0.3s ease;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .input-main:focus {
-    box-shadow: 0 0 20px var(--button-color), inset 0 0 5px rgba(0, 0, 0, 0.5);
+    box-shadow:
+        0 0 20px var(--button-color),
+        inset 0 0 5px rgba(0, 0, 0, 0.5);
     background: rgba(255, 215, 0, 0.1);
 }
 
@@ -110,7 +119,7 @@ body {
 
 .modal-overlay .panel-card {
     max-width: 500px;
-    width: 90%; 
+    width: 90%;
     animation: monitor-startup 0.6s ease-out forwards;
 }
 
@@ -131,14 +140,21 @@ body {
 }
 
 @keyframes monitor-startup {
-    0% { transform: scale(0.5) rotateX(90deg); opacity: 0; filter: brightness(2); }
-    100% { transform: scale(1) rotateX(0deg); opacity: 1; filter: brightness(1); }
+    0% {
+        transform: scale(0.5) rotateX(90deg);
+        opacity: 0;
+        filter: brightness(2);
+    }
+    100% {
+        transform: scale(1) rotateX(0deg);
+        opacity: 1;
+        filter: brightness(1);
+    }
 }
-
 
 /* formattering för hur texten ser ut på våra error message */
 .modal-overlay p {
-    font-family: 'Times New Roman', serif; 
+    font-family: "Times New Roman", serif;
     line-height: 1.6;
     color: var(--foreground-color);
     font-size: 1.2rem;
