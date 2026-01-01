@@ -20,6 +20,7 @@
   "ready": "READY",
   "notReady": "NOT READY",
   "home": "Home",
+  "about": "About Us",
   "aboutTitle": "Behind the Scenes: The Billionaire Dreams!",
   "aboutText1": "Welcome to Network 24. This simulation chamber is the last remaining interface to 'The Billionaire Engine.' The system, designed to test the boundaries of human knowledge and greed, was abandoned decades ago, yet its core still powers this challenge. You are one of the few who have managed to reconnect with the active node.",
   "aboutText2": "The system is ancient. Extremely ancient. Our developers have identified that its age has spawned 'personalities' within the code, which we call mini-games and hidden features. These are not bugs—they are Feature Documentation from a bygone era. They reward (or punish) those who dare to explore beyond the standard questions.",
@@ -27,7 +28,7 @@
   "errorTitle": "USER ERROR",
   "serverMissing": "Impressively incorrect. This node is deader than the code it’s running on. The Billionaire Engine doesn't open doors for operators who can't follow simple instructions.",
   "okButton": "UNDERSTOOD",
-
+  "faq": "FAQ",	
   "nameErrorTitle": "IDENTITY THEFT",
   "nameTakenMsg": "This operator profile is already active in the node. The Billionaire Engine permits no digital clones. Choose a unique designation or vacate the premises.",
   "faqTitle": "TERMINAL_LOGS: Q&A",

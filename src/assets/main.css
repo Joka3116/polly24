@@ -1,10 +1,10 @@
-@import './base.css';
+@import "./base.css";
 
 #app {
-  font-family: Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+    font-family: Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
 }
 
 h1,
@@ -14,13 +14,13 @@ h4,
 h5,
 h6,
 button {
-  font-family: "bebas-kai", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 3rem;
+    font-family: "bebas-kai", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 3rem;
 }
 
 h1 {
-  font-size: 3.5rem;
-  line-height: 1;
+    font-size: 4.5rem;
+    line-height: 1;
 }

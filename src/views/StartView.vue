@@ -1,54 +1,59 @@
 <template>
-    <div class="content-container">
-  <header>
-    <img src="/img/logo.png" alt="Logo" />
-    <h1>{{ uiLabels["sales-pitch"] }}</h1>
-    <h2>{{ uiLabels.subHeading }}</h2>
-  </header>
-  <main>
-    <div class="button-group">
-      <button 
-        v-if="!showPollInput" 
-        class="btn-main" 
-        @click="showPollInput = true">
-        {{ uiLabels.play || "PLAY!" }}
-      </button>
+    <header>
+        <img src="/img/logo.png" alt="Logo" />
+        <h1>{{ uiLabels["sales-pitch"] }}</h1>
+        <h2>{{ uiLabels.subHeading }}</h2>
+    </header>
+    <main>
+        <div class="button-group">
+            <button
+                v-if="!showPollInput"
+                class="btn-main"
+                @click="showPollInput = true"
+            >
+                {{ uiLabels.play || "PLAY!" }}
+            </button>
 
-<div v-else class="poll-input-area">
-    <input 
-        type="text" 
-        class="input-main" 
-        v-model="newPollId" 
-        :placeholder="uiLabels['gameID'] || 'Game ID'" 
-        v-on:keyup.enter="joinGame"
-    />
+            <div v-else class="poll-input-area">
+                <input
+                    type="text"
+                    class="input-main"
+                    v-model="newPollId"
+                    :placeholder="uiLabels['gameID'] || 'Game ID'"
+                    v-on:keyup.enter="joinGame"
+                />
 
-    <button class="btn-main" @click="joinGame">
-        {{ uiLabels.join || "JOIN!" }}
-    </button>
+                <button class="btn-main" @click="joinGame">
+                    {{ uiLabels.join || "JOIN!" }}
+                </button>
 
-                <button 
-  v-if="showPollInput" 
-  class="back-btn"
-  @click="showPollInput = false"
->
-  <i class="bi bi-x-lg"></i>
-</button>
+                <button
+                    v-if="showPollInput"
+                    class="back-btn"
+                    @click="showPollInput = false"
+                >
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
 
-      </div>
-
-            <button v-if="!showPollInput" class="btn-main" @click="$router.push('/create')">
+            <button
+                v-if="!showPollInput"
+                class="btn-main"
+                @click="$router.push('/create')"
+            >
                 {{ uiLabels["createGame"] || "CREATE!" }}
             </button>
         </div>
     </main>
-    </div>
     <ResponsiveNav>
         <router-link to="/">
             {{ uiLabels.home || "HOME!" }}
         </router-link>
         <router-link to="/about/">
             {{ uiLabels.about || "ABOUT!" }}
+        </router-link>
+        <router-link to="/faq/">
+            {{ uiLabels.faq || "FAQ!" }}
         </router-link>
         <router-link to="/lobby/1">
             {{ uiLabels.play || "PLAY!" }}
@@ -61,17 +66,26 @@
         </button>
     </ResponsiveNav>
 
-<div v-if="showErrorModal" class="modal-overlay" @click="showErrorModal = false">
-  <div class="panel-card" @click.stop>
-    <h2>{{ uiLabels.errorTitle || "USER ERROR" }}</h2>
-    
-    <p>{{ uiLabels.serverMissing || "Impressively incorrect. This node is deader than the code it's running on..." }}</p>
-    
-    <button class="btn-main" @click="showErrorModal = false">
-        {{ uiLabels.okButton || "UNDERSTOOD" }}
-    </button>
-  </div>
-</div>
+    <div
+        v-if="showErrorModal"
+        class="modal-overlay"
+        @click="showErrorModal = false"
+    >
+        <div class="panel-card" @click.stop>
+            <h2>{{ uiLabels.errorTitle || "USER ERROR" }}</h2>
+
+            <p>
+                {{
+                    uiLabels.serverMissing ||
+                    "Impressively incorrect. This node is deader than the code it's running on..."
+                }}
+            </p>
+
+            <button class="btn-main" @click="showErrorModal = false">
+                {{ uiLabels.okButton || "UNDERSTOOD" }}
+            </button>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -88,7 +102,6 @@ export default {
             uiLabels: {},
             newPollId: "",
             lang: localStorage.getItem("lang") || "en",
-            hideNav: true,
             showPollInput: false,
             showErrorModal: false,
         };
@@ -101,17 +114,17 @@ export default {
         joinGame: function () {
             if (!this.newPollId) return;
 
-            socket.emit('checkPollExists', this.newPollId);
+            socket.emit("checkPollExists", this.newPollId);
 
-            socket.once('pollExistsResponse', (exists) => {
+            socket.once("pollExistsResponse", (exists) => {
                 if (exists) {
-                    this.$router.push('/lobby/' + this.newPollId);
+                    this.$router.push("/lobby/" + this.newPollId);
                 } else {
                     this.showErrorModal = true;
                 }
             });
         },
-        
+
         switchLanguage: function () {
             if (this.lang === "en") {
                 this.lang = "sv";
@@ -121,15 +134,11 @@ export default {
             localStorage.setItem("lang", this.lang);
             socket.emit("getUILabels", this.lang);
         },
-        toggleNav: function () {
-            this.hideNav = !this.hideNav;
-        },
     },
 };
 </script>
 
 <style scoped>
-    
 header {
     display: flex;
     flex-direction: column;
@@ -149,7 +158,9 @@ header img {
 header h1,
 h2 {
     color: var(--headline-color);
-    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.9);
+    text-shadow:
+        0 0 10px rgba(255, 215, 0, 0.8),
+        0 0 20px rgba(0, 0, 0, 0.9);
     text-align: center;
 }
 
@@ -192,5 +203,4 @@ main a {
     box-shadow: 0 0 12px var(--button-color);
     transition: 0.2s ease;
 }
-
 </style>

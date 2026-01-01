@@ -66,14 +66,37 @@
       </div>
     </div>
   </div>
+  <ResponsiveNav>
+        <router-link to="/">
+            {{ uiLabels.home || "HOME!" }}
+        </router-link>
+        <router-link to="/about/">
+            {{ uiLabels.about || "ABOUT!" }}
+        </router-link>
+        <router-link to="/faq/">
+            {{ uiLabels.faq || "FAQ!" }}
+        </router-link>
+        <router-link to="/lobby/1">
+            {{ uiLabels.play || "PLAY!" }}
+        </router-link>
+        <router-link to="/create/">
+            {{ uiLabels["createGame"] || "CREATE!" }}
+        </router-link>
+        <button v-on:click="switchLanguage">
+            {{ uiLabels.changeLanguage }}
+        </button>
+    </ResponsiveNav>
 </template>
 
 <script>
 import socket from "@/socket.js";
-
+import ResponsiveNav from "@/components/ResponsiveNav.vue";
 
 export default {
   name: 'LobbyView',
+  components: {
+    ResponsiveNav,
+  },
   data: function () {
     return {
       userName: "",
@@ -165,7 +188,6 @@ this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
 
 <style scoped>
 .lobby-view {
-  background-color: var(--background-color);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
