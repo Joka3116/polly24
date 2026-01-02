@@ -25,21 +25,21 @@
         <router-link to="/create/">
             {{ uiLabels["createGame"] || "CREATE!" }}
         </router-link>
-        <button v-on:click="switchLanguage">
-            {{ uiLabels.changeLanguage }}
-        </button>
+        <LangSwitch @switch-language="switchLanguage" />  
     </ResponsiveNav>
 </template>
 <script>
 import socket from "@/socket.js";
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
 import TopHeader from "@/components/TopHeader.vue";
+import LangSwitch from "@/components/LangSwitch.vue";
 
 export default {
     name: "AboutView",
     components: {
         ResponsiveNav,
         TopHeader,
+        LangSwitch,
     },
     data: function () {
         return {

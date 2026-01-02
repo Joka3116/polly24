@@ -16,13 +16,18 @@
         <div id="hamburger" :class="{ active: isMenuOpen }" @click="toggleMenu">
             <span id="hamburger-line-one"></span>
             <span id="hamburger-line-two"></span>
-        </div>
+        </div>    
     </nav>
 </template>
 
 <script>
+import LangSwitch from "./LangSwitch.vue";
+
 export default {
     name: "ResponsiveNav",
+    components: {
+        LangSwitch,
+    },
     data() {
         return {
             isMenuOpen: false,
@@ -33,9 +38,9 @@ export default {
             this.isMenuOpen = !this.isMenuOpen;
         },
         handleOverlayClick(event) {
-            // NOT USED, BUT COOL: Check if the clicked element (or its parents) is a link or button
-            // const clickedElement = event.target.closest("a, button");
-            this.isMenuOpen = false;
+            if (!event.target.closest('.lang-switch-container')) {
+                this.isMenuOpen = false;
+            }
         },
     },
 };
@@ -195,7 +200,7 @@ nav ul {
     height: 100dvh;
 
     background-color: var(--background-alt-color);
-    transition: all 0.4s ease-in-out;
+    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
     z-index: 100;
     opacity: 0;
     visibility: hidden;
@@ -316,5 +321,13 @@ nav ul {
     pointer-events: none;
     cursor: default;
     background-color: transparent !important;
+}
+
+#nav-overlay-container ul :deep(.lang-switch-container) {
+    position: absolute;
+    bottom: 5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
 }
 </style>

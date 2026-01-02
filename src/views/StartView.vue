@@ -4,6 +4,7 @@
         <h1>{{ uiLabels["sales-pitch"] }}</h1>
         <h2>{{ uiLabels.subHeading }}</h2>
     </header>
+    
     <main>
         <div class="button-group">
             <button
@@ -44,6 +45,7 @@
                 {{ uiLabels["createGame"] || "CREATE!" }}
             </button>
         </div>
+        
     </main>
     <ResponsiveNav>
         <router-link to="/">
@@ -61,11 +63,9 @@
         <router-link to="/create/">
             {{ uiLabels["createGame"] || "CREATE!" }}
         </router-link>
-        <button v-on:click="switchLanguage">
-            {{ uiLabels.changeLanguage }}
-        </button>
+        <LangSwitch @switch-language="switchLanguage" />  
     </ResponsiveNav>
-
+    
     <div
         v-if="showErrorModal"
         class="modal-overlay"
@@ -90,12 +90,14 @@
 
 <script>
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
+import LangSwitch from "@/components/LangSwitch.vue";
 import socket from "@/socket.js";
 
 export default {
     name: "StartView",
     components: {
         ResponsiveNav,
+        LangSwitch,
     },
     data: function () {
         return {
@@ -125,11 +127,12 @@ export default {
             });
         },
 
-        switchLanguage: function () {
-            if (this.lang === "en") {
-                this.lang = "sv";
+        switchLanguage: function (lang) {
+            if (lang) {
+               this.lang = lang; 
             } else {
-                this.lang = "en";
+                // Fallback / toggle if called without argument (though LangSwitch provides it now)
+                this.lang = this.lang === "en" ? "sv" : "en";
             }
             localStorage.setItem("lang", this.lang);
             socket.emit("getUILabels", this.lang);
