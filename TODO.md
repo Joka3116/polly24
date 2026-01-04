@@ -3,11 +3,10 @@
 ## Navigation & Footer
 - [x] Hamburger ska inte ta upp hela skärmen på desktop
 - [-] Navigation på alla views ALT exit-knapp
-- [-] Språkknapp
-- [-] Fixa Footer på alla views 
-- [x] Kolla att det finns ett spel/server med id=?
+- [x] Språkknapp
+- [x] Fixa Footer på alla views 
+- [ ] Kolla att det finns ett spel/server med id=?
 - [x] ENTER efter man matat in id
-
 
 ## UI/CSS
 - [x] Ändra färg på burgir
@@ -31,9 +30,9 @@
 - [x] constants.js -> sockets.js
 
 ## Najs to have
+- [x] Gör FAQ-sida?
 - [ ] Hur snabbt har spelare svarat
 - [ ] Klicka på logo -> Double or nothing
 - [ ] Stjärnhimmel bg animation
 - [ ] Extra minispel: Bubblor att poppa
 - [ ] Ready knapp gör inget, host kan starta ändå -> Men spelare som klickar ready får bonuspoäng.
-- [ ] Gör FAQ-sida?
