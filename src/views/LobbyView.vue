@@ -4,7 +4,21 @@
       <h1>Lobby ID: <span class="highlight">{{ pollId }}</span></h1>
     </header>
 
-    <div v-if="!joined" class="join-container panel-card">
+    <div v-if="!pollId" class="join-container panel-card">
+      <h2>{{ uiLabels.enterLobbyId || "Enter Lobby ID" }}</h2>
+      <input 
+        type="text" 
+        class="input-main" 
+        v-model="inputPollId" 
+        placeholder="Lobby ID"
+        v-on:keyup.enter="enterLobbyId"
+      >
+      <button class="btn-main" v-on:click="enterLobbyId" :disabled="inputPollId.length < 1">
+        {{ uiLabels.join || "JOIN" }}
+      </button>
+    </div>
+
+    <div v-if="pollId && !joined" class="join-container panel-card">
       <h2>{{ uiLabels.participateInPoll || "Enter Name" }}</h2>
       <input 
         type="text" 
@@ -76,7 +90,7 @@
         <router-link to="/faq/">
             {{ uiLabels.faq || "FAQ!" }}
         </router-link>
-        <router-link to="/lobby/1">
+        <router-link to="/lobby/">
             {{ uiLabels.play || "PLAY!" }}
         </router-link>
         <router-link to="/create/">
@@ -110,7 +124,7 @@ export default {
       showErrorModal: false,
       errorTitle: "",
       errorMessage: "",
-
+      inputPollId: "",
     }
   },
 computed: {
@@ -119,17 +133,23 @@ computed: {
       return this.participants;
     }
   },
+  watch: {
+    '$route.params.id': function(newId) {
+      if (newId) {
+        this.pollId = newId;
+        this.connectToPoll();
+      }
+    }
+  },
 
   created: function () {
     this.pollId = this.$route.params.id;
     this.isHost = localStorage.getItem("isHost") === "true";
 
-  
     if (this.isHost) {
       this.joined = true;
       this.userName = "Host"; 
     }
-
 
     socket.on("uiLabels", labels => this.uiLabels = labels);
 
@@ -137,25 +157,28 @@ computed: {
       this.participants = [...p];
     });
 
-  socket.on("startPoll", () => {
-  // Endast deltagare ska tvingas vidare automatiskt
-  if (!this.isHost) {
-    this.$router.push("/poll/" + this.pollId);
-  }
-});
-    socket.emit("joinPoll", this.pollId);
-    socket.emit("getUILabels", this.lang);
+    socket.on("startPoll", () => {
+      if (!this.isHost) {
+        this.$router.push("/poll/" + this.pollId);
+      }
+    });
 
     socket.on("joinSuccess", () => {
-  this.joined = true;
-});
+      this.joined = true;
+    });
 
-socket.on("nameTaken", (error) => {
-this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
-  this.errorMessage = this.uiLabels.nameTakenMsg || "This operator profile is already active in the node. The Billionaire Engine permits no digital clones. Choose a unique designation or vacate the premises."
-  this.showErrorModal = true;
-  this.joined = false;
-});
+    socket.on("nameTaken", (error) => {
+      this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
+      this.errorMessage = this.uiLabels.nameTakenMsg || "This operator profile is already active in the node. The Billionaire Engine permits no digital clones. Choose a unique designation or vacate the premises."
+      this.showErrorModal = true;
+      this.joined = false;
+    });
+
+    if (this.pollId) {
+      this.connectToPoll();
+    } else {
+      socket.emit("getUILabels", this.lang);
+    }
   },
   methods: {
     participateInPoll: function () {
@@ -163,6 +186,15 @@ this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
         localStorage.setItem("userName", this.userName);
         socket.emit("participateInPoll", { pollId: this.pollId, name: this.userName })
 
+      }
+    },
+    connectToPoll: function() {
+      socket.emit("joinPoll", this.pollId);
+      socket.emit("getUILabels", this.lang);
+    },
+    enterLobbyId: function() {
+      if (this.inputPollId.length > 0) {
+        this.$router.push("/lobby/" + this.inputPollId);
       }
     },
     toggleReady: function () {

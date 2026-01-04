@@ -15,7 +15,7 @@ const router = createRouter({
       component: () => import("../views/PollView.vue"),
     },
     {
-      path: "/lobby/:id",
+      path: "/lobby/:id?",
       name: "LobbyView",
       component: () => import("../views/LobbyView.vue"),
     },

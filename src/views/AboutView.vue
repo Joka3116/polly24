@@ -19,7 +19,7 @@
         <router-link to="/faq/">
             {{ uiLabels.faq || "FAQ!" }}
         </router-link>
-        <router-link to="/lobby/1">
+        <router-link to="/lobby/">
             {{ uiLabels.play || "PLAY!" }}
         </router-link>
         <router-link to="/create/">
