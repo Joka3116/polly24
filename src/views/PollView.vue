@@ -164,8 +164,6 @@ export default {
 
 <style scoped>
 .poll-view {
-    background-color: var(--background-color, #3a0b3a);
-
     min-height: 100vh;
     display: flex;
     flex-direction: column;
