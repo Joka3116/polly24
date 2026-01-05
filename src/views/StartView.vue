@@ -91,7 +91,7 @@
 <script>
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
 import LangSwitch from "@/components/LangSwitch.vue";
-import socket from "@/socket.js";
+import socket from "@/clientSocket.js";
 
 export default {
     name: "StartView",

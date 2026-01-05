@@ -68,7 +68,7 @@
 
 <script>
 import QuestionComponent from "@/components/QuestionComponent.vue";
-import socket from "@/socket.js";
+import socket from "@/clientSocket.js";
 
 export default {
     name: "PollView",
