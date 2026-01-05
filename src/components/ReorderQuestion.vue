@@ -1,3 +1,4 @@
+<!-- NOTE: This component is currently NOT IN USE -->
 <template>
 <p>{{question.q}}</p>
 <div class="ordered-grid">
