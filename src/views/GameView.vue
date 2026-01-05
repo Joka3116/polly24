@@ -1,13 +1,13 @@
 <template>
-    <div class="poll-view">
-        <header class="poll-header">
+    <div class="game-view">
+        <header class="game-header">
             <h1>
                 Lobby ID: <span class="highlight">{{ pollId }}</span>
             </h1>
         </header>
 
         <div class="info-container">
-            <img src="/img/logo.png" alt="Logo" class="poll-logo" />
+            <img src="/img/logo.png" alt="Logo" class="game-logo" />
 
             <div class="timer-wrapper" v-if="question.text && !showResults">
                 <h2 :class="{ critical: timer < 10 }">
@@ -163,7 +163,7 @@ export default {
 </script>
 
 <style scoped>
-.poll-view {
+.game-view {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -173,7 +173,7 @@ export default {
     padding: 20px;
 }
 
-.poll-header {
+.game-header {
     margin-top: 1rem;
     margin-bottom: 2rem;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
@@ -189,7 +189,7 @@ export default {
     margin-bottom: 3rem;
 }
 
-.poll-logo {
+.game-logo {
     width: 120px;
 
     height: auto;
