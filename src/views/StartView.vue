@@ -8,18 +8,18 @@
     <main>
         <div class="button-group">
             <button
-                v-if="!showPollInput"
+                v-if="!showGameInput"
                 class="btn-main"
-                @click="showPollInput = true"
+                @click="showGameInput = true"
             >
                 {{ uiLabels.play || "PLAY!" }}
             </button>
 
-            <div v-else class="poll-input-area">
+            <div v-else class="game-input-area">
                 <input
                     type="text"
                     class="input-main"
-                    v-model="newPollId"
+                    v-model="newGameId"
                     :placeholder="uiLabels['gameID'] || 'Game ID'"
                     v-on:keyup.enter="joinGame"
                 />
@@ -29,16 +29,16 @@
                 </button>
 
                 <button
-                    v-if="showPollInput"
+                    v-if="showGameInput"
                     class="back-btn"
-                    @click="showPollInput = false"
+                    @click="showGameInput = false"
                 >
                     <i class="bi bi-x-lg"></i>
                 </button>
             </div>
 
             <button
-                v-if="!showPollInput"
+                v-if="!showGameInput"
                 class="btn-main"
                 @click="$router.push('/create')"
             >
@@ -102,9 +102,9 @@ export default {
     data: function () {
         return {
             uiLabels: {},
-            newPollId: "",
+            newGameId: "",
             lang: localStorage.getItem("lang") || "en",
-            showPollInput: false,
+            showGameInput: false,
             showErrorModal: false,
         };
     },
@@ -114,13 +114,13 @@ export default {
     },
     methods: {
         joinGame: function () {
-            if (!this.newPollId) return;
+            if (!this.newGameId) return;
 
-            socket.emit("checkPollExists", this.newPollId);
+            socket.emit("checkGameExists", this.newGameId);
 
-            socket.once("pollExistsResponse", (exists) => {
+            socket.once("gameExistsResponse", (exists) => {
                 if (exists) {
-                    this.$router.push("/lobby/" + this.newPollId);
+                    this.$router.push("/lobby/" + this.newGameId);
                 } else {
                     this.showErrorModal = true;
                 }
@@ -185,7 +185,7 @@ main a {
     margin-top: 2rem;
 }
 
-.poll-input-area {
+.game-input-area {
     display: flex;
     flex-direction: column;
     align-items: center;
