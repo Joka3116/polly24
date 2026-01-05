@@ -71,7 +71,7 @@ import QuestionComponent from "@/components/QuestionComponent.vue";
 import socket from "@/clientSocket.js";
 
 export default {
-    name: "PollView",
+    name: "GameView",
     components: {
         QuestionComponent,
     },

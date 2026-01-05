@@ -159,7 +159,7 @@ computed: {
 
     socket.on("startPoll", () => {
       if (!this.isHost) {
-        this.$router.push("/poll/" + this.pollId);
+        this.$router.push("/game/" + this.pollId);
       }
     });
 
@@ -212,7 +212,7 @@ computed: {
         language: this.lang
       
       });
-      this.$router.push("/poll/" + this.pollId);
+      this.$router.push("/game/" + this.pollId);
     },
     switchLanguage: function (lang) {
         if (lang) {
