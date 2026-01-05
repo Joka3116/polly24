@@ -1,13 +1,13 @@
 <script setup>
 import { RouterView } from "vue-router";
-import FooterComponent from "@/components/FooterComponent.vue";
+import AppFooter from "@/components/AppFooter.vue";
 </script>
 
 <template>
     <div class="app-container">
         <RouterView />
     </div>
-    <FooterComponent />
+    <AppFooter />
 </template>
 
 <style>
