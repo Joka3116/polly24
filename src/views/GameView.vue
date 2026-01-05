@@ -31,7 +31,7 @@
 
         <div class="question-container">
             <div v-if="question.text">
-                <QuestionComponent
+                <GameQuestion
                     v-bind:question="question"
                     v-bind:isHost="isHost"
                     v-bind:showResults="showResults"
@@ -67,13 +67,13 @@
 </template>
 
 <script>
-import QuestionComponent from "@/components/QuestionComponent.vue";
+import GameQuestion from "@/components/GameQuestion.vue";
 import socket from "@/clientSocket.js";
 
 export default {
     name: "GameView",
     components: {
-        QuestionComponent,
+        GameQuestion,
     },
     data: function () {
         return {

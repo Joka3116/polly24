@@ -31,7 +31,7 @@
 </template>
 <script>
 export default {
-  name: 'QuestionComponent',
+  name: 'GameQuestion',
   props: {
     question: Object,
     isHost: Boolean,

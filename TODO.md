@@ -21,7 +21,7 @@
 - [ ] Timer paj-form 
 - [ ] Vilken fråga är vi på?
 - [ ] Poäng-tracking
-- [ ] Ändra namn på Pollview till Gameview
+- [x] Ändra namn på Pollview till Gameview
 
 ## Resultat
 - [ ] Gör Resultatsida
