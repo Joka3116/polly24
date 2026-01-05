@@ -67,10 +67,7 @@ export default {
     data: function () {
         return {
             uiLabels: {},
-            newPollId: "",
             lang: localStorage.getItem("lang") || "en",
-            hideNav: true,
-            showPollInput: false,
         };
     },
     created: function () {
@@ -116,17 +113,6 @@ h2 {
         0 0 10px rgba(255, 215, 0, 0.8),
         0 0 20px rgba(0, 0, 0, 0.9);
     margin-bottom: 2rem;
-}
-
-.about-content {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 30px;
-    background-color: rgba(10, 48, 76, 0.7);
-    border-radius: 15px;
-    border: 1px solid gold;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
-    line-height: 1.8;
 }
 
 main p {
