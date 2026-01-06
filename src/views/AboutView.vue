@@ -1,6 +1,8 @@
 <template>
-    <TopHeader />
-    <h1>{{ uiLabels.about }}</h1>
+    <TopRightHeader />
+    <header>
+        <h1>{{ uiLabels.about }}</h1>
+    </header>  
     <main>
         <div class="about-content">
             <h2>{{ uiLabels.aboutTitle }}</h2>
@@ -10,9 +12,6 @@
         </div>
     </main>
     <ResponsiveNav>
-        <router-link to="/">
-            {{ uiLabels.home || "HOME!" }}
-        </router-link>
         <router-link to="/about/">
             {{ uiLabels.about || "ABOUT!" }}
         </router-link>
@@ -31,14 +30,14 @@
 <script>
 import socket from "@/clientSocket.js";
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
-import TopHeader from "@/components/TopHeader.vue";
+import TopRightHeader from "@/components/TopRightHeader.vue";
 import LangSwitch from "@/components/LangSwitch.vue";
 
 export default {
     name: "AboutView",
     components: {
         ResponsiveNav,
-        TopHeader,
+        TopRightHeader,
         LangSwitch,
     },
     data: function () {
@@ -66,7 +65,19 @@ export default {
 </script>
 
 <style scoped>
-h1,
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 8dvh;
+}
+
+@media (min-width: 1024px) {
+    header {
+        padding-top: 12dvh;
+    }
+}
+header h1,
 h2 {
     color: var(--headline-color);
     text-align: center;
@@ -75,8 +86,11 @@ h2 {
         0 0 20px rgba(0, 0, 0, 0.9);
     margin-bottom: 2rem;
 }
-h1 {
-    padding-top: 3rem;
+main p {
+    font-size: 1.1rem;
+    color: #e0e0e0;
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
 }
 .about-content {
     max-width: 700px;
@@ -87,13 +101,5 @@ h1 {
     border: 1px solid gold;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
 }
-main {
-    padding: 2rem;
-}
-main p {
-    font-size: 1.1rem;
-    color: #e0e0e0;
-    margin-bottom: 1.5rem;
-    line-height: 1.8;
-}
+
 </style>

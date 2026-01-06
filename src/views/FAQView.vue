@@ -1,6 +1,6 @@
 <template>
+    <TopRightHeader />
     <header>
-        <img src="/img/logo.png" alt="Logo" />
         <h1>{{ uiLabels.faq }}</h1>
     </header>
     <main>
@@ -35,9 +35,6 @@
     </main>
 
     <ResponsiveNav>
-        <router-link to="/">
-            {{ uiLabels.home || "HOME!" }}
-        </router-link>
         <router-link to="/about/">
             {{ uiLabels.about || "ABOUT!" }}
         </router-link>
@@ -57,12 +54,14 @@
 import socket from "@/clientSocket.js";
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
 import LangSwitch from "@/components/LangSwitch.vue";
+import TopRightHeader from "@/components/TopRightHeader.vue";
 
 export default {
     name: "FAQView",
     components: {
         ResponsiveNav,
         LangSwitch,
+        TopRightHeader
     },
     data: function () {
         return {
@@ -93,16 +92,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 4rem;
-}
-
-header img {
-    width: 60%;
-    height: auto;
-    max-width: 30rem;
-    max-height: 30rem;
-    aspect-ratio: 1;
-    padding-bottom: 2rem;
+    padding-top: 8dvh;
 }
 
 header h1,
@@ -192,10 +182,4 @@ main p {
     opacity: 0.9;
 }
 
-header img {
-    width: 60%;
-    max-width: 250px;
-    height: auto;
-    margin-bottom: 1rem;
-}
 </style>

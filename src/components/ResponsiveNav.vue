@@ -11,8 +11,12 @@
                         <slot></slot>
                     </li>
                 </ul>
+                <div class="top-right-header">
+                    <router-link to="/">Who wants to be<br>a millionaire?</router-link>
+        </div>
             </div>
         </div>
+        
         <div id="hamburger" :class="{ active: isMenuOpen }" @click="toggleMenu">
             <span id="hamburger-line-one"></span>
             <span id="hamburger-line-two"></span>
@@ -47,6 +51,29 @@ export default {
 </script>
 
 <style scoped>
+.top-right-header {
+    position: fixed;
+    right: 140px;
+    top: 62px;
+    text-align: right;
+    font-size: 1.2rem;
+    font-family: "bebas-kai", sans-serif;
+    text-transform: uppercase;
+}
+.top-right-header :deep(a) {
+    color: var(--foreground-alt-color) !important;
+    text-decoration: none;
+}
+.top-right-header :deep(a):hover {
+    text-decoration: underline;
+}
+@media (max-width: 768px) {
+    .top-right-header {
+        right: 100px;
+        top: 37px; 
+        font-size: 1rem;
+    }
+}
 /* =========================================
    Navigation Container
    ========================================= */
