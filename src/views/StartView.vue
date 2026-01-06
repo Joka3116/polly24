@@ -146,7 +146,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 4rem;
+    padding-top: 8dvh;
 }
 
 header img {
@@ -155,7 +155,7 @@ header img {
     max-width: 30rem;
     max-height: 30rem;
     aspect-ratio: 1;
-    padding-bottom: 1.5rem;
+    padding-bottom: 2rem;
 }
 
 header h1,
@@ -165,16 +165,13 @@ h2 {
         0 0 10px rgba(255, 215, 0, 0.8),
         0 0 20px rgba(0, 0, 0, 0.9);
     text-align: center;
+    text-wrap: balance !important;
 }
 
 main {
     color: white;
-    padding-top: 5rem;
+    padding-top: 5dvh;
     padding-bottom: 10rem;
-}
-
-main a {
-    color: white;
 }
 
 .button-group {
@@ -182,7 +179,7 @@ main a {
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
 .game-input-area {

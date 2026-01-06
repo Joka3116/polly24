@@ -11,7 +11,7 @@
   "createGame": "Create a Game",
   "play": "Play a Game",
   "join": "JOIN",
-  "gameID": "Write game id:",
+  "gameID": "Enter game id",
   "name": "Your name",
   "waitingplayer": "CONFIRM PRESENCE, OPERATOR.",
   "waitinghost": "AWAITING INITIATION...",
@@ -28,7 +28,7 @@
   "errorTitle": "USER ERROR",
   "serverMissing": "Impressively incorrect. This node is deader than the code it’s running on. The Billionaire Engine doesn't open doors for operators who can't follow simple instructions.",
   "okButton": "UNDERSTOOD",
-  "faq": "FAQ",	
+  "faq": "FAQ",
   "nameErrorTitle": "IDENTITY THEFT",
   "nameTakenMsg": "This operator profile is already active in the node. The Billionaire Engine permits no digital clones. Choose a unique designation or vacate the premises.",
   "faqTitle": "TERMINAL_LOGS: Q&A",
@@ -43,4 +43,3 @@
   "faqQ5": ">> WARNING: Are the winnings real?",
   "faqA5": "The value is tied to your success in the simulation. The system guarantees only intellectual dominance... for now."
 }
-  
