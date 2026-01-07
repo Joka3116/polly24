@@ -167,8 +167,8 @@ h2 {
 
 main {
     color: white;
-    padding-top: 5dvh;
-    padding-bottom: 10rem;
+    padding-top: 10dvh;
+    padding-bottom: 5rem;
 }
 
 .button-group {
