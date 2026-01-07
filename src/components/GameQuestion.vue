@@ -149,6 +149,10 @@ methods: {
 
 .answer-btn.time-out {
   border-color: #ff3e3e;
+<<<<<<< Updated upstream
   box-shadow: none;
+=======
+  box-shadow: none; 
+>>>>>>> Stashed changes
 }
 </style>
