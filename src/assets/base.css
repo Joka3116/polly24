@@ -4,7 +4,7 @@
     --background-color: #02050a;
 
     --foreground-alt-color: #02050a;
-    --background-alt-color: #f09445;
+    --background-alt-color: #226694;
     --button-background-color: radial-gradient(circle, #512da8, #311b92);
     --button-color: gold;
     --headline-color: gold;
@@ -145,6 +145,7 @@ body:has(#hamburger.active) {
         opacity: 0;
         filter: brightness(2);
     }
+
     100% {
         transform: scale(1) rotateX(0deg);
         opacity: 1;
