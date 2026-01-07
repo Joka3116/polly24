@@ -11,7 +11,7 @@
 
             <div class="timer-wrapper" v-if="question.text && !showResults">
                 <h2 :class="{ critical: timer < 10 }">
-                    TID KVAR: {{ timer }}s
+                    {{ uiLabels["timeLeft"] || "Time left:" }} {{ timer }}s
                 </h2>
                 <div
                     class="timer-bar"

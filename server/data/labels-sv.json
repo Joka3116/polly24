@@ -20,7 +20,6 @@
   "ready": "REDO",
   "notReady": "INTE REDO",
   "home": "Hem",
-  "about": "Om oss",
   "aboutTitle": "Bakom kulisserna: Miljardärsdrömmarna!",
   "aboutText1": "Välkommen till Nätverk 24. Denna simuleringskammare är det enda återstående gränssnittet till 'The Billionaire Engine'. Systemet, som utvecklades för att testa mänsklighetens gränser för kunskap och girighet, övergavs för årtionden sedan, men dess kärna driver fortfarande denna utmaning. Du är en av de få som har hittat tillbaka till den aktiva noden.",
   "aboutText2": "Systemet är gammalt. Mycket gammalt. Våra utvecklare har identifierat att dess ålder har skapat egna 'personligheter' i koden, vilka vi kallar minispel och dolda funktioner. Dessa är inte buggar – de är Feature Documentation från en svunnen era. De belönar (eller straffar) dem som vågar utforska bortom de vanliga frågorna.",
@@ -41,5 +40,6 @@
   "faqQ4": ">> HISTORIK: Vem byggde 'The Billionaire Engine'?",
   "faqA4": "Ursprunget är okänt. Vissa loggar pekar på anonyma arkitekter, andra att den uppstod spontant ur nätverksbruset.",
   "faqQ5": ">> VARNING: Är vinsterna verkliga?",
-  "faqA5": "Värdet är bundet till din framgång i simuleringen. Systemet garanterar endast intellektuell dominans... än så länge."
+  "faqA5": "Värdet är bundet till din framgång i simuleringen. Systemet garanterar endast intellektuell dominans... än så länge.",
+  "timeLeft": "Tid kvar:"
 }

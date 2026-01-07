@@ -6,7 +6,6 @@
   "participatePoll": "Participate in poll",
   "question": "Question",
   "changeLanguage": "Byt till svenska",
-  "about": "About",
   "participateInPoll": "Participate in game",
   "createGame": "Create a Game",
   "play": "Play a Game",
@@ -41,5 +40,6 @@
   "faqQ4": ">> HISTORY: Who built 'The Billionaire Engine'?",
   "faqA4": "The origin is unknown. Some logs point to anonymous architects; others claim it emerged spontaneously from network noise.",
   "faqQ5": ">> WARNING: Are the winnings real?",
-  "faqA5": "The value is tied to your success in the simulation. The system guarantees only intellectual dominance... for now."
+  "faqA5": "The value is tied to your success in the simulation. The system guarantees only intellectual dominance... for now.",
+  "timeLeft": "Time left:"
 }
