@@ -28,7 +28,7 @@ function sockets(io, socket, data) {
       text: question.text,
       answers: question.answers.map(a => ({ id: a.id, text: a.text })),
       currentNumber: poll.currentQuestion + 1, // +1 eftersom currentQuestion börjar på 0
-      totalQuestions: poll.settings.nrOfQuestions
+    totalQuestions: poll.settings.nrOfQuestions
     };
 
 
@@ -139,38 +139,47 @@ function sockets(io, socket, data) {
     }, 1000);
   }
 
-  socket.on('runQuestion', async function (d) {
+socket.on('runQuestion', async function (d) {
     let poll = data.getPoll(d.pollId);
     if (!poll || !poll.settings) return;
 
     if (poll.questions.length >= poll.settings.nrOfQuestions) {
-      io.to(d.pollId).emit('gameOver', { reason: 'Limit reached' });
-      return;
+     
+        io.to(d.pollId).emit('gameOver', { reason: 'Limit reached' });
+        return;
     }
 
     poll.currentQuestion++;
 
-    let question = await data.getRandomQuestion(poll.lang || "sv");
+    const usedIds = poll.questions.map(q => q.id);
+
+    let question = await data.getRandomQuestion(poll.lang || "sv", usedIds);
+
+    if (question) {
+        data.addQuestion(d.pollId, question);
+
+  
+        const sanitizedQuestion = {
+            id: question.id,
+            text: question.text,
+         
+            answers: question.answers.map(a => ({ id: a.id, text: a.text })),
+         
+            currentNumber: poll.currentQuestion + 1,
+            totalQuestions: poll.settings.nrOfQuestions
+        };
 
 
-    data.addQuestion(d.pollId, question);
+        io.to(d.pollId).emit('questionUpdate', sanitizedQuestion);
 
 
-    const sanitizedQuestion = {
-      id: question.id,
-      text: question.text,
-      answers: question.answers.map(a => ({ id: a.id, text: a.text })),
-      currentNumber: poll.currentQuestion + 1, // +1 eftersom currentQuestion börjar på 0
-      totalQuestions: poll.settings.nrOfQuestions
-    };
-
-    io.to(d.pollId).emit('questionUpdate', sanitizedQuestion);
+        io.to(d.pollId).emit('submittedAnswersUpdate', {});
+        io.to(d.pollId).emit('hideResults');
 
 
-    io.to(d.pollId).emit('submittedAnswersUpdate', {});
-    io.to(d.pollId).emit('hideResults');
-    startTimer(d.pollId, poll.settings.difficulty);
-  });
+        startTimer(d.pollId, poll.settings.difficulty);
+    }
+});
 
 
 }

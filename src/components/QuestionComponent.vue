@@ -77,28 +77,39 @@ export default {
 
 .answers-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  /* Tvingar fram 2 kolumner oavsett skärmstorlek */
+  grid-template-columns: 1fr 1fr; 
+  /* Minskat gap för att få plats på mobilen */
+  gap: clamp(10px, 2vw, 20px); 
   width: 100%;
-  max-width: 800px;
-  padding: 0 10px;
+  max-width: 1000px;
+  padding: 15px;
+  box-sizing: border-box;
 }
 
 .answer-btn {
   background: linear-gradient(145deg, #311b92, #512da8);
   color: gold;
-  border: 3px solid gold;
-  border-radius: 30px;
-  font-size: 1.2rem;
+  border: clamp(2px, 0.5vw, 4px) solid gold; 
+  border-radius: 30px; 
+  
+  /* Flexibel textstorlek för att undvika radbrytningar på små skärmar */
+  font-size: clamp(0.9rem, 2.5vw, 1.6rem);
+  
   font-weight: bold;
   text-transform: uppercase;
-  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
-  letter-spacing: 1px;
-  padding: 20px;
-  min-height: 100px;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  
+  /* Säkrar att knapparna är stora men inte för höga på mobil */
+  padding: clamp(10px, 2vh, 25px);
+  min-height: clamp(80px, 15vh, 120px); 
+  
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.2s ease;
 }
 
 .answer-btn:hover {
@@ -112,10 +123,16 @@ export default {
 
 @media (max-width: 600px) {
   .answers-grid {
-    grid-template-columns: 1fr;
+    padding: 10px;
+    gap: 12px;
+  }
+  
+  .answer-btn {
+    border-radius: 20px;
+    /* Gör texten lite smalare på mobil om namnen är långa */
+    letter-spacing: 0px; 
   }
 }
-
 .answer-btn.selected {
   color: gold;
   border-color: gold;
@@ -149,5 +166,11 @@ export default {
 .answer-btn.time-out {
   border-color: #ff3e3e;
   box-shadow: none;
+}
+
+.answer-btn:hover:not(:disabled) {
+  transform: scale(1.02);
+  box-shadow: 0 0 25px gold;
+  background: linear-gradient(145deg, #4527a0, #673ab7);
 }
 </style>
