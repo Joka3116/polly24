@@ -21,7 +21,8 @@
     <div class="question-container">
       <div v-if="question.text">
         <QuestionComponent v-bind:question="question" v-bind:isHost="isHost" v-bind:showResults="showResults"
-          v-bind:timeExpired="timeExpired" v-on:answer="submitAnswer($event)" />
+          v-bind:timeExpired="timeExpired" v-bind:correctAnswerId="correctAnswerId"
+          v-on:answer="submitAnswer($event)" />
 
         <div v-if="isHost" class="host-controls">
           <button v-if="!showResults" class="btn-main" @click="revealAnswer">VISA SVAR</button>
@@ -61,7 +62,8 @@ export default {
       showResults: false,
       timer: 0,
       timeExpired: false,
-      answersStatus: { answered: 0, total: 0 }
+      answersStatus: { answered: 0, total: 0 },
+      correctAnswerId: null
     }
   },
 
@@ -69,13 +71,14 @@ export default {
     this.pollId = this.$route.params.id;
     this.isHost = localStorage.getItem("isHost") === "true";
 
-socket.on("questionUpdate", q => {
-  this.question = q || { text: "", answers: [] }; // Säkerställer att det aldrig blir null
-  this.showResults = false;
-  this.answersStatus.answered = 0;
-});
+    socket.on("questionUpdate", q => {
+      this.question = q || { text: "", answers: [] }; // Säkerställer att det aldrig blir null
+      this.showResults = false;
+      this.answersStatus.answered = 0;
+    });
 
-    socket.on("showResults", () => {
+    socket.on("showResults", (correctId) => {
+      this.correctAnswerId = correctId;
       this.showResults = true;
     });
 
@@ -105,27 +108,25 @@ socket.on("questionUpdate", q => {
     });
   },
   methods: {
-submitAnswer: function (answerObject) { 
-  const user = localStorage.getItem("userName");
-  
- 
-  const answerText = answerObject.text || answerObject; 
+    submitAnswer: function (answerObject) {
+      const user = localStorage.getItem("userName");
 
-  socket.emit("submitAnswer", {
-    pollId: this.pollId,
-    answer: answerText,
-    userName: user,
-    timeLeft: this.timer
-  });
-},
-runNextQuestion: function () {
-  // Kontrollera om question är null ELLER om texten är tom
-  if (!this.question || this.question.text === "") {
-    socket.emit("startPoll", { pollId: this.pollId, language: this.lang });
-  } else {
-    socket.emit("runQuestion", { pollId: this.pollId });
-  }
-},
+
+      socket.emit("submitAnswer", {
+        pollId: this.pollId,
+        answerId: answerObject.id, // Ändrat från 'answer' till 'answerId'
+        userName: user,
+        timeLeft: this.timer
+      });
+    },
+    runNextQuestion: function () {
+
+      if (!this.question || this.question.text === "") {
+        socket.emit("startPoll", { pollId: this.pollId, language: this.lang });
+      } else {
+        socket.emit("runQuestion", { pollId: this.pollId });
+      }
+    },
     revealAnswer: function () {
       socket.emit("showResults", { pollId: this.pollId });
     }

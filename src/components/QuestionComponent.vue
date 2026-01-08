@@ -6,19 +6,13 @@
 
     <div v-if="!isHost || showResults" class="player-view">
       <div class="answers-grid">
-        <button 
-          v-for="(answer, index) in question.answers" 
-          :key="index"
-          class="answer-btn"
-          :disabled="timeExpired || showResults || isHost" 
-          :class="{ 
+        <button v-for="(answer, index) in question.answers" :key="index" class="answer-btn"
+          :disabled="timeExpired || showResults || isHost" :class="{
             'selected': selectedAnswer === answer,
-            'correct': showResults && answer.is_correct,
-            'wrong': showResults && selectedAnswer === answer && !answer.is_correct,
+            'correct': showResults && answer.id === correctAnswerId, // ÄNDRAD LOGIK
+            'wrong': showResults && selectedAnswer === answer && answer.id !== correctAnswerId, // ÄNDRAD LOGIK
             'time-out': timeExpired && !selectedAnswer && !showResults
-          }" 
-          @click="clicked(answer)"
-        >
+          }" @click="clicked(answer)">
           {{ answer.text }}
         </button>
       </div>
@@ -36,7 +30,8 @@ export default {
     question: Object,
     isHost: Boolean,
     showResults: Boolean,
-    timeExpired: Boolean
+    timeExpired: Boolean,
+    correctAnswerId: [Number, String]
   },
   emits: ["answer"],
   data: function () {
@@ -45,17 +40,17 @@ export default {
     }
   },
   watch: {
-    question: function() {
+    question: function () {
       this.selectedAnswer = null;
     }
   },
-methods: {
+  methods: {
     clicked: function (answer) {
       if (this.selectedAnswer || this.isHost || this.showResults) return;
 
       this.selectedAnswer = answer;
       this.$emit("answer", answer);
-    } 
+    }
   }
 }
 
@@ -74,7 +69,7 @@ methods: {
   font-size: 2rem;
   text-align: center;
   margin-bottom: 1.5rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .answers-grid {
@@ -94,7 +89,7 @@ methods: {
   font-size: 1.2rem;
   font-weight: bold;
   text-transform: uppercase;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
   letter-spacing: 1px;
   padding: 20px;
   min-height: 100px;
@@ -134,8 +129,9 @@ methods: {
   background: linear-gradient(145deg, #2e7d32, #43a047) !important;
   border-color: #a5d6a7;
 }
+
 .answer-btn.wrong {
- color: gold;
+  color: gold;
   border-color: gold;
   transform: scale(1.05);
   box-shadow: 0 0 20px white;

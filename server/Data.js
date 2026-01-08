@@ -5,7 +5,7 @@ import mysql from "mysql2/promise";
 const pool = mysql.createPool({
   host: "localhost",
   user: "root",
-  password: "PaSswOrD",
+  password: "9573Agaton",
   database: "quizgame"
 });
 
@@ -85,11 +85,11 @@ Data.prototype.getPoll = function (pollId) {
 
 Data.prototype.participateInPoll = function (pollId, name) {
   if (this.pollExists(pollId)) {
-    this.polls[pollId].participants.push({ 
-      name: name, 
-      answers: [], 
-      isReady: false, 
-      points: 0       
+    this.polls[pollId].participants.push({
+      name: name,
+      answers: [],
+      isReady: false,
+      points: 0
     });
   }
 }
@@ -97,7 +97,7 @@ Data.prototype.participateInPoll = function (pollId, name) {
 Data.prototype.setPlayerReady = function (pollId, name, isReady) {
   if (this.pollExists(pollId)) {
     const participants = this.polls[pollId].participants;
-  
+
     const participant = participants.find(p => p.name === name);
     if (participant) {
       participant.isReady = isReady;
@@ -139,36 +139,34 @@ Data.prototype.getSubmittedAnswers = function (pollId) {
   return {}
 }
 
-Data.prototype.submitAnswer = function (pollId, name, answer, timeLeft) {
+Data.prototype.submitAnswer = function (pollId, name, answerId, timeLeft) {
   if (this.pollExists(pollId)) {
     const poll = this.polls[pollId];
     const participant = poll.participants.find(p => p.name === name);
+
+    // Hämta den RIKTIGA frågan (den med is_correct) från serverns minne
     const question = poll.questions[poll.currentQuestion];
 
-    if (participant) {
-      participant.answers[poll.currentQuestion] = answer;
+    if (participant && question) {
+      participant.answers[poll.currentQuestion] = answerId;
 
-  
-      const selectedOption = question.answers.find(a => 
-        a.text.toString().trim().toLowerCase() === answer.toString().trim().toLowerCase()
-      );
-
+      // Hitta svaret i listan baserat på ID istället för sträng
+      const selectedOption = question.answers.find(a => a.id === answerId);
 
       if (selectedOption && selectedOption.is_correct == 1) {
         const pointsEarned = Math.round(timeLeft * 100);
         participant.points += pointsEarned;
-        console.log(`KORREKT! ${name} tjänade ${pointsEarned} Cash. Totalt: ${participant.points}`);
+        console.log(`KORREKT ID! ${name} tjänade ${pointsEarned} Cash.`);
       } else {
-        console.log(`FEL SVAR från ${name}. Han valde: ${answer}`);
+        console.log(`FEL SVAR (ID: ${answerId}) från ${name}.`);
       }
     }
-
-    // Statistik-logik för stapeldiagram
+    // Uppdatera statistik för stapeldiagrammet med ID som nyckel
     if (typeof poll.answers[poll.currentQuestion] !== 'object') {
       poll.answers[poll.currentQuestion] = {};
     }
     let currentAnswers = poll.answers[poll.currentQuestion];
-    currentAnswers[answer] = (currentAnswers[answer] || 0) + 1;
+    currentAnswers[answerId] = (currentAnswers[answerId] || 0) + 1;
   }
 }
 
@@ -198,7 +196,7 @@ Data.prototype.getRandomQuestion = async function (language = "sv") {
     id: q.id,
     sharedId: q.shared_question_id,
     text: q.text,
-    answers: shuffleArray(answers) 
+    answers: shuffleArray(answers)
   };
 };
 Data.prototype.nameAvailable = function (pollId, name) {
@@ -207,9 +205,21 @@ Data.prototype.nameAvailable = function (pollId, name) {
     const exists = this.polls[pollId].participants.some(
       p => p.name.toLowerCase() === name.toLowerCase()
     );
-    return !exists; 
+    return !exists;
   }
   return true;
+};
+
+Data.prototype.getCorrectAnswerId = function (pollId) {
+  if (this.pollExists(pollId)) {
+    const poll = this.polls[pollId];
+    const question = poll.questions[poll.currentQuestion];
+    if (question) {
+      const correct = question.answers.find(a => a.is_correct == 1);
+      return correct ? correct.id : null;
+    }
+  }
+  return null;
 };
 
 export { Data };
