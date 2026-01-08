@@ -6,13 +6,8 @@
 
     <div v-if="!joined" class="join-container panel-card">
       <h2>{{ uiLabels.participateInPoll || "Enter Name" }}</h2>
-      <input 
-        type="text" 
-        class="input-main" 
-        v-model="userName" 
-        :placeholder="uiLabels['name'] || 'NAME'"
-        v-on:keyup.enter="participateInPoll"
-      >
+      <input type="text" class="input-main" v-model="userName" :placeholder="uiLabels['name'] || 'NAME'"
+        v-on:keyup.enter="participateInPoll">
       <button class="btn-main" v-on:click="participateInPoll" :disabled="userName.length < 1">
         {{ uiLabels["join"] || "JOIN" }}
       </button>
@@ -26,11 +21,7 @@
         <span class="highlight">{{ userName }}</span>!
       </h2>
 
-      <button 
-        v-if="!isHost" 
-        class="btn-main" 
-        :class="{ 'btn-alt': isReady }" 
-        v-on:click="toggleReady">
+      <button v-if="!isHost" class="btn-main" :class="{ 'btn-alt': isReady }" v-on:click="toggleReady">
         {{ isReady ? (uiLabels.notReady || "INTE REDO") : (uiLabels.ready || "REDO") }}
       </button>
 
@@ -90,7 +81,7 @@ export default {
 
     }
   },
-computed: {
+  computed: {
     displayParticipants() {
       // Ganska stor ändring här för att programmet ska godkänna unika användarnamn. 
       return this.participants;
@@ -101,11 +92,43 @@ computed: {
     this.pollId = this.$route.params.id;
     this.isHost = localStorage.getItem("isHost") === "true";
 
-  
+
     if (this.isHost) {
       this.joined = true;
-      this.userName = "Host"; 
+      this.userName = "Host";
+      socket.emit("joinPoll", this.pollId);
     }
+
+    socket.on("joinPoll", (pollId) => {
+      socket.join(pollId);
+
+      const poll = data.getPoll(pollId);
+      if (!poll) return;
+
+      socket.emit(
+        "participantsUpdate",
+        data.getParticipants(pollId)
+      );
+    });
+
+    socket.on("playerReady", (d) => {
+      data.setPlayerReady(d.pollId, d.name, d.isReady);
+
+      io.to(d.pollId).emit(
+        "participantsUpdate",
+        data.getParticipants(d.pollId)
+      );
+    });
+
+    socket.on("disconnect", () => {
+      const pollId = data.removeParticipantBySocket?.(socket.id);
+      if (pollId) {
+        io.to(pollId).emit(
+          "participantsUpdate",
+          data.getParticipants(pollId)
+        );
+      }
+    });
 
 
     socket.on("uiLabels", labels => this.uiLabels = labels);
@@ -114,25 +137,25 @@ computed: {
       this.participants = [...p];
     });
 
-  socket.on("startPoll", () => {
-  // Endast deltagare ska tvingas vidare automatiskt
-  if (!this.isHost) {
-    this.$router.push("/poll/" + this.pollId);
-  }
-});
-    socket.emit("joinPoll", this.pollId);
+    socket.on("startPoll", () => {
+      // Endast deltagare ska tvingas vidare automatiskt
+      if (!this.isHost) {
+        this.$router.push("/poll/" + this.pollId);
+      }
+    });
+
     socket.emit("getUILabels", this.lang);
 
     socket.on("joinSuccess", () => {
-  this.joined = true;
-});
+      this.joined = true;
+    });
 
-socket.on("nameTaken", (error) => {
-this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
-  this.errorMessage = this.uiLabels.nameTakenMsg || "This operator profile is already active in the node. The Billionaire Engine permits no digital clones. Choose a unique designation or vacate the premises."
-  this.showErrorModal = true;
-  this.joined = false;
-});
+    socket.on("nameTaken", (error) => {
+      this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
+      this.errorMessage = this.uiLabels.nameTakenMsg || "This operator profile is already active in the node. The Billionaire Engine permits no digital clones. Choose a unique designation or vacate the premises."
+      this.showErrorModal = true;
+      this.joined = false;
+    });
   },
   methods: {
     participateInPoll: function () {
@@ -149,13 +172,13 @@ this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
         name: this.userName,
         isReady: this.isReady
       });
-    }, 
-    
-    runQuiz: function() {
+    },
+
+    runQuiz: function () {
       socket.emit("startPoll", {
         pollId: this.pollId,
         language: this.lang
-      
+
       });
       this.$router.push("/poll/" + this.pollId);
     }
@@ -222,7 +245,7 @@ this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem; 
+  gap: 2rem;
   padding: 20px 0;
 }
 
@@ -278,7 +301,7 @@ this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
   color: white;
   transform: scale(1.05);
   box-shadow: 0 0 10px gold;
- 
+
 }
 
 .participant-card.ready {
@@ -287,9 +310,9 @@ this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
 }
 
 .join-container .btn-main {
-    width: auto !important;        
-    min-width: 160px !important;    
-    font-size: 2rem !important;   
-    align-self: center;
+  width: auto !important;
+  min-width: 160px !important;
+  font-size: 2rem !important;
+  align-self: center;
 }
 </style>

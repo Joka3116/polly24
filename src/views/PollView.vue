@@ -20,9 +20,8 @@
 
     <div class="question-container">
       <div v-if="question.text">
-        <QuestionComponent v-bind:question="question" v-bind:isHost="isHost" v-bind:showResults="showResults"
-          v-bind:timeExpired="timeExpired" v-on:answer="submitAnswer($event)" />
-
+        <QuestionComponent :question="question" :isHost="isHost" :showResults="showResults" :timeExpired="timeExpired"
+          :correctAnswerId="correctAnswerId" @answer="submitAnswer" />
         <div v-if="isHost" class="host-controls">
           <button v-if="!showResults" class="btn-main" @click="revealAnswer">VISA SVAR</button>
           <button v-else class="btn-main" @click="runNextQuestion">NÄSTA FRÅGA</button>
@@ -46,32 +45,46 @@ import socket from "@/socket.js";
 
 export default {
   name: 'PollView',
-  components: {
-    QuestionComponent
-  },
-  data: function () {
+  components: { QuestionComponent },
+
+  data() {
     return {
       lang: localStorage.getItem("lang") || "en",
       question: { text: "", answers: [] },
       pollId: "inactive poll",
-      submittedAnswers: {},
       participants: [],
       uiLabels: {},
       isHost: false,
       showResults: false,
+      correctAnswerId: null,
       timer: 0,
       timeExpired: false,
       answersStatus: { answered: 0, total: 0 }
-    }
+    };
   },
 
-  created: function () {
+  created() {
     this.pollId = this.$route.params.id;
     this.isHost = localStorage.getItem("isHost") === "true";
+
+    socket.emit("getUILabels", this.lang);
+    socket.emit("joinPoll", this.pollId);
 
     socket.on("questionUpdate", q => {
       this.question = q;
       this.showResults = false;
+      this.correctAnswerId = null;
+      this.answersStatus.answered = 0;
+    });
+
+    socket.on("questionResult", ({ correctAnswerId }) => {
+      this.correctAnswerId = correctAnswerId;
+      this.showResults = true;
+    });
+
+    socket.on("timerUpdate", t => {
+      this.timer = t;
+      this.timeExpired = t <= 0;
     });
 
     socket.on("showResults", () => {
@@ -80,60 +93,41 @@ export default {
 
     socket.on("hideResults", () => {
       this.showResults = false;
-    });
-
-    socket.on("timerUpdate", t => {
-      this.timer = t;
-      this.timeExpired = (t <= 0);
-    });
-
-    socket.on("hideResults", () => {
-      this.showResults = false;
       this.timeExpired = false;
     });
 
-    socket.on("submittedAnswersUpdate", answers => this.submittedAnswers = answers);
-    socket.on("uiLabels", labels => this.uiLabels = labels);
-    socket.on("participantsUpdate", p => this.participants = p);
+    socket.on("participantsUpdate", p => {
+      this.participants = p;
+    });
 
-    socket.emit("getUILabels", this.lang);
-    socket.emit("joinPoll", this.pollId);
+    socket.on("uiLabels", labels => {
+      this.uiLabels = labels;
+    });
 
-    socket.on("answersUpdate", (status) => {
+    socket.on("answersUpdate", status => {
       this.answersStatus = status;
     });
-
-
-    socket.on("questionUpdate", q => {
-      this.question = q;
-      this.showResults = false;
-      this.answersStatus.answered = 0;
-    });
   },
+
   methods: {
-submitAnswer: function (answerObject) { 
-  const user = localStorage.getItem("userName");
-  
- 
-  const answerText = answerObject.text || answerObject; 
+    submitAnswer({ questionId, answerId }) {
+      socket.emit("submitAnswer", {
+        pollId: this.pollId,
+        questionId,
+        answerId,
+        timeLeft: this.timer
+      });
+    },
 
-  socket.emit("submitAnswer", {
-    pollId: this.pollId,
-    answer: answerText,
-    userName: user,
-    timeLeft: this.timer
-  });
-},
-
-    runNextQuestion: function () {
+    runNextQuestion() {
       socket.emit("runQuestion", { pollId: this.pollId });
     },
-    revealAnswer: function () {
+
+    revealAnswer() {
       socket.emit("showResults", { pollId: this.pollId });
     }
   }
-}
-
+};
 </script>
 
 <style scoped>
