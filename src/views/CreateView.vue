@@ -43,8 +43,8 @@
       </div>
     </div>
 
-    <button v-on:click="startPoll" class="start-btn">
-      START POLL
+    <button v-on:click="createPollSettings" class="start-btn">
+      CREATE POLL
     </button>
     
     <div style="margin-top:20px; font-size:0.8rem;">
@@ -86,23 +86,18 @@ export default {
       socket.emit("createPoll", {pollId: this.pollId, lang: this.lang })
       socket.emit("joinPoll", this.pollId);
     },
-startPoll() {
-    // 1. Skicka inställningarna till servern
-    socket.emit("startPoll", {
+createPollSettings() {
+    // 1. Spara inställningar på servern utan att starta frågor än
+    socket.emit("saveSettings", {
       pollId: this.pollId,
       difficulty: this.selectedDifficulty,
       nrOfQuestions: this.selectedNrOfQuestions
     });
 
-    // 2. VIKTIGT: Spara att denna klient är HOST
-    // Detta behövs för att GameView ska veta att den ska visa frågorna
     localStorage.setItem("isHost", "true"); 
-
-    // 3. Navigera till lobbyn (eller direkt till spelet om du föredrar)
-    // Enligt din plan: "när hosten trycker på 'start poll' så skickas den in i lobbyn"
+    // 2. Gå till lobbyn för att vänta på deltagare
     this.$router.push(`/lobby/${this.pollId}`); 
-  },
-
+},
 
 
     },

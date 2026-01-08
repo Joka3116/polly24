@@ -133,6 +133,12 @@ this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
   this.showErrorModal = true;
   this.joined = false;
 });
+
+socket.on("navToPoll", (id) => {
+  if (!this.isHost) {
+    this.$router.push("/poll/" + id);
+  }
+});
   },
   methods: {
     participateInPoll: function () {
@@ -151,14 +157,12 @@ this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
       });
     }, 
     
-    runQuiz: function() {
-      socket.emit("startPoll", {
-        pollId: this.pollId,
-        language: this.lang
-      
-      });
-      this.$router.push("/poll/" + this.pollId);
-    }
+runQuiz: function() {
+  // Säg till servern att flytta alla deltagare
+  socket.emit("initiateGameNavigation", { pollId: this.pollId });
+  // Flytta hosten direkt
+  this.$router.push("/poll/" + this.pollId);
+}
   }
 }
 </script>

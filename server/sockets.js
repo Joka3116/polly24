@@ -2,6 +2,33 @@
 let timers = {};
 
 function sockets(io, socket, data) {
+socket.on('saveSettings', function (d) {
+    data.saveSettings(d.pollId, {
+      nrOfQuestions: d.nrOfQuestions,
+      difficulty: d.difficulty
+    });
+  });
+
+socket.on('initiateGameNavigation', function (d) {
+    io.to(d.pollId).emit('navToPoll', d.pollId);
+  });
+
+
+socket.on('startPoll', async function (d) {
+    let poll = data.getPoll(d.pollId);
+    
+    if (poll.questions && poll.questions.length > 0) return;
+
+    console.log("--- BILLIONAIRE ENGINE INITIATED ---");
+    let question = await data.getRandomQuestion(d.language || "en");
+    data.addQuestion(d.pollId, question);
+    
+    io.to(d.pollId).emit('questionUpdate', question);
+    // Rensa gamla staplar/svar i UI
+    io.to(d.pollId).emit('submittedAnswersUpdate', {}); 
+    
+    startTimer(d.pollId, poll.settings?.difficulty || 'medium');
+  });
 
   socket.on('getUILabels', function (lang) {
     socket.emit('uiLabels', data.getUILabels(lang));
@@ -12,11 +39,19 @@ function sockets(io, socket, data) {
     socket.emit('pollData', data.getPoll(d.pollId));
   });
 
-  socket.on('joinPoll', function (pollId) {
+socket.on('joinPoll', function (pollId) {
     socket.join(pollId);
-    socket.emit('questionUpdate', null)
+    let poll = data.getPoll(pollId);
+    
+    // Om det finns frågor, skicka den aktuella
+    if (poll.questions && poll.questions.length > 0) {
+      socket.emit('questionUpdate', poll.questions[poll.currentQuestion]);
+    } 
+    // Om inga frågor finns, skicka INTE null. 
+    // Frontenden har redan ett bra standard-objekt i data()
+    
     socket.emit('submittedAnswersUpdate', data.getSubmittedAnswers(pollId));
-  });
+});
 
 socket.on('participateInPoll', function (d) {
 
@@ -39,43 +74,7 @@ socket.on('participateInPoll', function (d) {
     io.to(d.pollId).emit('participantsUpdate', data.getParticipants(d.pollId));
   });
 
-socket.on('startPoll', async function (d) {
-  let poll = data.getPoll(d.pollId);
-
-  // 1. Spara BARA inställningar om de skickas med (från CreateView)
-  if (d.difficulty && d.nrOfQuestions) {
-    data.saveSettings(d.pollId, {
-      nrOfQuestions: d.nrOfQuestions,
-      difficulty: d.difficulty
-    });
-  }
-
-  // 2. Hämta nu den slutgiltiga svårighetsgraden från sparad data 
-  // (eller fallbacks om allt annat skiter sig)
-  const finalDifficulty = poll.settings?.difficulty || d.difficulty || 'medium';
-  
-  console.log("--- STARTAR SPELET ---");
-  console.log("Vald svårighetsgrad som används:", finalDifficulty);
-
-  io.to(d.pollId).emit('startPoll', d.pollId);
-  
-  let question = await data.getRandomQuestion(d.language || "en");
-  data.addQuestion(d.pollId, question);
-  
-  if (poll) {
-    poll.answers = [];
-  }
-
-  io.to(d.pollId).emit('questionUpdate', question);
-  io.to(d.pollId).emit('submittedAnswersUpdate', {});
-
- //ÄNTLIGEN FUNGERAR DET (vi hade råkat hårdkoda svårighetsgrad i en annan view :D)
-  startTimer(d.pollId, finalDifficulty);
-});
-
-
 socket.on('submitAnswer', function (d) {
-
     data.submitAnswer(d.pollId, d.userName, d.answer, d.timeLeft);
 
     const answeredCount = data.getAnsweredCount(d.pollId);
@@ -85,7 +84,13 @@ socket.on('submitAnswer', function (d) {
         answered: answeredCount,
         total: totalPlayers
     });
-});
+
+    //  Om alla har svarat kan du tvinga fram resultaten direkt här
+    if (answeredCount >= totalPlayers && totalPlayers > 0) {
+      if (timers[d.pollId]) clearInterval(timers[d.pollId]);
+      io.to(d.pollId).emit('showResults');
+    }
+  });
 socket.on('checkPollExists', function (pollId) {
     const exists = data.pollExists(pollId);
     socket.emit('pollExistsResponse', exists);

@@ -69,10 +69,11 @@ export default {
     this.pollId = this.$route.params.id;
     this.isHost = localStorage.getItem("isHost") === "true";
 
-    socket.on("questionUpdate", q => {
-      this.question = q;
-      this.showResults = false;
-    });
+socket.on("questionUpdate", q => {
+  this.question = q || { text: "", answers: [] }; // Säkerställer att det aldrig blir null
+  this.showResults = false;
+  this.answersStatus.answered = 0;
+});
 
     socket.on("showResults", () => {
       this.showResults = true;
@@ -102,13 +103,6 @@ export default {
     socket.on("answersUpdate", (status) => {
       this.answersStatus = status;
     });
-
-
-    socket.on("questionUpdate", q => {
-      this.question = q;
-      this.showResults = false;
-      this.answersStatus.answered = 0;
-    });
   },
   methods: {
 submitAnswer: function (answerObject) { 
@@ -124,10 +118,14 @@ submitAnswer: function (answerObject) {
     timeLeft: this.timer
   });
 },
-
-    runNextQuestion: function () {
-      socket.emit("runQuestion", { pollId: this.pollId });
-    },
+runNextQuestion: function () {
+  // Kontrollera om question är null ELLER om texten är tom
+  if (!this.question || this.question.text === "") {
+    socket.emit("startPoll", { pollId: this.pollId, language: this.lang });
+  } else {
+    socket.emit("runQuestion", { pollId: this.pollId });
+  }
+},
     revealAnswer: function () {
       socket.emit("showResults", { pollId: this.pollId });
     }

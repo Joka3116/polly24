@@ -1,9 +1,11 @@
 import io from "socket.io-client";
 
-// Force the server IP to match original StartView behavior
-sessionStorage.setItem("dataServer", "localhost:3000");
-sessionStorage.setItem("localServer", "localhost:3000");
+// Använder hostname istället för "localhost" så att det fungerar på alla enheter
+const serverAddress = `${window.location.hostname}:3000`;
 
-const socket = io(sessionStorage.getItem("dataServer"));
+sessionStorage.setItem("dataServer", serverAddress);
+sessionStorage.setItem("localServer", serverAddress);
+
+const socket = io(serverAddress);
 
 export default socket;
