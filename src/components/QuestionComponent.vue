@@ -1,27 +1,30 @@
 <template>
   <div class="question-wrapper">
-    <h1 class="question-text">
+    <h1 class="question-text" v-if="isHost || showResults">
       {{ question.text }}
     </h1>
 
     <div v-if="!isHost || showResults" class="player-view">
       <div class="answers-grid">
-        <button v-for="(answer, index) in question.answers" :key="index" class="answer-btn"
-          :disabled="timeExpired || showResults || isHost" :class="{
+        <button 
+          v-for="(answer, index) in question.answers" 
+          :key="index"
+          class="answer-btn"
+          :disabled="timeExpired || showResults || isHost" 
+          :class="{ 
             'selected': selectedAnswer === answer,
-            'correct': showResults && answer.id === correctAnswerId, // ÄNDRAD LOGIK
-            'wrong': showResults && selectedAnswer === answer && answer.id !== correctAnswerId, // ÄNDRAD LOGIK
+            'correct': showResults && answer.id === correctAnswerId,
+            'wrong': showResults && selectedAnswer === answer && answer.id !== correctAnswerId,
             'time-out': timeExpired && !selectedAnswer && !showResults
-          }" @click="clicked(answer)">
+          }" 
+          @click="clicked(answer)"
+        >
           {{ answer.text }}
         </button>
       </div>
     </div>
 
-    <div v-else class="host-waiting-info">
-      <p class="pulsing-text">Operatörerna väljer sina svar...</p>
     </div>
-  </div>
 </template>
 <script>
 export default {

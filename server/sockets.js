@@ -26,7 +26,9 @@ function sockets(io, socket, data) {
     const sanitizedQuestion = {
       id: question.id,
       text: question.text,
-      answers: question.answers.map(a => ({ id: a.id, text: a.text }))
+      answers: question.answers.map(a => ({ id: a.id, text: a.text })),
+      currentNumber: poll.currentQuestion + 1, // +1 eftersom currentQuestion börjar på 0
+      totalQuestions: poll.settings.nrOfQuestions
     };
 
 
@@ -124,6 +126,9 @@ function sockets(io, socket, data) {
 
     timers[pollId] = setInterval(() => {
       timeLeft -= 1;
+      let poll = data.getPoll(pollId);
+      if (poll) poll.currentTimer = timeLeft;
+
       io.to(pollId).emit('timerUpdate', timeLeft);
 
       if (timeLeft <= 0) {
@@ -154,7 +159,9 @@ function sockets(io, socket, data) {
     const sanitizedQuestion = {
       id: question.id,
       text: question.text,
-      answers: question.answers.map(a => ({ id: a.id, text: a.text }))
+      answers: question.answers.map(a => ({ id: a.id, text: a.text })),
+      currentNumber: poll.currentQuestion + 1, // +1 eftersom currentQuestion börjar på 0
+      totalQuestions: poll.settings.nrOfQuestions
     };
 
     io.to(d.pollId).emit('questionUpdate', sanitizedQuestion);

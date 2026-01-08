@@ -5,18 +5,16 @@
       <h1>Lobby ID: <span class="highlight">{{ pollId }}</span></h1>
     </header>
 
-    <div class="info-container">
-      <img src="/img/logo.png" alt="Logo" class="poll-logo" />
+<div class="info-container">
+  <img src="/img/logo.png" alt="Logo" class="poll-logo" />
 
-      <div class="timer-wrapper" v-if="question.text && !showResults">
-        <h2 :class="{ 'critical': timer < 10 }">TID KVAR: {{ timer }}s</h2>
-        <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
+  <div v-if="isHost && question.text" class="question-count-display">
+    <h2>FRÅGA: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions }}</span></h2>
+  </div>
 
-        <div class="answers-count">
-          <h3>SVAR: <span class="highlight">{{ answersStatus.answered }}</span></h3>
-        </div>
-      </div>
+  <div class="timer-wrapper" v-if="question.text && !showResults">
     </div>
+</div>
 
     <div class="question-container">
       <div v-if="question.text">
@@ -247,5 +245,16 @@ export default {
 
 .answers-count h3 {
   font-size: 1.4rem;
+}
+
+.question-count-display {
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.question-count-display h2 {
+  font-size: 1.8rem;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 </style>
