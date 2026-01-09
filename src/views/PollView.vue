@@ -12,8 +12,14 @@
     <h2>FRÅGA: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions }}</span></h2>
   </div>
 
-  <div class="timer-wrapper" v-if="question.text && !showResults">
+<div class="timer-wrapper" v-if="question.text && !showResults">
+    <h2 :class="{ 'critical': timer < 10 }">TID KVAR: {{ timer }}s</h2>
+    <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
+
+    <div class="answers-count">
+        <h3>SVAR: <span class="highlight">{{ answersStatus.answered }}</span></h3>
     </div>
+</div>
 </div>
 
     <div class="question-container">
