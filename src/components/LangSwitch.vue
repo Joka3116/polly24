@@ -9,17 +9,30 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 
 const emit = defineEmits(['switch-language']);
 const currentLang = ref((localStorage.getItem("lang") || "en").toUpperCase());
 
-const toggleLang = () => {
-    currentLang.value = currentLang.value === 'EN' ? 'SV' : 'EN';
-    const langCode = currentLang.value.toLowerCase();
-    localStorage.setItem("lang", langCode);
-    emit('switch-language', langCode);
+const updateLangState = () => {
+    currentLang.value = (localStorage.getItem("lang") || "en").toUpperCase();
 };
+
+const toggleLang = () => {
+    const newLang = currentLang.value === 'EN' ? 'sv' : 'en';
+    localStorage.setItem("lang", newLang);
+    window.dispatchEvent(new Event('lang-change'));
+    emit('switch-language', newLang);
+    updateLangState();
+};
+
+onMounted(() => {
+    window.addEventListener('lang-change', updateLangState);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('lang-change', updateLangState);
+});
 </script>
 
 <style scoped>
@@ -90,7 +103,7 @@ const toggleLang = () => {
         height: 100%;
     }
     .lang-switch-text-container {
-        font-size: 1.8rem !important;
+        font-size: 1.8rem;
     }
 }
 </style>
