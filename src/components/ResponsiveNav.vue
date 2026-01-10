@@ -24,30 +24,35 @@
     </nav>
 </template>
 
-<script>
-import LangSwitch from "./LangSwitch.vue";
+<script setup>
+import { ref, watch } from 'vue';
 
-export default {
-    name: "ResponsiveNav",
-    components: {
-        LangSwitch,
-    },
-    data() {
-        return {
-            isMenuOpen: false,
-        };
-    },
-    methods: {
-        toggleMenu() {
-            this.isMenuOpen = !this.isMenuOpen;
-        },
-        handleOverlayClick(event) {
-            if (!event.target.closest('.lang-switch-container')) {
-                this.isMenuOpen = false;
-            }
-        },
-    },
+const isMenuOpen = ref(false);
+
+const toggleMenu = () => {
+    isMenuOpen.value = !isMenuOpen.value;
 };
+
+const handleOverlayClick = (event) => {
+    if (!event.target.closest('.lang-switch-container')) {
+        isMenuOpen.value = false;
+    }
+};
+
+const getScrollbarWidth = () => {
+    return window.innerWidth - document.documentElement.clientWidth;
+};
+
+watch(isMenuOpen, (isOpen) => {
+    if (isOpen) {
+        const scrollbarWidth = getScrollbarWidth();
+        document.body.style.overflow = 'hidden';
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+    } else {
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    }
+});
 </script>
 
 <style scoped>
