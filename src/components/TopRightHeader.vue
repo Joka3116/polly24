@@ -7,8 +7,8 @@
 <style scoped>
 .top-right-header {
     position: absolute;
-    right: 140px;
-    top: 62px;
+    right: calc(8.75rem + var(--scrollbar-gap, 0px));
+    top: 3.875rem;
     z-index: 2;
     text-align: right;
     font-size: 1.2rem;
@@ -25,8 +25,8 @@
 @media (max-width: 768px) {
     .top-right-header {
         position: absolute;
-        right: 100px;
-        top: 37px; 
+        right: calc(6.25rem + var(--scrollbar-gap, 0px));
+        top: 2.3125rem; 
         font-size: 1rem;
     }
 }

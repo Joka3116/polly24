@@ -47,9 +47,11 @@ watch(isMenuOpen, (isOpen) => {
     if (isOpen) {
         const scrollbarWidth = getScrollbarWidth();
         document.body.style.overflow = 'hidden';
+        document.body.style.setProperty('--scrollbar-gap', `${scrollbarWidth}px`);
         document.body.style.paddingRight = `${scrollbarWidth}px`;
     } else {
         document.body.style.overflow = '';
+        document.body.style.removeProperty('--scrollbar-gap');
         document.body.style.paddingRight = '';
     }
 });
@@ -58,8 +60,8 @@ watch(isMenuOpen, (isOpen) => {
 <style scoped>
 .top-right-header {
     position: fixed;
-    right: 140px;
-    top: 62px;
+    right: calc(8.75rem + var(--scrollbar-gap, 0px));
+    top: 3.875rem;
     text-align: right;
     font-size: 1.2rem;
     font-family: "bebas-kai", sans-serif;
@@ -74,8 +76,8 @@ watch(isMenuOpen, (isOpen) => {
 }
 @media (max-width: 768px) {
     .top-right-header {
-        right: 100px;
-        top: 37px; 
+        right: calc(6.25rem + var(--scrollbar-gap, 0px));
+        top: 2.3125rem; 
         font-size: 1rem;
     }
 }
@@ -105,7 +107,7 @@ nav ul {
     position: fixed;
     /* Use REM for positioning so it respects user base font settings */
     top: 2.5rem; /* was 40px */
-    right: 2.5rem; /* was 40px */
+    right: calc(2.5rem + var(--scrollbar-gap, 0px)); /* was 40px */
 
     /* Use REM for sizing the click target */
     width: 4.875rem; /* was 78px */
@@ -199,7 +201,7 @@ nav ul {
         width: 4rem; /* was 64px */
         height: 4rem; /* was 64px */
         top: 1.25rem; /* was 20px */
-        right: 1.25rem;
+        right: calc(1.25rem + var(--scrollbar-gap, 0px));
     }
 
     /*
