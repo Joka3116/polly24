@@ -15,27 +15,11 @@
                 {{ uiLabels.play || "PLAY!" }}
             </button>
 
-            <div v-else class="game-input-area">
-                <input
-                    type="text"
-                    class="input-main"
-                    v-model="newGameId"
-                    :placeholder="uiLabels['gameID'] || 'Game ID'"
-                    v-on:keyup.enter="joinGame"
-                />
-
-                <button class="btn-main" @click="joinGame">
-                    {{ uiLabels.join || "JOIN!" }}
-                </button>
-
-                <button
-                    v-if="showGameInput"
-                    class="back-btn"
-                    @click="showGameInput = false"
-                >
-                    <i class="bi bi-x-lg"></i>
-                </button>
-            </div>
+            <GameInput
+                v-else
+                :uiLabels="uiLabels"
+                @cancel="showGameInput = false"
+            />
 
             <button
                 v-if="!showGameInput"
@@ -63,31 +47,13 @@
         <LangSwitch @switch-language="switchLanguage" />  
     </ResponsiveNav>
     
-    <div
-        v-if="showErrorModal"
-        class="modal-overlay"
-        @click="showErrorModal = false"
-    >
-        <div class="panel-card" @click.stop>
-            <h2>{{ uiLabels.errorTitle || "USER ERROR" }}</h2>
 
-            <p>
-                {{
-                    uiLabels.serverMissing ||
-                    "Impressively incorrect. This node is deader than the code it's running on..."
-                }}
-            </p>
-
-            <button class="btn-main" @click="showErrorModal = false">
-                {{ uiLabels.okButton || "UNDERSTOOD" }}
-            </button>
-        </div>
-    </div>
 </template>
 
 <script>
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
 import LangSwitch from "@/components/LangSwitch.vue";
+import GameInput from "@/components/GameInput.vue";
 import socket from "@/clientSocket.js";
 
 export default {
@@ -95,14 +61,13 @@ export default {
     components: {
         ResponsiveNav,
         LangSwitch,
+        GameInput,
     },
     data: function () {
         return {
             uiLabels: {},
-            newGameId: "",
             lang: localStorage.getItem("lang") || "en",
             showGameInput: false,
-            showErrorModal: false,
         };
     },
     created: function () {
@@ -110,20 +75,6 @@ export default {
         socket.emit("getUILabels", this.lang);
     },
     methods: {
-        joinGame: function () {
-            if (!this.newGameId) return;
-
-            socket.emit("checkPollExists", this.newGameId);
-
-            socket.once("pollExistsResponse", (exists) => {
-                if (exists) {
-                    this.$router.push("/lobby/" + this.newGameId);
-                } else {
-                    this.showErrorModal = true;
-                }
-            });
-        },
-
         switchLanguage: function (lang) {
             if (lang) {
                this.lang = lang; 
@@ -179,25 +130,4 @@ main {
     margin-top: 1rem;
 }
 
-.game-input-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-    width: 100%;
-}
-
-.back-btn {
-    background: var(--button-background-color);
-    border: 2px solid var(--button-color);
-    color: var(--button-color);
-    font-size: 1.5rem;
-    font-weight: bold;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 0 12px var(--button-color);
-    transition: 0.2s ease;
-}
 </style>
