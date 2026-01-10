@@ -7,27 +7,28 @@
     
     <main>
         <div class="button-group">
-            <button
-                v-if="!showGameInput"
-                class="btn-main"
-                @click="showGameInput = true"
-            >
-                {{ uiLabels.play || "PLAY!" }}
-            </button>
+            <Transition name="slide-fade" mode="out-in">
+                <div v-if="!showGameInput" class="menu-buttons">
+                    <button
+                        class="btn-main"
+                        @click="showGameInput = true"
+                    >
+                        {{ uiLabels.play || "PLAY!" }}
+                    </button>
+                    <button
+                        class="btn-main"
+                        @click="$router.push('/create')"
+                    >
+                        {{ uiLabels["createGame"] || "CREATE!" }}
+                    </button>
+                </div>
 
-            <GameInput
-                v-else
-                :uiLabels="uiLabels"
-                @cancel="showGameInput = false"
-            />
-
-            <button
-                v-if="!showGameInput"
-                class="btn-main"
-                @click="$router.push('/create')"
-            >
-                {{ uiLabels["createGame"] || "CREATE!" }}
-            </button>
+                <GameInput
+                    v-else
+                    :uiLabels="uiLabels"
+                    @cancel="showGameInput = false"
+                />
+            </Transition>
         </div>
         
     </main>
@@ -123,11 +124,35 @@ main {
 }
 
 .button-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+    min-height: 12rem; /* Reserve space to prevent jumpiness, adjust as needed */
+}
+
+.menu-buttons {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1.5rem;
-    margin-top: 1rem;
+    width: 100%;
+}
+
+/* Transitions */
+.slide-fade-enter-active {
+    transition: all 0.15s ease-out;
+}
+
+.slide-fade-leave-active {
+    transition: all 0.15s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+    transform: translateY(20px);
+    opacity: 0;
 }
 
 </style>

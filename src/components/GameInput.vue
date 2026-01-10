@@ -101,4 +101,17 @@ function emitCancel() {
     box-shadow: 0 0 12px var(--button-color);
     transition: 0.2s ease;
 }
+
+.back-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+    filter: brightness(1.1);
+}
+.back-btn i {
+    transition: font-size 0.2s ease;
+}
+
+.back-btn:hover i {
+    font-size: 2rem;
+}
 </style>
