@@ -69,12 +69,13 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 8dvh;
+    padding-top: clamp(8rem, 8dvh, 10rem);
+    margin-bottom: 3rem;
 }
 
 @media (min-width: 1024px) {
     header {
-        padding-top: 12dvh;
+        padding-top: clamp(10rem, 8dvh, 12rem);
     }
 }
 header h1,
@@ -84,7 +85,10 @@ h2 {
     text-shadow:
         0 0 10px rgba(255, 215, 0, 0.8),
         0 0 20px rgba(0, 0, 0, 0.9);
-    margin-bottom: 2rem;
+}
+h2 {
+    margin-bottom: 1.5rem;
+    text-wrap: balance;
 }
 main p {
     font-size: 1.1rem;
@@ -93,8 +97,8 @@ main p {
     line-height: 1.8;
 }
 .about-content {
-    max-width: 700px;
-    margin: 0 auto;
+    max-width: 1024px;
+    margin: 0 auto 3rem auto;
     padding: 2rem;
     background-color: rgba(10, 48, 76, 0.7);
     border-radius: 16px;

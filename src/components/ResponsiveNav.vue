@@ -210,6 +210,14 @@ nav ul {
     #hamburger-line-two {
         width: 25%; /* approx 16px of 64px */
     }
+
+    /* Reduce menu item sizes on mobile */
+    #nav-overlay-container ul :deep(li a) {
+        font-size: 1.8rem !important;
+        padding: 0.5em !important;
+        margin: 1.5rem !important;
+        min-width: 70vw !important;
+    }
 }
 
 /* =========================================

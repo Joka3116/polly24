@@ -77,4 +77,20 @@ const toggleLang = () => {
   color: var(--background-alt-color);
 }
 
+/* =========================================
+   Mobile Breakpoint
+   ========================================= */
+@media (max-width: 768px) {
+    .lang-switch-container {
+        width: 6rem !important;
+        height: 3rem !important;
+    }
+    .lang-switch-circle {
+        width: 50%;
+        height: 100%;
+    }
+    .lang-switch-text-container {
+        font-size: 1.8rem !important;
+    }
+}
 </style>
