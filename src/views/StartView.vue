@@ -113,9 +113,9 @@ export default {
         joinGame: function () {
             if (!this.newGameId) return;
 
-            socket.emit("checkGameExists", this.newGameId);
+            socket.emit("checkPollExists", this.newGameId);
 
-            socket.once("gameExistsResponse", (exists) => {
+            socket.once("pollExistsResponse", (exists) => {
                 if (exists) {
                     this.$router.push("/lobby/" + this.newGameId);
                 } else {
