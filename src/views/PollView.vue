@@ -1,9 +1,13 @@
 <template>
-  <div class="poll-view">
+  <TopRightHeader />
+  <header>
+    <h1>SPELA OCH VINN!</h1>
+  </header>
+  <main>
+  
+    <div class="poll-view">
 
-    <header class="poll-header">
-      <h1>Lobby ID: <span class="highlight">{{ pollId }}</span></h1>
-    </header>
+    <LobbyLicensePlate :pollId="pollId" />
 
 <div class="info-container">
   <img src="/img/logo.png" alt="Logo" class="poll-logo" />
@@ -43,16 +47,40 @@
       </div>
     </div>
   </div>
+</main>
+<ResponsiveNav>
+  <router-link to="/about/">
+    {{ uiLabels.about || "ABOUT!" }}
+  </router-link>
+  <router-link to="/faq/">
+    {{ uiLabels.faq || "FAQ!" }}
+  </router-link>
+  <router-link to="/lobby/">
+    {{ uiLabels.play || "PLAY!" }}
+  </router-link>
+  <router-link to="/create/">
+    {{ uiLabels["createGame"] || "CREATE!" }}
+  </router-link>
+  <LangSwitch @switch-language="switchLanguage" />  
+</ResponsiveNav>
 </template>
 
 <script>
 import QuestionComponent from '@/components/QuestionComponent.vue';
 import socket from "@/socket.js";
+import ResponsiveNav from "@/components/ResponsiveNav.vue";
+import TopRightHeader from "@/components/TopRightHeader.vue";
+import LangSwitch from "@/components/LangSwitch.vue";
+import LobbyLicensePlate from "@/components/LobbyLicensePlate.vue";
 
 export default {
   name: 'PollView',
   components: {
-    QuestionComponent
+    QuestionComponent,
+    ResponsiveNav,
+    TopRightHeader,
+    LangSwitch,
+    LobbyLicensePlate
   },
   data: function () {
     return {
@@ -140,10 +168,39 @@ export default {
 </script>
 
 <style scoped>
-.poll-view {
-  background-color: var(--background-color, #3a0b3a);
+  header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: clamp(8rem, 8dvh, 10rem);
+}
 
-  min-height: 100vh;
+@media (min-width: 1024px) {
+    header {
+        padding-top: clamp(10rem, 8dvh, 12rem);
+    }
+}
+
+header h1,
+h2 {
+    color: var(--headline-color);
+    text-align: center;
+    text-shadow:
+        0 0 10px rgba(255, 215, 0, 0.8),
+        0 0 20px rgba(0, 0, 0, 0.9);
+}
+h3 {
+  font-size: 2.5rem;
+  text-wrap: nowrap;
+}
+header p {
+    color: var(--headline-color);
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+}
+.poll-view {
   display: flex;
   flex-direction: column;
   align-items: center;
