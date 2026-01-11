@@ -1,8 +1,13 @@
 <template>
+  <TopRightHeader />
+  <header>
+    <h1>{{ uiLabels.lobbyTitle  || "Lobby" }}</h1>
+    <p>{{ uiLabels.lobbySubtitle  || "Vänta på att spelet ska starta" }}</p>
+  </header>
+  <main>
   <div class="lobby-view">
-    <header class="lobby-header">
-      <h1>Lobby ID: <span class="highlight">{{ pollId }}</span></h1>
-    </header>
+    
+    <LobbyLicensePlate :pollId="pollId" />
 
     <div v-if="!joined" class="join-container panel-card">
       <h2>{{ uiLabels.participateInPoll || "Enter Name" }}</h2>
@@ -27,7 +32,7 @@
 
       <div v-if="isHost" class="host-controls">
         <button class="btn-main" v-on:click="runQuiz">
-          STARTA SPELET
+          {{ uiLabels.startGame || "STARTA SPELET" }}
         </button>
       </div>
 
@@ -57,11 +62,30 @@
       </div>
     </div>
   </div>
+  </main>
+  <ResponsiveNav>
+        <router-link to="/about/">
+            {{ uiLabels.about || "ABOUT!" }}
+        </router-link>
+        <router-link to="/faq/">
+            {{ uiLabels.faq || "FAQ!" }}
+        </router-link>
+        <router-link to="/lobby/">
+            {{ uiLabels.play || "PLAY!" }}
+        </router-link>
+        <router-link to="/create/">
+            {{ uiLabels["createGame"] || "CREATE!" }}
+        </router-link>
+        <LangSwitch @switch-language="switchLanguage" />  
+    </ResponsiveNav>
 </template>
 
 <script>
 import socket from "@/socket.js";
-
+import LobbyLicensePlate from "@/components/LobbyLicensePlate.vue";
+import ResponsiveNav from "@/components/ResponsiveNav.vue";
+import LangSwitch from "@/components/LangSwitch.vue";
+import TopRightHeader from "@/components/TopRightHeader.vue";
 
 export default {
   name: 'LobbyView',
@@ -81,6 +105,24 @@ export default {
 
     }
   },
+  components: {
+    LobbyLicensePlate,
+    ResponsiveNav,
+    LangSwitch,
+    TopRightHeader,
+  },
+  methods: {
+        switchLanguage: function (lang) {
+            if (lang) {
+               this.lang = lang; 
+            } else {
+                // Fallback / toggle if called without argument (though LangSwitch provides it now)
+                this.lang = this.lang === "en" ? "sv" : "en";
+            }
+            localStorage.setItem("lang", this.lang);
+            socket.emit("getUILabels", this.lang);
+        },
+    },
   computed: {
     displayParticipants() {
       // Ganska stor ändring här för att programmet ska godkänna unika användarnamn. 
@@ -159,9 +201,40 @@ export default {
 </script>
 
 <style scoped>
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: clamp(8rem, 8dvh, 10rem);
+}
+
+@media (min-width: 1024px) {
+    header {
+        padding-top: clamp(10rem, 8dvh, 12rem);
+    }
+}
+
+header h1,
+h2 {
+    color: var(--headline-color);
+    text-align: center;
+    text-shadow:
+        0 0 10px rgba(255, 215, 0, 0.8),
+        0 0 20px rgba(0, 0, 0, 0.9);
+}
+h3 {
+  font-size: 2.5rem;
+  text-wrap: nowrap;
+}
+header p {
+    color: var(--headline-color);
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    font-size: 1.5rem;
+}
+
 .lobby-view {
-  background-color: var(--background-color);
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -250,9 +323,7 @@ export default {
   width: 100%;
 }
 
-
 .participant-card {
-
   background: grey;
   border: 2px solid #bbb;
   border-radius: 50px;
@@ -267,13 +338,11 @@ export default {
   animation: popIn 0.3s ease-out;
 }
 
-
 .participant-card.is-me {
   border-color: gold;
   color: white;
   transform: scale(1.05);
   box-shadow: 0 0 10px gold;
-
 }
 
 .participant-card.ready {

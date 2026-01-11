@@ -3,7 +3,7 @@
     <div class="plate-screw top-left">+</div>
     <div class="plate-screw top-right">+</div>
     <span class="plate-header">LOBBY ID</span>
-    <span class="plate-number">{{ pollId }}</span>
+    <span class="plate-number">{{ pollId || "----" }}</span>
     <div class="plate-screw bottom-left">+</div>
     <div class="plate-screw bottom-right">+</div>
   </div>
@@ -13,7 +13,8 @@
 defineProps({
   pollId: {
     type: [String, Number],
-    required: true
+    required: false,
+    default: ""
   }
 })
 </script>

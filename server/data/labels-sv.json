@@ -54,5 +54,8 @@
   "questions": "frågor",
   "easyQuestions": "Lätta",
   "mediumQuestions": "Lagom",
-  "hardQuestions": "Svåra"
+  "hardQuestions": "Svåra",
+  "lobbyTitle": "Spelets lobby",
+  "lobbySubtitle": "Vänta på att spelet ska starta",
+  "startGame": "Starta spelet"
 }
