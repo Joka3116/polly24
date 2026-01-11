@@ -18,6 +18,8 @@ function sockets(io, socket, data) {
     let poll = data.getPoll(d.pollId);
     if (poll.questions && poll.questions.length > 0) return;
 
+    poll.currentQuestion = 0;
+
     console.log("--- BILLIONAIRE ENGINE INITIATED ---");
     let question = await data.getRandomQuestion(d.language || "en");
 
@@ -28,7 +30,7 @@ function sockets(io, socket, data) {
       text: question.text,
       answers: question.answers.map(a => ({ id: a.id, text: a.text })),
       currentNumber: poll.currentQuestion + 1, // +1 eftersom currentQuestion börjar på 0
-    totalQuestions: poll.settings.nrOfQuestions
+      totalQuestions: poll.settings.nrOfQuestions
     };
 
 
@@ -92,19 +94,25 @@ function sockets(io, socket, data) {
     io.to(d.pollId).emit('answersUpdate', { answered: answeredCount, total: totalPlayers });
 
     if (answeredCount >= totalPlayers && totalPlayers > 0) {
-      if (timers[d.pollId]) clearInterval(timers[d.pollId]);
+      if (timers[d.pollId]) {
+        clearInterval(timers[d.pollId]);
+        delete timers[d.pollId];
+      }
 
-      const correctId = data.getCorrectAnswerId(d.pollId);
-      io.to(d.pollId).emit('showResults', correctId);
+      endOfQuestion(io, data, d.pollId);
     }
+
   });
 
+  socket.on('forceEndQuestion', d => {
+    if (timers[d.pollId]) {
+      clearInterval(timers[d.pollId]);
+      delete timers[d.pollId];
+    }
 
-  socket.on('showResults', function (d) {
-    if (timers[d.pollId]) clearInterval(timers[d.pollId]);
-    const correctId = data.getCorrectAnswerId(d.pollId);
-    io.to(d.pollId).emit('showResults', correctId);
+    endOfQuestion(io, data, d.pollId);
   });
+
 
   socket.on('checkPollExists', function (pollId) {
     const exists = data.pollExists(pollId);
@@ -134,54 +142,63 @@ function sockets(io, socket, data) {
       if (timeLeft <= 0) {
         clearInterval(timers[pollId]);
         delete timers[pollId];
-        io.to(pollId).emit('showResults');
+        endOfQuestion(io, data, pollId);
       }
     }, 1000);
   }
 
-socket.on('runQuestion', async function (d) {
-    let poll = data.getPoll(d.pollId);
+  socket.on('runQuestion', async function (d) {
+    const poll = data.getPoll(d.pollId);
     if (!poll || !poll.settings) return;
 
-    if (poll.questions.length >= poll.settings.nrOfQuestions) {
-     
-        io.to(d.pollId).emit('gameOver', { reason: 'Limit reached' });
-        return;
+
+    if (poll.currentQuestion + 1 >= poll.settings.nrOfQuestions) {
+      return;
     }
 
     poll.currentQuestion++;
 
     const usedIds = poll.questions.map(q => q.id);
+    const question = await data.getRandomQuestion(
+      poll.lang || "sv",
+      usedIds
+    );
 
-    let question = await data.getRandomQuestion(poll.lang || "sv", usedIds);
+    if (!question) return;
 
-    if (question) {
-        data.addQuestion(d.pollId, question);
+    data.addQuestion(d.pollId, question);
 
-  
-        const sanitizedQuestion = {
-            id: question.id,
-            text: question.text,
-         
-            answers: question.answers.map(a => ({ id: a.id, text: a.text })),
-         
-            currentNumber: poll.currentQuestion + 1,
-            totalQuestions: poll.settings.nrOfQuestions
-        };
+    const sanitizedQuestion = {
+      id: question.id,
+      text: question.text,
+      answers: question.answers.map(a => ({
+        id: a.id,
+        text: a.text
+      })),
+      currentNumber: poll.currentQuestion + 1,
+      totalQuestions: poll.settings.nrOfQuestions
+    };
+
+    io.to(d.pollId).emit('questionUpdate', sanitizedQuestion);
+    io.to(d.pollId).emit('submittedAnswersUpdate', {});
+    io.to(d.pollId).emit('hideResults');
+
+    startTimer(d.pollId, poll.settings.difficulty);
+  });
 
 
-        io.to(d.pollId).emit('questionUpdate', sanitizedQuestion);
+  function endOfQuestion(io, data, pollId) {
+    const poll = data.getPoll(pollId);
+    const correctId = data.getCorrectAnswerId(pollId);
 
+    io.to(pollId).emit('showResults', correctId);
 
-        io.to(d.pollId).emit('submittedAnswersUpdate', {});
-        io.to(d.pollId).emit('hideResults');
-
-
-        startTimer(d.pollId, poll.settings.difficulty);
+    if (poll.currentQuestion + 1 >= poll.settings.nrOfQuestions) {
+      setTimeout(() => {
+        io.to(pollId).emit('gameOver');
+      }, 5000);
     }
-});
-
-
-}
+  }
+};
 
 export { sockets };

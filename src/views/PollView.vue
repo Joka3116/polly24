@@ -5,22 +5,22 @@
       <h1>Lobby ID: <span class="highlight">{{ pollId }}</span></h1>
     </header>
 
-<div class="info-container">
-  <img src="/img/logo.png" alt="Logo" class="poll-logo" />
+    <div class="info-container">
+      <img src="/img/logo.png" alt="Logo" class="poll-logo" />
 
-  <div v-if="isHost && question.text" class="question-count-display">
-    <h2>FRÅGA: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions }}</span></h2>
-  </div>
+      <div v-if="isHost && question.text" class="question-count-display">
+        <h2>FRÅGA: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions }}</span></h2>
+      </div>
 
-<div class="timer-wrapper" v-if="question.text && !showResults">
-    <h2 :class="{ 'critical': timer < 10 }">TID KVAR: {{ timer }}s</h2>
-    <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
+      <div class="timer-wrapper" v-if="question.text && !showResults">
+        <h2 :class="{ 'critical': timer < 10 }">TID KVAR: {{ timer }}s</h2>
+        <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
 
-    <div class="answers-count">
-        <h3>SVAR: <span class="highlight">{{ answersStatus.answered }}</span></h3>
+        <div class="answers-count">
+          <h3>SVAR: <span class="highlight">{{ answersStatus.answered }}</span></h3>
+        </div>
+      </div>
     </div>
-</div>
-</div>
 
     <div class="question-container">
       <div v-if="question.text">
@@ -29,9 +29,16 @@
           v-on:answer="submitAnswer($event)" />
 
         <div v-if="isHost" class="host-controls">
-          <button v-if="!showResults" class="btn-main" @click="revealAnswer">VISA SVAR</button>
-          <button v-else class="btn-main" @click="runNextQuestion">NÄSTA FRÅGA</button>
+          <button v-if="!showResults" class="btn-main" @click="revealAnswer">
+            VISA SVAR
+          </button>
+
+          <button v-else-if="question.currentNumber < question.totalQuestions" class="btn-main"
+            @click="runNextQuestion">
+            NÄSTA FRÅGA
+          </button>
         </div>
+
       </div>
 
       <div v-else class="waiting-screen">
@@ -67,7 +74,24 @@ export default {
       timer: 0,
       timeExpired: false,
       answersStatus: { answered: 0, total: 0 },
-      correctAnswerId: null
+      correctAnswerId: null,
+      isGameOver: false,
+      gameOverTimeout: null
+    }
+  },
+
+  beforeUnmount() {
+    socket.off("questionUpdate");
+    socket.off("showResults");
+    socket.off("timerUpdate");
+    socket.off("hideResults");
+    socket.off("submittedAnswersUpdate");
+    socket.off("participantsUpdate");
+    socket.off("answersUpdate");
+    socket.off("uiLabels");
+
+    if (this.gameOverTimeout) {
+      clearTimeout(this.gameOverTimeout);
     }
   },
 
@@ -76,19 +100,20 @@ export default {
     this.isHost = localStorage.getItem("isHost") === "true";
 
     socket.on("questionUpdate", q => {
-      this.question = q || { text: "", answers: [] }; // Säkerställer att det aldrig blir null
+      this.question = q || { text: "", answers: [] };
       this.showResults = false;
       this.answersStatus.answered = 0;
+      this.isGameOver = false;
     });
 
+
     socket.on("showResults", (correctId) => {
-      this.correctAnswerId = correctId;
+      if (correctId !== undefined) {
+        this.correctAnswerId = correctId;
+      }
       this.showResults = true;
     });
 
-    socket.on("hideResults", () => {
-      this.showResults = false;
-    });
 
     socket.on("timerUpdate", t => {
       this.timer = t;
@@ -98,6 +123,15 @@ export default {
     socket.on("hideResults", () => {
       this.showResults = false;
       this.timeExpired = false;
+    });
+
+    socket.on("gameOver", () => {
+      this.isGameOver = true;
+      this.showResults = true;
+
+      this.gameOverTimeout = setTimeout(() => {
+        this.$router.push(`/result/${this.pollId}`);
+      }, 5000);
     });
 
     socket.on("submittedAnswersUpdate", answers => this.submittedAnswers = answers);
@@ -132,7 +166,7 @@ export default {
       }
     },
     revealAnswer: function () {
-      socket.emit("showResults", { pollId: this.pollId });
+      socket.emit('forceEndQuestion', { pollId: this.pollId });
     }
   }
 }
