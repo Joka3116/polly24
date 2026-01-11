@@ -11,37 +11,76 @@
                         <slot></slot>
                     </li>
                 </ul>
+                <div class="top-right-header">
+                    <router-link to="/">Who wants to be<br>a millionaire?</router-link>
+        </div>
             </div>
         </div>
+        
         <div id="hamburger" :class="{ active: isMenuOpen }" @click="toggleMenu">
             <span id="hamburger-line-one"></span>
             <span id="hamburger-line-two"></span>
-        </div>
+        </div>    
     </nav>
 </template>
 
-<script>
-export default {
-    name: "ResponsiveNav",
-    data() {
-        return {
-            isMenuOpen: false,
-        };
-    },
-    methods: {
-        toggleMenu() {
-            this.isMenuOpen = !this.isMenuOpen;
-        },
-        handleOverlayClick(event) {
-            // NOT USED, BUT COOL: Check if the clicked element (or its parents) is a link or button
-            // const clickedElement = event.target.closest("a, button");
-            this.isMenuOpen = false;
-        },
-    },
+<script setup>
+import { ref, watch } from 'vue';
+
+const isMenuOpen = ref(false);
+
+const toggleMenu = () => {
+    isMenuOpen.value = !isMenuOpen.value;
 };
+
+const handleOverlayClick = (event) => {
+    if (!event.target.closest('.lang-switch-container')) {
+        isMenuOpen.value = false;
+    }
+};
+
+const getScrollbarWidth = () => {
+    return window.innerWidth - document.documentElement.clientWidth;
+};
+
+watch(isMenuOpen, (isOpen) => {
+    if (isOpen) {
+        const scrollbarWidth = getScrollbarWidth();
+        document.body.style.overflow = 'hidden';
+        document.body.style.setProperty('--scrollbar-gap', `${scrollbarWidth}px`);
+        document.body.style.paddingRight = `${scrollbarWidth}px`;
+    } else {
+        document.body.style.overflow = '';
+        document.body.style.removeProperty('--scrollbar-gap');
+        document.body.style.paddingRight = '';
+    }
+});
 </script>
 
 <style scoped>
+.top-right-header {
+    position: fixed;
+    right: calc(8.75rem + var(--scrollbar-gap, 0px));
+    top: 3.875rem;
+    text-align: right;
+    font-size: 1.2rem;
+    font-family: "bebas-kai", sans-serif;
+    text-transform: uppercase;
+}
+.top-right-header :deep(a) {
+    color: var(--foreground-alt-color) !important;
+    text-decoration: none;
+}
+.top-right-header :deep(a):hover {
+    text-decoration: underline;
+}
+@media (max-width: 768px) {
+    .top-right-header {
+        right: calc(6.25rem + var(--scrollbar-gap, 0px));
+        top: 2.3125rem; 
+        font-size: 1rem;
+    }
+}
 /* =========================================
    Navigation Container
    ========================================= */
@@ -68,7 +107,7 @@ nav ul {
     position: fixed;
     /* Use REM for positioning so it respects user base font settings */
     top: 2.5rem; /* was 40px */
-    right: 2.5rem; /* was 40px */
+    right: calc(2.5rem + var(--scrollbar-gap, 0px)); /* was 40px */
 
     /* Use REM for sizing the click target */
     width: 4.875rem; /* was 78px */
@@ -162,7 +201,7 @@ nav ul {
         width: 4rem; /* was 64px */
         height: 4rem; /* was 64px */
         top: 1.25rem; /* was 20px */
-        right: 1.25rem;
+        right: calc(1.25rem + var(--scrollbar-gap, 0px));
     }
 
     /*
@@ -177,6 +216,14 @@ nav ul {
     }
     #hamburger-line-two {
         width: 25%; /* approx 16px of 64px */
+    }
+
+    /* Reduce menu item sizes on mobile */
+    #nav-overlay-container ul :deep(li a) {
+        font-size: 1.8rem !important;
+        padding: 0.5em !important;
+        margin: 1.5rem !important;
+        min-width: 70vw !important;
     }
 }
 
@@ -195,7 +242,7 @@ nav ul {
     height: 100dvh;
 
     background-color: var(--background-alt-color);
-    transition: all 0.4s ease-in-out;
+    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
     z-index: 100;
     opacity: 0;
     visibility: hidden;
@@ -316,5 +363,13 @@ nav ul {
     pointer-events: none;
     cursor: default;
     background-color: transparent !important;
+}
+
+#nav-overlay-container ul :deep(.lang-switch-container) {
+    position: absolute;
+    bottom: 5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
 }
 </style>
