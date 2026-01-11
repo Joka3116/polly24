@@ -11,27 +11,18 @@
                         <slot></slot>
                     </li>
                 </ul>
-                <div class="top-right-header">
-                    <router-link to="/">Who wants to be<br>a millionaire?</router-link>
-        </div>
             </div>
         </div>
-        
         <div id="hamburger" :class="{ active: isMenuOpen }" @click="toggleMenu">
             <span id="hamburger-line-one"></span>
             <span id="hamburger-line-two"></span>
-        </div>    
+        </div>
     </nav>
 </template>
 
 <script>
-import LangSwitch from "./LangSwitch.vue";
-
 export default {
     name: "ResponsiveNav",
-    components: {
-        LangSwitch,
-    },
     data() {
         return {
             isMenuOpen: false,
@@ -42,38 +33,15 @@ export default {
             this.isMenuOpen = !this.isMenuOpen;
         },
         handleOverlayClick(event) {
-            if (!event.target.closest('.lang-switch-container')) {
-                this.isMenuOpen = false;
-            }
+            // NOT USED, BUT COOL: Check if the clicked element (or its parents) is a link or button
+            // const clickedElement = event.target.closest("a, button");
+            this.isMenuOpen = false;
         },
     },
 };
 </script>
 
 <style scoped>
-.top-right-header {
-    position: fixed;
-    right: 140px;
-    top: 62px;
-    text-align: right;
-    font-size: 1.2rem;
-    font-family: "bebas-kai", sans-serif;
-    text-transform: uppercase;
-}
-.top-right-header :deep(a) {
-    color: var(--foreground-alt-color) !important;
-    text-decoration: none;
-}
-.top-right-header :deep(a):hover {
-    text-decoration: underline;
-}
-@media (max-width: 768px) {
-    .top-right-header {
-        right: 100px;
-        top: 37px; 
-        font-size: 1rem;
-    }
-}
 /* =========================================
    Navigation Container
    ========================================= */
@@ -227,7 +195,7 @@ nav ul {
     height: 100dvh;
 
     background-color: var(--background-alt-color);
-    transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+    transition: all 0.4s ease-in-out;
     z-index: 100;
     opacity: 0;
     visibility: hidden;
@@ -348,13 +316,5 @@ nav ul {
     pointer-events: none;
     cursor: default;
     background-color: transparent !important;
-}
-
-#nav-overlay-container ul :deep(.lang-switch-container) {
-    position: absolute;
-    bottom: 5vh;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
 }
 </style>

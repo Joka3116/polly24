@@ -4,7 +4,7 @@
     --background-color: #02050a;
 
     --foreground-alt-color: #02050a;
-    --background-alt-color: #62a5e3;
+    --background-alt-color: #226694;
     --button-background-color: radial-gradient(circle, #512da8, #311b92);
     --button-color: gold;
     --headline-color: gold;
@@ -80,10 +80,10 @@ body:has(#hamburger.active) {
     border: 3px solid var(--button-color);
     border-radius: 50px;
     color: var(--button-color);
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: bold;
     text-align: center;
-    padding: 18px 25px;
+    padding: 12px 25px;
     outline: none;
     width: 100%;
     max-width: 300px;
