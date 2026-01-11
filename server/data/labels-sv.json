@@ -8,7 +8,7 @@
   "changeLanguage": "Change to English",
   "about": "Om oss",
   "participateInPoll": "Delta i spelet",
-  "createGame": "SKAPA",
+  "createGame": "Skapa",
   "play": "SPELA",
   "join": "DELTA",
   "gameID": "Skriv spel id:",
@@ -43,5 +43,16 @@
   "faqA5": "Värdet är bundet till din framgång i simuleringen. Systemet garanterar endast intellektuell dominans... än så länge.",
   "timeLeft": "Tid kvar:",
   "group": "grupp",
-  "uu": "Uppsala universitet"
+  "uu": "Uppsala universitet",
+  "difficultyLevel": "Välj svårighetsgrad",
+  "numOfQuestions": "Antal frågor",
+  "easy": "Lätt",
+  "medium": "Lagom",
+  "hard": "Svårt",
+  "createGameNow": "Skapa spel",
+  "createSubTitle": "Här kan du skapa ett spel",
+  "questions": "frågor",
+  "easyQuestions": "Lätta",
+  "mediumQuestions": "Lagom",
+  "hardQuestions": "Svåra"
 }

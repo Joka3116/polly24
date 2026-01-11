@@ -8,7 +8,7 @@
   "changeLanguage": "Byt till svenska",
   "about": "About",
   "participateInPoll": "Participate in game",
-  "createGame": "CREATE",
+  "createGame": "Create",
   "play": "PLAY",
   "join": "JOIN",
   "gameID": "Write game id:",
@@ -43,5 +43,16 @@
   "faqA5": "The value is tied to your success in the simulation. The system guarantees only intellectual dominance... for now.",
   "timeLeft": "Time left:",
   "group": "group",
-  "uu": "Uppsala University"
+  "uu": "Uppsala University",
+  "difficultyLevel": "Difficulty Level",
+  "numOfQuestions": "Number of Questions",
+  "easy": "Easy",
+  "medium": "Medium",
+  "hard": "Hard",
+  "createGameNow": "Create Game",
+  "createSubTitle": "Here you can create a game",
+  "questions": "questions",
+  "easyQuestions": "easy",
+  "mediumQuestions": "medium",
+  "hardQuestions": "hard"
 }
