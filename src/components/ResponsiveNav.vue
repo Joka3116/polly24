@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onBeforeUnmount } from 'vue';
 
 const isMenuOpen = ref(false);
 
@@ -43,6 +43,12 @@ const getScrollbarWidth = () => {
     return window.innerWidth - document.documentElement.clientWidth;
 };
 
+const cleanup = () => {
+    document.body.style.overflow = '';
+    document.body.style.removeProperty('--scrollbar-gap');
+    document.body.style.paddingRight = '';
+};
+
 watch(isMenuOpen, (isOpen) => {
     if (isOpen) {
         const scrollbarWidth = getScrollbarWidth();
@@ -50,9 +56,13 @@ watch(isMenuOpen, (isOpen) => {
         document.body.style.setProperty('--scrollbar-gap', `${scrollbarWidth}px`);
         document.body.style.paddingRight = `${scrollbarWidth}px`;
     } else {
-        document.body.style.overflow = '';
-        document.body.style.removeProperty('--scrollbar-gap');
-        document.body.style.paddingRight = '';
+        cleanup();
+    }
+});
+
+onBeforeUnmount(() => {
+    if (isMenuOpen.value) {
+        cleanup();
     }
 });
 </script>
