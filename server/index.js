@@ -5,7 +5,7 @@ const httpServer = createServer();
 const io = new Server(httpServer, {
   cors: {
     origin: "*",
-    methods: ["GET"],
+methods: ["GET", "POST"], 
     credentials: true
   }
 });
@@ -20,7 +20,7 @@ import { sockets } from "./sockets.js";
 
 let data = new Data();
 
-io.on('connection', function (socket) {
+io.on('connection', function (socket) { 
   sockets(io, socket, data);
 });
 

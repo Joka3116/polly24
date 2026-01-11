@@ -6,11 +6,12 @@
   "participatePoll": "Participate in poll",
   "question": "Question",
   "changeLanguage": "Byt till svenska",
+  "about": "About",
   "participateInPoll": "Participate in game",
-  "createGame": "Create a Game",
-  "play": "Play a Game",
+  "createGame": "CREATE",
+  "play": "PLAY",
   "join": "JOIN",
-  "gameID": "Enter game id",
+  "gameID": "Write game id:",
   "name": "Your name",
   "waitingplayer": "CONFIRM PRESENCE, OPERATOR.",
   "waitinghost": "AWAITING INITIATION...",
@@ -19,7 +20,6 @@
   "ready": "READY",
   "notReady": "NOT READY",
   "home": "Home",
-  "about": "About Us",
   "aboutTitle": "Behind the Scenes: The Billionaire Dreams!",
   "aboutText1": "Welcome to Network 24. This simulation chamber is the last remaining interface to 'The Billionaire Engine.' The system, designed to test the boundaries of human knowledge and greed, was abandoned decades ago, yet its core still powers this challenge. You are one of the few who have managed to reconnect with the active node.",
   "aboutText2": "The system is ancient. Extremely ancient. Our developers have identified that its age has spawned 'personalities' within the code, which we call mini-games and hidden features. These are not bugs—they are Feature Documentation from a bygone era. They reward (or punish) those who dare to explore beyond the standard questions.",
@@ -27,7 +27,7 @@
   "errorTitle": "USER ERROR",
   "serverMissing": "Impressively incorrect. This node is deader than the code it’s running on. The Billionaire Engine doesn't open doors for operators who can't follow simple instructions.",
   "okButton": "UNDERSTOOD",
-  "faq": "FAQ",
+
   "nameErrorTitle": "IDENTITY THEFT",
   "nameTakenMsg": "This operator profile is already active in the node. The Billionaire Engine permits no digital clones. Choose a unique designation or vacate the premises.",
   "faqTitle": "TERMINAL_LOGS: Q&A",
@@ -40,8 +40,6 @@
   "faqQ4": ">> HISTORY: Who built 'The Billionaire Engine'?",
   "faqA4": "The origin is unknown. Some logs point to anonymous architects; others claim it emerged spontaneously from network noise.",
   "faqQ5": ">> WARNING: Are the winnings real?",
-  "faqA5": "The value is tied to your success in the simulation. The system guarantees only intellectual dominance... for now.",
-  "timeLeft": "Time left:",
-  "group": "group",
-  "uu": "Uppsala University"
+  "faqA5": "The value is tied to your success in the simulation. The system guarantees only intellectual dominance... for now."
 }
+  

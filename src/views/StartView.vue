@@ -1,74 +1,96 @@
 <template>
-    <header>
-        <img src="/img/logo.png" alt="Logo" />
-        <h1>{{ uiLabels["sales-pitch"] }}</h1>
-        <h2>{{ uiLabels.subHeading }}</h2>
-    </header>
-    
-    <main>
-        <div class="button-group">
-            <Transition name="slide-fade" mode="out-in">
-                <div v-if="!showGameInput" class="menu-buttons">
-                    <button
-                        class="btn-main"
-                        @click="showGameInput = true"
-                    >
-                        {{ uiLabels.play || "PLAY!" }}
-                    </button>
-                    <button
-                        class="btn-main"
-                        @click="$router.push('/create')"
-                    >
-                        {{ uiLabels["createGame"] || "CREATE!" }}
-                    </button>
-                </div>
+    <div class="content-container">
+  <header>
+    <img src="/img/logo.png" alt="Logo" />
+    <h1>{{ uiLabels["sales-pitch"] }}</h1>
+    <h2>{{ uiLabels.subHeading }}</h2>
+  </header>
+  <main>
+    <div class="button-group">
+      <button 
+        v-if="!showPollInput" 
+        class="btn-main" 
+        @click="showPollInput = true">
+        {{ uiLabels.play || "PLAY!" }}
+      </button>
 
-                <GameInput
-                    v-else
-                    :uiLabels="uiLabels"
-                    @cancel="showGameInput = false"
-                />
-            </Transition>
+<div v-else class="poll-input-area">
+    <input 
+        type="text" 
+        class="input-main" 
+        v-model="newPollId" 
+        :placeholder="uiLabels['gameID'] || 'Game ID'" 
+        v-on:keyup.enter="joinGame"
+    />
+
+    <button class="btn-main" @click="joinGame">
+        {{ uiLabels.join || "JOIN!" }}
+    </button>
+
+                <button 
+  v-if="showPollInput" 
+  class="back-btn"
+  @click="showPollInput = false"
+>
+  <i class="bi bi-x-lg"></i>
+</button>
+
+      </div>
+
+            <button v-if="!showPollInput" class="btn-main" @click="$router.push('/create')">
+                {{ uiLabels["createGame"] || "CREATE!" }}
+            </button>
         </div>
-        
     </main>
+    </div>
     <ResponsiveNav>
+        <router-link to="/">
+            {{ uiLabels.home || "HOME!" }}
+        </router-link>
         <router-link to="/about/">
             {{ uiLabels.about || "ABOUT!" }}
         </router-link>
-        <router-link to="/faq/">
-            {{ uiLabels.faq || "FAQ!" }}
-        </router-link>
-        <router-link to="/lobby/">
+        <router-link to="/lobby/1">
             {{ uiLabels.play || "PLAY!" }}
         </router-link>
         <router-link to="/create/">
             {{ uiLabels["createGame"] || "CREATE!" }}
         </router-link>
-        <LangSwitch @switch-language="switchLanguage" />  
+        <button v-on:click="switchLanguage">
+            {{ uiLabels.changeLanguage }}
+        </button>
     </ResponsiveNav>
-    
 
+<div v-if="showErrorModal" class="modal-overlay" @click="showErrorModal = false">
+  <div class="panel-card" @click.stop>
+    <h2>{{ uiLabels.errorTitle || "USER ERROR" }}</h2>
+    
+    <p>{{ uiLabels.serverMissing || "Impressively incorrect. This node is deader than the code it's running on..." }}</p>
+    
+    <button class="btn-main" @click="showErrorModal = false">
+        {{ uiLabels.okButton || "UNDERSTOOD" }}
+    </button>
+  </div>
+</div>
 </template>
 
 <script>
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
-import LangSwitch from "@/components/LangSwitch.vue";
-import GameInput from "@/components/GameInput.vue";
-import socket from "@/clientSocket.js";
+import socket from "@/socket.js";
 
 export default {
     name: "StartView",
     components: {
         ResponsiveNav,
-        LangSwitch,
-        GameInput,
     },
     data: function () {
         return {
             uiLabels: {},
+            newPollId: "",
             lang: localStorage.getItem("lang") || "en",
-            showGameInput: false,
+            hideNav: true,
+            showPollInput: false,
+            showErrorModal: false,
         };
     },
     created: function () {
@@ -76,26 +98,43 @@ export default {
         socket.emit("getUILabels", this.lang);
     },
     methods: {
-        switchLanguage: function (lang) {
-            if (lang) {
-               this.lang = lang; 
+        joinGame: function () {
+            if (!this.newPollId) return;
+
+            socket.emit('checkPollExists', this.newPollId);
+
+            socket.once('pollExistsResponse', (exists) => {
+                if (exists) {
+                    this.$router.push('/lobby/' + this.newPollId);
+                } else {
+                    this.showErrorModal = true;
+                }
+            });
+        },
+        
+        switchLanguage: function () {
+            if (this.lang === "en") {
+                this.lang = "sv";
             } else {
-                // Fallback / toggle if called without argument (though LangSwitch provides it now)
-                this.lang = this.lang === "en" ? "sv" : "en";
+                this.lang = "en";
             }
             localStorage.setItem("lang", this.lang);
             socket.emit("getUILabels", this.lang);
+        },
+        toggleNav: function () {
+            this.hideNav = !this.hideNav;
         },
     },
 };
 </script>
 
 <style scoped>
+    
 header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 8dvh;
+    padding-top: 4rem;
 }
 
 header img {
@@ -104,35 +143,35 @@ header img {
     max-width: 30rem;
     max-height: 30rem;
     aspect-ratio: 1;
-    padding-bottom: 2rem;
+    padding-bottom: 1.5rem;
 }
 
 header h1,
 h2 {
     color: var(--headline-color);
-    text-shadow:
-        0 0 10px rgba(255, 215, 0, 0.8),
-        0 0 20px rgba(0, 0, 0, 0.9);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.9);
     text-align: center;
-    text-wrap: balance !important;
 }
 
 main {
     color: white;
-    padding-top: 10dvh;
-    padding-bottom: 5rem;
+    padding-top: 5rem;
+    padding-bottom: 10rem;
+}
+
+main a {
+    color: white;
 }
 
 .button-group {
-    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 1rem;
-    min-height: 12rem; /* Reserve space to prevent jumpiness, adjust as needed */
+    gap: 1.5rem;
+    margin-top: 2rem;
 }
 
-.menu-buttons {
+.poll-input-area {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -140,19 +179,18 @@ main {
     width: 100%;
 }
 
-/* Transitions */
-.slide-fade-enter-active {
-    transition: all 0.15s ease-out;
-}
-
-.slide-fade-leave-active {
-    transition: all 0.15s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-    transform: translateY(20px);
-    opacity: 0;
+.back-btn {
+    background: var(--button-background-color);
+    border: 2px solid var(--button-color);
+    color: var(--button-color);
+    font-size: 1.5rem;
+    font-weight: bold;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 12px var(--button-color);
+    transition: 0.2s ease;
 }
 
 </style>

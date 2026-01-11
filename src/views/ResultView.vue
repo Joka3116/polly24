@@ -11,7 +11,7 @@
 <script>
 // @ is an alias to /src
 import BarsComponent from '@/components/BarsComponent.vue';
-import socket from "@/clientSocket.js";
+import socket from "@/socket.js";
 
 export default {
   name: 'ResultView',

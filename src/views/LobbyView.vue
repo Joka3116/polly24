@@ -4,29 +4,10 @@
       <h1>Lobby ID: <span class="highlight">{{ pollId }}</span></h1>
     </header>
 
-    <div v-if="!pollId" class="join-container panel-card">
-      <h2>{{ uiLabels.enterLobbyId || "Enter Lobby ID" }}</h2>
-      <input 
-        type="text" 
-        class="input-main" 
-        v-model="inputPollId" 
-        placeholder="Lobby ID"
-        v-on:keyup.enter="enterLobbyId"
-      >
-      <button class="btn-main" v-on:click="enterLobbyId" :disabled="inputPollId.length < 1">
-        {{ uiLabels.join || "JOIN" }}
-      </button>
-    </div>
-
-    <div v-if="pollId && !joined" class="join-container panel-card">
+    <div v-if="!joined" class="join-container panel-card">
       <h2>{{ uiLabels.participateInPoll || "Enter Name" }}</h2>
-      <input 
-        type="text" 
-        class="input-main" 
-        v-model="userName" 
-        :placeholder="uiLabels['name'] || 'NAME'"
-        v-on:keyup.enter="participateInPoll"
-      >
+      <input type="text" class="input-main" v-model="userName" :placeholder="uiLabels['name'] || 'NAME'"
+        v-on:keyup.enter="participateInPoll">
       <button class="btn-main" v-on:click="participateInPoll" :disabled="userName.length < 1">
         {{ uiLabels["join"] || "JOIN" }}
       </button>
@@ -40,11 +21,7 @@
         <span class="highlight">{{ userName }}</span>!
       </h2>
 
-      <button 
-        v-if="!isHost" 
-        class="btn-main" 
-        :class="{ 'btn-alt': isReady }" 
-        v-on:click="toggleReady">
+      <button v-if="!isHost" class="btn-main" :class="{ 'btn-alt': isReady }" v-on:click="toggleReady">
         {{ isReady ? (uiLabels.notReady || "INTE REDO") : (uiLabels.ready || "REDO") }}
       </button>
 
@@ -80,34 +57,14 @@
       </div>
     </div>
   </div>
-  <ResponsiveNav>
-        <router-link to="/about/">
-            {{ uiLabels.about || "ABOUT!" }}
-        </router-link>
-        <router-link to="/faq/">
-            {{ uiLabels.faq || "FAQ!" }}
-        </router-link>
-        <router-link to="/lobby/">
-            {{ uiLabels.play || "PLAY!" }}
-        </router-link>
-        <router-link to="/create/">
-            {{ uiLabels["createGame"] || "CREATE!" }}
-        </router-link>
-        <LangSwitch @switch-language="switchLanguage" />  
-    </ResponsiveNav>
 </template>
 
 <script>
-import socket from "@/clientSocket.js";
-import ResponsiveNav from "@/components/ResponsiveNav.vue";
-import LangSwitch from "@/components/LangSwitch.vue";
+import socket from "@/socket.js";
+
 
 export default {
   name: 'LobbyView',
-  components: {
-    ResponsiveNav,
-    LangSwitch,
-  },
   data: function () {
     return {
       userName: "",
@@ -121,21 +78,13 @@ export default {
       showErrorModal: false,
       errorTitle: "",
       errorMessage: "",
-      inputPollId: "",
+
     }
   },
-computed: {
+  computed: {
     displayParticipants() {
       // Ganska stor ändring här för att programmet ska godkänna unika användarnamn. 
       return this.participants;
-    }
-  },
-  watch: {
-    '$route.params.id': function(newId) {
-      if (newId) {
-        this.pollId = newId;
-        this.connectToPoll();
-      }
     }
   },
 
@@ -143,10 +92,12 @@ computed: {
     this.pollId = this.$route.params.id;
     this.isHost = localStorage.getItem("isHost") === "true";
 
+
     if (this.isHost) {
       this.joined = true;
-      this.userName = "Host"; 
+      this.userName = "Host";
     }
+
 
     socket.on("uiLabels", labels => this.uiLabels = labels);
 
@@ -155,10 +106,13 @@ computed: {
     });
 
     socket.on("startPoll", () => {
+      // Endast deltagare ska tvingas vidare automatiskt
       if (!this.isHost) {
-        this.$router.push("/game/" + this.pollId);
+        this.$router.push("/poll/" + this.pollId);
       }
     });
+    socket.emit("joinPoll", this.pollId);
+    socket.emit("getUILabels", this.lang);
 
     socket.on("joinSuccess", () => {
       this.joined = true;
@@ -171,11 +125,11 @@ computed: {
       this.joined = false;
     });
 
-    if (this.pollId) {
-      this.connectToPoll();
-    } else {
-      socket.emit("getUILabels", this.lang);
-    }
+    socket.on("navToPoll", (id) => {
+      if (!this.isHost) {
+        this.$router.push("/poll/" + id);
+      }
+    });
   },
   methods: {
     participateInPoll: function () {
@@ -185,15 +139,6 @@ computed: {
 
       }
     },
-    connectToPoll: function() {
-      socket.emit("joinPoll", this.pollId);
-      socket.emit("getUILabels", this.lang);
-    },
-    enterLobbyId: function() {
-      if (this.inputPollId.length > 0) {
-        this.$router.push("/lobby/" + this.inputPollId);
-      }
-    },
     toggleReady: function () {
       this.isReady = !this.isReady;
       socket.emit("playerReady", {
@@ -201,24 +146,13 @@ computed: {
         name: this.userName,
         isReady: this.isReady
       });
-    }, 
-    
-    runQuiz: function() {
-      socket.emit("startPoll", {
-        pollId: this.pollId,
-        language: this.lang
-      
-      });
-      this.$router.push("/game/" + this.pollId);
     },
-    switchLanguage: function (lang) {
-        if (lang) {
-           this.lang = lang;
-        } else {
-            this.lang = this.lang === "en" ? "sv" : "en";
-        }
-        localStorage.setItem("lang", this.lang);
-        socket.emit("getUILabels", this.lang);
+
+    runQuiz: function () {
+
+      socket.emit("initiateGameNavigation", { pollId: this.pollId });
+
+      this.$router.push("/poll/" + this.pollId);
     }
   }
 }
@@ -226,6 +160,7 @@ computed: {
 
 <style scoped>
 .lobby-view {
+  background-color: var(--background-color);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -282,7 +217,7 @@ computed: {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem; 
+  gap: 2rem;
   padding: 20px 0;
 }
 
@@ -338,7 +273,7 @@ computed: {
   color: white;
   transform: scale(1.05);
   box-shadow: 0 0 10px gold;
- 
+
 }
 
 .participant-card.ready {
@@ -347,9 +282,9 @@ computed: {
 }
 
 .join-container .btn-main {
-    width: auto !important;        
-    min-width: 160px !important;    
-    font-size: 2rem !important;   
-    align-self: center;
+  width: auto !important;
+  min-width: 160px !important;
+  font-size: 2rem !important;
+  align-self: center;
 }
 </style>
