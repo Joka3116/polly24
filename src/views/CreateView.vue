@@ -154,15 +154,14 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: clamp(8rem, 8dvh, 10rem);
+  padding-top: clamp(2rem, 4dvh, 10rem);
 }
 
 @media (min-width: 1024px) {
   header {
-    padding-top: clamp(10rem, 8dvh, 12rem);
+    padding-top: clamp(4rem, 4dvh, 5rem);
   }
 }
-
 
 header h1,
 h2 {
@@ -222,7 +221,7 @@ button {
 .option-btn {
   padding: 10px 20px;
   font-size: 1.2rem;
-  min-width: 80px;
+  min-width: 100px;
   opacity: 0.6;
   display: flex !important;
   justify-content: center !important;
