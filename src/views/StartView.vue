@@ -107,7 +107,7 @@ header img {
     max-height: 30rem;
     aspect-ratio: 1;
     padding-bottom: 2rem;
-}   
+}
 
 header h1 {
     color: var(--headline-color);
@@ -115,8 +115,8 @@ header h1 {
         0 0 10px rgba(255, 215, 0, 0.8),
         0 0 20px rgba(0, 0, 0, 0.9);
     text-align: center;
-    text-wrap: balance !important;   
-    font-size: 5rem;
+    text-wrap: balance !important;
+    font-size: 3rem;
 }
 
 
@@ -127,16 +127,17 @@ h2 {
         0 0 20px rgba(0, 0, 0, 0.9);
     text-align: center;
     text-wrap: balance !important;
-    font-size: 2rem;
+    font-size: 1.5rem;
 
-    
+
 }
 
 main {
     color: white;
-    padding-top: 5dvh; /* Sänkt från 10dvh */
+    padding-top: 5dvh;
+    /* Sänkt från 10dvh */
     padding-bottom: 5rem;
-}   
+}
 
 .button-group {
     width: 100%;
@@ -154,7 +155,7 @@ main {
     align-items: center;
     gap: 1.5rem;
     width: 100%;
-      min-width: 80px;
+    min-width: 80px;
 }
 
 /* Transitions */
@@ -174,24 +175,24 @@ main {
 
 @media (max-width: 768px) {
     header h1 {
-    color: var(--headline-color);
-    text-shadow:
-        0 0 10px rgba(255, 215, 0, 0.8),
-        0 0 20px rgba(0, 0, 0, 0.9);
-    text-align: center;
-    text-wrap: balance !important;   
-    font-size: 2rem;
-}
+        color: var(--headline-color);
+        text-shadow:
+            0 0 10px rgba(255, 215, 0, 0.8),
+            0 0 20px rgba(0, 0, 0, 0.9);
+        text-align: center;
+        text-wrap: balance !important;
+        font-size: 2.2rem;
+    }
 
-h2     {color: var(--headline-color);
-    text-shadow:
-        0 0 10px rgba(255, 215, 0, 0.8),
-        0 0 20px rgba(0, 0, 0, 0.9);
-    text-align: center;
-    text-wrap: balance !important;   
-    font-size: 1rem;
-}
+    h2 {
+        color: var(--headline-color);
+        text-shadow:
+            0 0 10px rgba(255, 215, 0, 0.8),
+            0 0 20px rgba(0, 0, 0, 0.9);
+        text-align: center;
+        text-wrap: balance !important;
+        font-size: 1.2rem;
+    }
 
 }
-
 </style>

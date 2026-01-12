@@ -2,12 +2,12 @@
   <TopRightHeader />
   <header>
     <h1>{{ uiLabels.lobbyTitle || "Lobby" }}</h1>
-    <p>{{ uiLabels.lobbySubtitle || "Vänta på att spelet ska starta" }}</p>
+    <p class="pulsing-text2" v-if="!isHost">{{ uiLabels.lobbySubtitle || "Vänta på att spelet ska starta" }}</p>
   </header>
   <main>
     <div class="lobby-view">
 
-      <LobbyLicensePlate :pollId="pollId" />
+      <LobbyLicensePlate v-if="isHost" :pollId="pollId" />
 
       <div v-if="!joined" class="join-container panel-card">
         <h2>{{ uiLabels.participateInPoll || "Enter Name" }}</h2>
@@ -40,7 +40,7 @@
           {{ isReady ? "AWAITING INITIATION..." : "CONFIRM PRESENCE, OPERATOR." }}
         </h3>
 
-        <h3>{{ uiLabels.participants || "Deltagare" }}: {{ participants.length }}</h3>
+        <h4>{{ uiLabels.participants || "Deltagare" }}: {{ participants.length }}</h4>
 
         <div class="participants-grid">
           <div v-for="(participant, index) in participants" :key="index" class="participant-card" :class="{
@@ -205,12 +205,12 @@ header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: clamp(8rem, 8dvh, 10rem);
+  padding-top: clamp(6rem, 4dvh, 6rem);
 }
 
 @media (min-width: 1024px) {
   header {
-    padding-top: clamp(10rem, 8dvh, 12rem);
+    padding-top: clamp(4rem, 2dvh, 4rem);
   }
 }
 
@@ -218,14 +218,21 @@ header h1,
 h2 {
   color: var(--headline-color);
   text-align: center;
+  font-size: 3rem;
   text-shadow:
     0 0 10px rgba(255, 215, 0, 0.8),
     0 0 20px rgba(0, 0, 0, 0.9);
 }
 
 h3 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   text-wrap: nowrap;
+}
+
+h4 {
+  font-size: 2rem;
+  text-wrap: nowrap;
+  margin-top: -20px;
 }
 
 header p {
@@ -242,7 +249,7 @@ header p {
   align-items: center;
   color: white;
   font-family: 'Arial', sans-serif;
-  padding: 20px;
+  padding: 5px;
 }
 
 .lobby-header {
@@ -260,7 +267,7 @@ header p {
 .lobby-logo {
   width: 180px;
   height: auto;
-  margin-bottom: 1rem;
+  margin-bottom: -1rem;
   animation: float 6s ease-in-out infinite;
 }
 
@@ -303,6 +310,13 @@ header p {
   font-style: italic;
 }
 
+.pulsing-text2 {
+  animation: pulse 2s infinite;
+  margin-bottom: 1rem;
+  color: gold;
+  font-style: italic;
+}
+
 @keyframes pulse {
   0% {
     opacity: 0.6;
@@ -323,6 +337,7 @@ header p {
   justify-content: center;
   gap: 15px;
   width: 100%;
+  margin-top: -10px;
 }
 
 .participant-card {
@@ -357,5 +372,16 @@ header p {
   min-width: 160px !important;
   font-size: 2rem !important;
   align-self: center;
+}
+
+@media (max-width: 600px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .header,
+  h1 {
+    display: none;
+  }
 }
 </style>
