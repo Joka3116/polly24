@@ -11,20 +11,25 @@
 
       <div class="info-container">
         <img src="/img/logo.png" alt="Logo" class="poll-logo" />
+      </div>
 
+      <div class="timer-wrapper" v-if="question.text && !showResults">
+       <div class="timertimer"> 
+        <h2 :class="{ 'critical': timer < 10 }">{{ uiLabels.timer }} {{ timer }}s</h2>
+        <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
+        </div>
+        
         <div v-if="isHost && question.text" class="question-count-display">
+
+
+
           <h2>{{ uiLabels.question }}: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions
           }}</span></h2>
         </div>
-
-        <div class="timer-wrapper" v-if="question.text && !showResults">
-          <h2 :class="{ 'critical': timer < 10 }">{{ uiLabels.timer }} {{ timer }}s</h2>
-          <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
-
-          <div class="answers-count">
-            <h3>{{ uiLabels.answer }}: <span class="highlight">{{ answersStatus.answered }}</span></h3>
-          </div>
+        <div class="answers-count">
+          <h3>{{ uiLabels.answer }}: <span class="highlight">{{ answersStatus.answered }}</span></h3>
         </div>
+
       </div>
 
       <div class="question-container">
@@ -239,7 +244,7 @@ h2 {
 }
 
 h3 {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   text-wrap: nowrap;
 }
 
@@ -268,7 +273,7 @@ header p {
 
 .highlight {
   color: gold;
-  font-weight: bold;
+
 }
 
 .info-container {
@@ -359,13 +364,14 @@ header p {
 }
 
 .question-count-display {
-  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 0rem;
   text-transform: uppercase;
   letter-spacing: 2px;
 }
 
 .question-count-display h2 {
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
@@ -378,5 +384,24 @@ header p {
   h1 {
     display: none;
   }
+
+}
+
+
+@media (min-width: 1000px) {
+
+  .header,
+  h1 {
+    margin-top: -9rem;
+
+  }
+
+  .desktop-only {
+    margin-top: -4rem;
+  }
+}
+
+.timertimer {
+  margin-top: -4rem;
 }
 </style>
