@@ -7,7 +7,7 @@
                         <transition name="fade" mode="out-in">
                             <div v-if="showGameInput" class="nav-input-row" :class="{ shake: isShaking }" key="input">
                                 <input ref="gameInputRef" type="text" v-model="gameId" class="nav-input"
-                                    :placeholder="uiLabels.gameId || 'GAME ID'" @click.stop @keyup.enter="joinGame" />
+                                    :placeholder="uiLabels.gameID || 'GAME ID!'" @click.stop @keyup.enter="joinGame" />
                                 <button class="nav-btn" @click.stop="joinGame">
                                     {{ uiLabels.join || "JOIN" }}
                                 </button>
@@ -16,18 +16,23 @@
                                 {{ uiLabels.play || "PLAY!" }}
                             </a>
                         </transition>
-
+                    </li>
+                    <li>
                         <router-link to="/create/">
                             {{ uiLabels["createGame"] || "CREATE!" }}
                         </router-link>
+                    </li>
+                    <li>
                         <router-link to="/about/">
                             {{ uiLabels.about || "ABOUT!" }}
                         </router-link>
+                    </li>
+                    <li>
                         <router-link to="/faq/">
                             {{ uiLabels.faq || "FAQ!" }}
                         </router-link>
-                        <LangSwitch @switch-language="$emit('switch-language', $event)" />
                     </li>
+                    <LangSwitch @switch-language="$emit('switch-language', $event)" />
                 </ul>
                 <div class="top-right-header">
                     <router-link to="/">Who wants to be<br>a billionaire?</router-link>
@@ -498,7 +503,7 @@ nav ul {
     margin: 2rem 0;
     
     /* Strict sizing to match links */
-    width: 100%;
+    /* width: 100%; removed to prevent overflow with opacity margin */
     min-width: 60vw;
     box-sizing: border-box;
 }
@@ -554,10 +559,7 @@ nav ul {
 }
 
 .nav-btn:hover {
-    transform: scale(1.05);
-    background: #fff;
-    /* Slightly brighter on hover */
-    color: #000;
+    transform: scale(1.07);
 }
 
 @media (max-width: 768px) {
@@ -569,10 +571,20 @@ nav ul {
     }
     .nav-input-row {
         margin: 1.5rem !important;
+        min-width: 70vw !important;
+        /* Enforce margins by constraining width */
+        max-width: calc(100vw - 3rem) !important;
+        width: auto !important;
     }
+    .nav-input {
+        min-width: 0; /* Allow shrinking below content size */
+        box-sizing: border-box;
+    }
+    
     .nav-btn {
+        box-sizing: border-box;
         margin-left: 0.5rem !important;
-        margin-right: 3rem !important;
+        flex-shrink: 0; /* Never shrink button */
     }
 }
 
@@ -601,7 +613,7 @@ nav ul {
         padding 0.2s ease-out,
         margin 0.2s ease-out,
         opacity 0.2s ease-in;
-    max-width: 200px; /* Arbitrary large enough width */
+    /* max-width: 200px;  Removed to allow flexbox to handle standard width */
 }
 
 .fade-enter-from .nav-btn {

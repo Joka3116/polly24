@@ -31,6 +31,7 @@
         right: calc(6.25rem + var(--scrollbar-gap, 0px));
         top: 2.3125rem;
         font-size: 1rem;
+        visibility: hidden;
     }
 }
 </style>
