@@ -88,7 +88,7 @@ export default {
       uiLabels: {},
       // NY DATA HÄR:
       selectedDifficulty: 20, // Förvald tidsgräns
-      selectedNrOfQuestions: 5    // Förvalt antal frågor
+      selectedNrOfQuestions: 7    // Förvalt antal frågor
     }
   },
   created: function () {
