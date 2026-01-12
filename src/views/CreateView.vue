@@ -1,13 +1,13 @@
 <template>
   <TopRightHeader />
   <header>
-    <h1>{{ uiLabels.createGame || "CREATE!" }}</h1>
-    <p>{{ uiLabels.createSubTitle || "Här kan du skapa ett spel" }}</p>
+    <h1 class="desktop-only">{{ uiLabels.createGame || "CREATE!" }}</h1>
+    <p class="pulsing-text">{{ uiLabels.createSubTitle || "Här kan du skapa ett spel" }}</p>
   </header>
   <main>
     <div class="create-container">
 
-      <LobbyLicensePlate :pollId="pollId" />
+      <LobbyLicensePlate :pollId="pollId" class="LobbyPlateSpacing" />
 
       <div class="selection-wrapper">
         <h3>{{ uiLabels.difficultyLevel || "Välj Svårighetsgrad" }}</h3>
@@ -155,6 +155,43 @@ header {
   flex-direction: column;
   align-items: center;
   padding-top: clamp(2rem, 4dvh, 10rem);
+}
+
+.pulsing-text {
+  animation: pulse 2s infinite;
+  margin-bottom: -1.2rem;
+  color: gold;
+  font-style: italic;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .LobbyPlateSpacing {
+    margin-top: 2rem;
+  }
+
+  .header,
+  h1 {
+    display: none;
+  }
+
+  .pulsing-text {
+    display: none;
+  }
 }
 
 @media (min-width: 1024px) {
