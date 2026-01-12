@@ -163,7 +163,9 @@ export default {
     });
 
     socket.on("submittedAnswersUpdate", answers => this.submittedAnswers = answers);
-    socket.on("uiLabels", labels => this.uiLabels = labels);
+socket.on("uiLabels", labels => {
+      this.uiLabels = { ...labels };
+    });
     socket.on("participantsUpdate", p => this.participants = p);
 
     socket.emit("getUILabels", this.lang);
@@ -193,12 +195,25 @@ export default {
         socket.emit("runQuestion", { pollId: this.pollId });
       }
     },
-    revealAnswer: function () {
+revealAnswer: function () {
       socket.emit('forceEndQuestion', { pollId: this.pollId });
-    }
-  }
-}
+    },
 
+switchLanguage: function (lang) {
+  this.lang = lang;
+  localStorage.setItem("lang", this.lang);
+  
+  // Uppdatera gränssnittet
+  socket.emit("getUILabels", this.lang);
+
+  // Uppdatera själva frågan från databasen
+  socket.emit("patchCurrentQuestion", { 
+    pollId: this.pollId, 
+    lang: this.lang 
+  });
+}
+}
+}
 </script>
 
 <style scoped>

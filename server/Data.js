@@ -221,6 +221,28 @@ Data.prototype.getCorrectAnswerId = function (pollId) {
   return null;
 };
 
+Data.prototype.getQuestionBySharedId = async function (sharedId, language) {
+  const [questions] = await pool.query(
+    `SELECT id, shared_question_id, text FROM questions WHERE shared_question_id = ? AND language = ? LIMIT 1`,
+    [sharedId, language]
+  );
+  const q = questions[0];
+
+  if (!q) return null;
+
+  const [answers] = await pool.query(
+    `SELECT id, answer_text AS text, is_correct FROM answers WHERE question_id = ?`,
+    [q.id]
+  );
+
+  return {
+    id: q.id,
+    sharedId: q.shared_question_id,
+    text: q.text,
+    answers: shuffleArray(answers)
+  };
+};
+
 export { Data };
 
 

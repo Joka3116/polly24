@@ -143,8 +143,29 @@ function sockets(io, socket, data) {
     socket.emit("finalResults", leaderboard);
   });
 
+ socket.on('patchCurrentQuestion', async function (d) {
+  let poll = data.getPoll(d.pollId);
+
+  let currentQ = poll.questions[poll.currentQuestion];
+
+  if (currentQ && currentQ.sharedId) {
+    let translated = await data.getQuestionBySharedId(currentQ.sharedId, d.lang);
+    
+    if (translated) {
+      const sanitizedQuestion = {
+        id: translated.id,
+        text: translated.text,
+        answers: translated.answers.map(a => ({ id: a.id, text: a.text })),
+        currentNumber: poll.currentQuestion + 1,
+        totalQuestions: poll.settings.nrOfQuestions
+      };
+
+      socket.emit('questionUpdate', sanitizedQuestion);
+    }
+  }
+});
+
   function startTimer(pollId, difficulty) {
-    // 1. Rensa ALLTID den specifika timern om den redan körs för detta ID
     if (timers[pollId]) {
       clearInterval(timers[pollId]);
       console.log("Stoppade gammal timer för:", pollId);
