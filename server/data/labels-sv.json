@@ -62,11 +62,10 @@
   "loading": "Laddar resultat...",
   "startingPage": "Gå till startsidan",
   "playpoll": "SPELA OCH VINN!",
-      "timer": "Tid kvar:",
-      "answer": "SVAR",
-      "showanswer": "VISA SVAR",
-            "nextQ": "NÄSTA FRÅGA",
-            "waiting": "Väntar på fråga...",
-                              "readyStart": "Redo att starta?"
-
+  "timer": "Tid kvar:",
+  "answer": "SVAR",
+  "showanswer": "VISA SVAR",
+  "nextQ": "NÄSTA FRÅGA",
+  "waiting": "Väntar på fråga...",
+  "readyStart": "Redo att starta?"
 }

@@ -61,13 +61,11 @@
   "result": "Results",
   "loading": "Loading results...",
   "startingPage": "Go to starting page",
-    "playpoll": "PLAY AND WIN!",
-    "timer": "Time left:",
-      "answer": "ANSWER",
-      "showanswer": "SHOW ANSWER",
-      "nextQ": "NEXT QUESTION",
-                  "waiting": "Waiting for question...",
-                  "readyStart": "Ready to start?"
-
-
+  "playpoll": "PLAY AND WIN!",
+  "timer": "Time left:",
+  "answer": "ANSWER",
+  "showanswer": "SHOW ANSWER",
+  "nextQ": "NEXT QUESTION",
+  "waiting": "Waiting for question...",
+  "readyStart": "Ready to start?"
 }
