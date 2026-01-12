@@ -130,6 +130,16 @@ export default {
     }
   },
 
+  beforeUnmount() {
+    socket.off("uiLabels");
+    socket.off("participantsUpdate");
+    socket.off("startPoll");
+    socket.off("joinSuccess");
+    socket.off("nameTaken");
+    socket.off("navToPoll");
+    socket.off("error");
+  },
+
   created: function () {
     this.pollId = this.$route.params.id;
     this.isHost = localStorage.getItem("isHost") === "true";
@@ -163,6 +173,13 @@ export default {
     socket.on("nameTaken", (error) => {
       this.errorTitle = this.uiLabels.nameErrorTitle || "IDENTITY THEFT";
       this.errorMessage = this.uiLabels.nameTakenMsg || "This operator profile is already active in the node. The Billionaire Engine permits no digital clones. Choose a unique designation or vacate the premises."
+      this.showErrorModal = true;
+      this.joined = false;
+    });
+
+    socket.on("error", (error) => {
+      this.errorTitle = error.title || "Error";
+      this.errorMessage = error.message || "An error occurred.";
       this.showErrorModal = true;
       this.joined = false;
     });

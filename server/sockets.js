@@ -10,13 +10,14 @@ function sockets(io, socket, data) {
   });
 
   socket.on('initiateGameNavigation', function (d) {
+    data.resetPoll(d.pollId);
     io.to(d.pollId).emit('navToPoll', d.pollId);
   });
 
 
   socket.on('startPoll', async function (d) {
+    data.resetPoll(d.pollId);
     let poll = data.getPoll(d.pollId);
-    if (poll.questions && poll.questions.length > 0) return;
 
     poll.currentQuestion = 0;
 
@@ -64,6 +65,10 @@ function sockets(io, socket, data) {
   });
 
   socket.on('participateInPoll', function (d) {
+    if (!data.pollExists(d.pollId)) {
+      socket.emit('error', { title: "Error", message: "Poll does not exist." });
+      return;
+    }
 
     if (data.nameAvailable(d.pollId, d.name)) {
       data.participateInPoll(d.pollId, d.name);
@@ -120,8 +125,11 @@ function sockets(io, socket, data) {
 
   socket.on("getFinalResults", pollId => {
     const poll = data.getPoll(pollId);
+    console.log(`getFinalResults requested for pollId: ${pollId}`);
+    console.log("Poll object retrieved:", poll);
 
-    if (!poll) {
+    if (!poll || Object.keys(poll).length === 0) {
+      console.log("Poll not found or empty!");
       socket.emit("finalResults", []);
       return;
     }
@@ -129,6 +137,8 @@ function sockets(io, socket, data) {
     const participants = Array.isArray(poll.participants)
       ? poll.participants
       : [];
+
+    console.log("Participants found:", participants);
 
     const leaderboard = participants
       .filter(p => p.name !== "Host")

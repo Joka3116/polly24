@@ -14,7 +14,7 @@
 
         <div v-if="isHost && question.text" class="question-count-display">
           <h2>{{ uiLabels.question }}: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions
-          }}</span></h2>
+              }}</span></h2>
         </div>
 
         <div class="timer-wrapper" v-if="question.text && !showResults">
@@ -118,6 +118,7 @@ export default {
     socket.off("participantsUpdate");
     socket.off("answersUpdate");
     socket.off("uiLabels");
+    socket.off("gameOver");
 
     if (this.gameOverTimeout) {
       clearTimeout(this.gameOverTimeout);

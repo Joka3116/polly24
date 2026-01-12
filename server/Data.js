@@ -76,6 +76,27 @@ Data.prototype.saveSettings = function (pollId, settings) {
   }
 }
 
+Data.prototype.resetPoll = function (pollId) {
+  if (this.pollExists(pollId)) {
+    const poll = this.polls[pollId];
+    poll.questions = [];
+    poll.answers = [];
+    poll.currentQuestion = 0;
+
+    console.log(`[DEBUG] Resetting poll ${pollId}. Previous participants state:`, JSON.stringify(poll.participants));
+
+    poll.participants.forEach(participant => {
+      console.log(`[DEBUG] Resetting participant ${participant.name} from ${participant.points} to 0`);
+      participant.points = 0;
+      participant.answers = [];
+      participant.isReady = false;
+    });
+
+    console.log(`[DEBUG] Poll reset complete. New participants state:`, JSON.stringify(poll.participants));
+    console.log("Poll reset for", pollId);
+  }
+}
+
 Data.prototype.getPoll = function (pollId) {
   if (this.pollExists(pollId)) {
     return this.polls[pollId];
@@ -184,7 +205,7 @@ Data.prototype.getRandomQuestion = async function (language = "sv", excludeIds =
   const [questions] = await pool.query(query, params);
   const q = questions[0];
 
-  if (!q) return null; 
+  if (!q) return null;
 
   const [answers] = await pool.query(
     `SELECT id, answer_text AS text, is_correct FROM answers WHERE question_id = ?`,
@@ -195,7 +216,7 @@ Data.prototype.getRandomQuestion = async function (language = "sv", excludeIds =
     id: q.id,
     sharedId: q.shared_question_id,
     text: q.text,
-    answers: shuffleArray(answers) 
+    answers: shuffleArray(answers)
   };
 };
 Data.prototype.nameAvailable = function (pollId, name) {
