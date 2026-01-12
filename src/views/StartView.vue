@@ -4,33 +4,23 @@
         <h1>{{ uiLabels["sales-pitch"] }}</h1>
         <h2>{{ uiLabels.subHeading }}</h2>
     </header>
-    
+
     <main>
         <div class="button-group">
             <Transition name="slide-fade" mode="out-in">
                 <div v-if="!showGameInput" class="menu-buttons">
-                    <button
-                        class="btn-main"
-                        @click="showGameInput = true"
-                    >
+                    <button class="btn-main" @click="unlockAudio(); showGameInput = true">
                         {{ uiLabels.play || "PLAY!" }}
                     </button>
-                    <button
-                        class="btn-main"
-                        @click="$router.push('/create')"
-                    >
+                    <button class="btn-main" @click="unlockAudio(); $router.push('/create')">
                         {{ uiLabels["createGame"] || "CREATE!" }}
                     </button>
                 </div>
 
-                <GameInput
-                    v-else
-                    :uiLabels="uiLabels"
-                    @cancel="showGameInput = false"
-                />
+                <GameInput v-else :uiLabels="uiLabels" @cancel="showGameInput = false" />
             </Transition>
         </div>
-        
+
     </main>
     <ResponsiveNav>
         <router-link to="/about/">
@@ -39,15 +29,15 @@
         <router-link to="/faq/">
             {{ uiLabels.faq || "FAQ!" }}
         </router-link>
-        <router-link to="/lobby/">
+        <router-link to="/">
             {{ uiLabels.play || "PLAY!" }}
         </router-link>
         <router-link to="/create/">
             {{ uiLabels["createGame"] || "CREATE!" }}
         </router-link>
-        <LangSwitch @switch-language="switchLanguage" />  
+        <LangSwitch @switch-language="switchLanguage" />
     </ResponsiveNav>
-    
+
 
 </template>
 
@@ -76,9 +66,21 @@ export default {
         socket.emit("getUILabels", this.lang);
     },
     methods: {
+        unlockAudio() {
+            if (this.audioUnlocked) return;
+
+            this.confettiSound?.play()
+                .then(() => {
+                    this.confettiSound.pause();
+                    this.confettiSound.currentTime = 0;
+                    this.audioUnlocked = true;
+                })
+                .catch(() => { });
+        },
+
         switchLanguage: function (lang) {
             if (lang) {
-               this.lang = lang; 
+                this.lang = lang;
             } else {
                 // Fallback / toggle if called without argument (though LangSwitch provides it now)
                 this.lang = this.lang === "en" ? "sv" : "en";
@@ -129,7 +131,8 @@ main {
     flex-direction: column;
     align-items: center;
     margin-top: 1rem;
-    min-height: 12rem; /* Reserve space to prevent jumpiness, adjust as needed */
+    min-height: 12rem;
+    /* Reserve space to prevent jumpiness, adjust as needed */
 }
 
 .menu-buttons {
@@ -154,5 +157,4 @@ main {
     transform: translateY(20px);
     opacity: 0;
 }
-
 </style>

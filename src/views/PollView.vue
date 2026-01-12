@@ -4,72 +4,72 @@
     <h1>SPELA OCH VINN!</h1>
   </header>
   <main>
-  
+
     <div class="poll-view">
 
-    <LobbyLicensePlate :pollId="pollId" />
+      <LobbyLicensePlate :pollId="pollId" />
 
-    <div class="info-container">
-      <img src="/img/logo.png" alt="Logo" class="poll-logo" />
+      <div class="info-container">
+        <img src="/img/logo.png" alt="Logo" class="poll-logo" />
 
-      <div v-if="isHost && question.text" class="question-count-display">
-        <h2>FRÅGA: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions }}</span></h2>
+        <div v-if="isHost && question.text" class="question-count-display">
+          <h2>FRÅGA: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions }}</span></h2>
+        </div>
+
+        <div class="timer-wrapper" v-if="question.text && !showResults">
+          <h2 :class="{ 'critical': timer < 10 }">TID KVAR: {{ timer }}s</h2>
+          <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
+
+          <div class="answers-count">
+            <h3>SVAR: <span class="highlight">{{ answersStatus.answered }}</span></h3>
+          </div>
+        </div>
       </div>
 
-      <div class="timer-wrapper" v-if="question.text && !showResults">
-        <h2 :class="{ 'critical': timer < 10 }">TID KVAR: {{ timer }}s</h2>
-        <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
+      <div class="question-container">
+        <div v-if="question.text">
+          <QuestionComponent v-bind:question="question" v-bind:isHost="isHost" v-bind:showResults="showResults"
+            v-bind:timeExpired="timeExpired" v-bind:correctAnswerId="correctAnswerId"
+            v-on:answer="submitAnswer($event)" />
 
-        <div class="answers-count">
-          <h3>SVAR: <span class="highlight">{{ answersStatus.answered }}</span></h3>
+          <div v-if="isHost" class="host-controls">
+            <button v-if="!showResults" class="btn-main" @click="revealAnswer">
+              VISA SVAR
+            </button>
+
+            <button v-else-if="question.currentNumber < question.totalQuestions" class="btn-main"
+              @click="runNextQuestion">
+              NÄSTA FRÅGA
+            </button>
+          </div>
+
+        </div>
+
+        <div v-else class="waiting-screen">
+          <h2 v-if="!isHost">Väntar på fråga...</h2>
+          <div v-else>
+            <h2>Redo att starta?</h2>
+            <button class="btn-main" @click="runNextQuestion">START GAME</button>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="question-container">
-      <div v-if="question.text">
-        <QuestionComponent v-bind:question="question" v-bind:isHost="isHost" v-bind:showResults="showResults"
-          v-bind:timeExpired="timeExpired" v-bind:correctAnswerId="correctAnswerId"
-          v-on:answer="submitAnswer($event)" />
-
-        <div v-if="isHost" class="host-controls">
-          <button v-if="!showResults" class="btn-main" @click="revealAnswer">
-            VISA SVAR
-          </button>
-
-          <button v-else-if="question.currentNumber < question.totalQuestions" class="btn-main"
-            @click="runNextQuestion">
-            NÄSTA FRÅGA
-          </button>
-        </div>
-
-      </div>
-
-      <div v-else class="waiting-screen">
-        <h2 v-if="!isHost">Väntar på fråga...</h2>
-        <div v-else>
-          <h2>Redo att starta?</h2>
-          <button class="btn-main" @click="runNextQuestion">START GAME</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</main>
-<ResponsiveNav>
-  <router-link to="/about/">
-    {{ uiLabels.about || "ABOUT!" }}
-  </router-link>
-  <router-link to="/faq/">
-    {{ uiLabels.faq || "FAQ!" }}
-  </router-link>
-  <router-link to="/lobby/">
-    {{ uiLabels.play || "PLAY!" }}
-  </router-link>
-  <router-link to="/create/">
-    {{ uiLabels["createGame"] || "CREATE!" }}
-  </router-link>
-  <LangSwitch @switch-language="switchLanguage" />  
-</ResponsiveNav>
+  </main>
+  <ResponsiveNav>
+    <router-link to="/about/">
+      {{ uiLabels.about || "ABOUT!" }}
+    </router-link>
+    <router-link to="/faq/">
+      {{ uiLabels.faq || "FAQ!" }}
+    </router-link>
+    <router-link to="/l">
+      {{ uiLabels.play || "PLAY!" }}
+    </router-link>
+    <router-link to="/create/">
+      {{ uiLabels["createGame"] || "CREATE!" }}
+    </router-link>
+    <LangSwitch @switch-language="switchLanguage" />
+  </ResponsiveNav>
 </template>
 
 <script>
@@ -202,38 +202,41 @@ export default {
 </script>
 
 <style scoped>
-  header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: clamp(8rem, 8dvh, 10rem);
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: clamp(8rem, 8dvh, 10rem);
 }
 
 @media (min-width: 1024px) {
-    header {
-        padding-top: clamp(10rem, 8dvh, 12rem);
-    }
+  header {
+    padding-top: clamp(10rem, 8dvh, 12rem);
+  }
 }
 
 header h1,
 h2 {
-    color: var(--headline-color);
-    text-align: center;
-    text-shadow:
-        0 0 10px rgba(255, 215, 0, 0.8),
-        0 0 20px rgba(0, 0, 0, 0.9);
+  color: var(--headline-color);
+  text-align: center;
+  text-shadow:
+    0 0 10px rgba(255, 215, 0, 0.8),
+    0 0 20px rgba(0, 0, 0, 0.9);
 }
+
 h3 {
   font-size: 2.5rem;
   text-wrap: nowrap;
 }
+
 header p {
-    color: var(--headline-color);
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    font-size: 1.5rem;
+  color: var(--headline-color);
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  font-size: 1.5rem;
 }
+
 .poll-view {
   display: flex;
   flex-direction: column;

@@ -1,6 +1,6 @@
 <template>
     <div class="top-right-header">
-        <router-link to="/">Who wants to be<br>a millionaire?</router-link>
+        <router-link to="/">Who wants to be<br>a billionaire?</router-link>
     </div>
 </template>
 
@@ -15,18 +15,21 @@
     font-family: "bebas-kai", sans-serif;
     text-transform: uppercase;
 }
+
 .top-right-header :deep(a) {
     color: gold !important;
     text-decoration: none;
 }
+
 .top-right-header :deep(a):hover {
     text-decoration: underline;
 }
+
 @media (max-width: 768px) {
     .top-right-header {
         position: absolute;
         right: calc(6.25rem + var(--scrollbar-gap, 0px));
-        top: 2.3125rem; 
+        top: 2.3125rem;
         font-size: 1rem;
     }
 }

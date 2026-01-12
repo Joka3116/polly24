@@ -2,7 +2,7 @@
     <TopRightHeader />
     <header>
         <h1>{{ uiLabels.about }}</h1>
-    </header>  
+    </header>
     <main>
         <div class="about-content">
             <h2>{{ uiLabels.aboutTitle }}</h2>
@@ -18,13 +18,13 @@
         <router-link to="/faq/">
             {{ uiLabels.faq || "FAQ!" }}
         </router-link>
-        <router-link to="/lobby/">
+        <router-link to="/">
             {{ uiLabels.play || "PLAY!" }}
         </router-link>
         <router-link to="/create/">
             {{ uiLabels["createGame"] || "CREATE!" }}
         </router-link>
-        <LangSwitch @switch-language="switchLanguage" />  
+        <LangSwitch @switch-language="switchLanguage" />
     </ResponsiveNav>
 </template>
 <script>
@@ -78,6 +78,7 @@ header {
         padding-top: clamp(10rem, 8dvh, 12rem);
     }
 }
+
 header h1,
 h2 {
     color: var(--headline-color);
@@ -86,16 +87,19 @@ h2 {
         0 0 10px rgba(255, 215, 0, 0.8),
         0 0 20px rgba(0, 0, 0, 0.9);
 }
+
 h2 {
     margin-bottom: 1.5rem;
     text-wrap: balance;
 }
+
 main p {
     font-size: 1.1rem;
     color: #e0e0e0;
     margin-bottom: 1.5rem;
     line-height: 1.8;
 }
+
 .about-content {
     max-width: 1024px;
     margin: 0 auto 3rem auto;
@@ -105,5 +109,4 @@ main p {
     border: 1px solid gold;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
 }
-
 </style>

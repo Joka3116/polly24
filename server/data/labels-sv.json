@@ -57,5 +57,8 @@
   "hardQuestions": "Svåra",
   "lobbyTitle": "Spelets lobby",
   "lobbySubtitle": "Vänta på att spelet ska starta",
-  "startGame": "Starta spelet"
+  "startGame": "Starta spelet",
+  "result": "Resultat",
+  "loading": "Laddar resultat...",
+  "startingPage": "Gå till startsidan"
 }

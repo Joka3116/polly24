@@ -1,10 +1,6 @@
 <template>
     <nav>
-        <div
-            id="nav-overlay"
-            :class="{ active: isMenuOpen }"
-            @click="handleOverlayClick"
-        >
+        <div id="nav-overlay" :class="{ active: isMenuOpen }" @click="handleOverlayClick">
             <div id="nav-overlay-container">
                 <ul>
                     <li>
@@ -12,15 +8,15 @@
                     </li>
                 </ul>
                 <div class="top-right-header">
-                    <router-link to="/">Who wants to be<br>a millionaire?</router-link>
-        </div>
+                    <router-link to="/">Who wants to be<br>a billionaire?</router-link>
+                </div>
             </div>
         </div>
-        
+
         <div id="hamburger" :class="{ active: isMenuOpen }" @click="toggleMenu">
             <span id="hamburger-line-one"></span>
             <span id="hamburger-line-two"></span>
-        </div>    
+        </div>
     </nav>
 </template>
 
@@ -77,20 +73,24 @@ onBeforeUnmount(() => {
     font-family: "bebas-kai", sans-serif;
     text-transform: uppercase;
 }
+
 .top-right-header :deep(a) {
     color: var(--foreground-alt-color) !important;
     text-decoration: none;
 }
+
 .top-right-header :deep(a):hover {
     text-decoration: underline;
 }
+
 @media (max-width: 768px) {
     .top-right-header {
         right: calc(6.25rem + var(--scrollbar-gap, 0px));
-        top: 2.3125rem; 
+        top: 2.3125rem;
         font-size: 1rem;
     }
 }
+
 /* =========================================
    Navigation Container
    ========================================= */
@@ -116,12 +116,16 @@ nav ul {
 #hamburger {
     position: fixed;
     /* Use REM for positioning so it respects user base font settings */
-    top: 2.5rem; /* was 40px */
-    right: calc(2.5rem + var(--scrollbar-gap, 0px)); /* was 40px */
+    top: 2.5rem;
+    /* was 40px */
+    right: calc(2.5rem + var(--scrollbar-gap, 0px));
+    /* was 40px */
 
     /* Use REM for sizing the click target */
-    width: 4.875rem; /* was 78px */
-    height: 4.875rem; /* was 78px */
+    width: 4.875rem;
+    /* was 78px */
+    height: 4.875rem;
+    /* was 78px */
 
     border-radius: 50%;
     background-color: var(--background-alt-color);
@@ -141,7 +145,8 @@ nav ul {
 #hamburger-line-one,
 #hamburger-line-two {
     position: absolute;
-    left: 32%; /* Percentage keeps it aligned regardless of button size */
+    left: 32%;
+    /* Percentage keeps it aligned regardless of button size */
     background-color: var(--foreground-alt-color);
 
     /* Keep PX for height to ensure lines stay sharp and don't blur */
@@ -154,24 +159,28 @@ nav ul {
 
 #hamburger-line-one {
     /* Use % for width so lines grow if you change the button size */
-    width: 36%; /* approx 28px relative to 78px */
+    width: 36%;
+    /* approx 28px relative to 78px */
     top: 44%;
     transform: rotate(0deg);
 }
 
 #hamburger-line-two {
-    width: 26%; /* approx 20px relative to 78px */
+    width: 26%;
+    /* approx 20px relative to 78px */
     top: 55%;
     transform: rotate(0deg);
 }
 
 /* Hover States: staggering the line lengths */
 #hamburger:hover #hamburger-line-two {
-    width: 36%; /* Matches line-one width */
+    width: 36%;
+    /* Matches line-one width */
 }
 
 #hamburger:hover #hamburger-line-one {
-    width: 26%; /* Shrinks */
+    width: 26%;
+    /* Shrinks */
 }
 
 /* =========================================
@@ -188,7 +197,8 @@ nav ul {
 
     /* Width logic for the X shape */
     width: 36%;
-    height: 3px; /* Slightly thicker for the X is fine in px */
+    height: 3px;
+    /* Slightly thicker for the X is fine in px */
 
     transform-origin: center center;
     background-color: var(--background-alt-color);
@@ -208,9 +218,12 @@ nav ul {
 @media (max-width: 768px) {
     #hamburger {
         /* Scale down using REM */
-        width: 4rem; /* was 64px */
-        height: 4rem; /* was 64px */
-        top: 1.25rem; /* was 20px */
+        width: 4rem;
+        /* was 64px */
+        height: 4rem;
+        /* was 64px */
+        top: 1.25rem;
+        /* was 20px */
         right: calc(1.25rem + var(--scrollbar-gap, 0px));
     }
 
@@ -222,10 +235,13 @@ nav ul {
     */
 
     #hamburger-line-one {
-        width: 37%; /* approx 24px of 64px */
+        width: 37%;
+        /* approx 24px of 64px */
     }
+
     #hamburger-line-two {
-        width: 25%; /* approx 16px of 64px */
+        width: 25%;
+        /* approx 16px of 64px */
     }
 
     /* Reduce menu item sizes on mobile */
@@ -248,7 +264,8 @@ nav ul {
 
     /* BEST PRACTICE: Use dvh (Dynamic Viewport Height)
        This prevents the mobile URL bar from hiding the bottom of your menu */
-    height: 100vh; /* Fallback */
+    height: 100vh;
+    /* Fallback */
     height: 100dvh;
 
     background-color: var(--background-alt-color);
@@ -295,11 +312,14 @@ nav ul {
     line-height: 1.2;
 
     /* 3. Spacing: Use EM so padding/radius scales if font-size grows */
-    padding: 0.625em; /* Replaces 25px */
-    border-radius: 1.2em; /* Replaces 45px (pill shape) */
+    padding: 0.625em;
+    /* Replaces 25px */
+    border-radius: 1.2em;
+    /* Replaces 45px (pill shape) */
 
     /* 4. Layout Spacing: Use REM for distance between items */
-    margin: 2rem 0; /* Replaces 30px */
+    margin: 2rem 0;
+    /* Replaces 30px */
 
     /* 5. Width: Viewport Width is good here */
     min-width: 60vw;
@@ -320,7 +340,8 @@ nav ul {
 #nav-overlay-container ul :deep(li a) {
     opacity: 1;
     display: block;
-    color: var(--foreground-alt-color); /* Solid by default */
+    color: var(--foreground-alt-color);
+    /* Solid by default */
 
     /* Layout Properties (Restored) */
     text-decoration: none;
@@ -353,22 +374,18 @@ nav ul {
     outline-width: 5px;
     outline-color: var(--foreground-alt-color);
 
-    color: color-mix(
-        in srgb,
-        var(--foreground-alt-color),
-        transparent 0%
-    ) !important;
+    color: color-mix(in srgb,
+            var(--foreground-alt-color),
+            transparent 0%) !important;
 }
 
 #nav-overlay-container ul :deep(li a.router-link-exact-active) {
     border: 2px solid var(--foreground-alt-color) !important;
 
     /* Keep text dimmed */
-    color: color-mix(
-        in srgb,
-        var(--foreground-alt-color),
-        transparent 70%
-    ) !important;
+    color: color-mix(in srgb,
+            var(--foreground-alt-color),
+            transparent 70%) !important;
 
     pointer-events: none;
     cursor: default;

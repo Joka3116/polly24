@@ -57,5 +57,8 @@
   "hardQuestions": "hard",
   "lobbyTitle": "Game Lobby",
   "lobbySubtitle": "Wait for the game to start",
-  "startGame": "Start Game"
+  "startGame": "Start Game",
+  "result": "Results",
+  "loading": "Loading results...",
+  "startingPage": "Go to starting page"
 }

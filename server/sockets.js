@@ -113,10 +113,34 @@ function sockets(io, socket, data) {
     endOfQuestion(io, data, d.pollId);
   });
 
-
   socket.on('checkPollExists', function (pollId) {
     const exists = data.pollExists(pollId);
     socket.emit('pollExistsResponse', exists);
+  });
+
+  socket.on("getFinalResults", pollId => {
+    const poll = data.getPoll(pollId);
+
+    if (!poll) {
+      socket.emit("finalResults", []);
+      return;
+    }
+
+    const participants = Array.isArray(poll.participants)
+      ? poll.participants
+      : [];
+
+    const leaderboard = participants
+      .filter(p => p.name !== "Host")
+      .map(p => ({
+        name: p.name,
+        points: p.points || 0
+      }))
+      .sort((a, b) => b.points - a.points);
+
+    console.log("FINAL RESULTS SENT:", leaderboard);
+
+    socket.emit("finalResults", leaderboard);
   });
 
   function startTimer(pollId, difficulty) {

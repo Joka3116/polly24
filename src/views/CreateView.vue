@@ -1,65 +1,66 @@
 <template>
   <TopRightHeader />
   <header>
-    <h1>{{ uiLabels.createGame  || "CREATE!" }}</h1>
-    <p>{{ uiLabels.createSubTitle  || "Här kan du skapa ett spel" }}</p>
+    <h1>{{ uiLabels.createGame || "CREATE!" }}</h1>
+    <p>{{ uiLabels.createSubTitle || "Här kan du skapa ett spel" }}</p>
   </header>
   <main>
-  <div class="create-container">
-    
-    <LobbyLicensePlate :pollId="pollId" />
+    <div class="create-container">
 
-    <div class="selection-wrapper">
-      <h3>{{ uiLabels.difficultyLevel  || "Välj Svårighetsgrad" }}</h3>
+      <LobbyLicensePlate :pollId="pollId" />
 
-      <div class="button-row">
-        <button v-on:click="selectedDifficulty = 'easy'"
-          v-bind:class="['option-btn', { selected: selectedDifficulty === 'easy' }]">
-          {{ uiLabels.easy  || "Easy" }}
-        </button>
-        <button v-on:click="selectedDifficulty = 'medium'"
-          v-bind:class="['option-btn', { selected: selectedDifficulty === 'medium' }]">
-          {{ uiLabels.medium  || "Medium" }}
-        </button>
-        <button v-on:click="selectedDifficulty = 'hard'"
-          v-bind:class="['option-btn', { selected: selectedDifficulty === 'hard' }]">
-          {{ uiLabels.hard  || "Hard" }}
-        </button>
+      <div class="selection-wrapper">
+        <h3>{{ uiLabels.difficultyLevel || "Välj Svårighetsgrad" }}</h3>
+
+        <div class="button-row">
+          <button v-on:click="selectedDifficulty = 'easy'"
+            v-bind:class="['option-btn', { selected: selectedDifficulty === 'easy' }]">
+            {{ uiLabels.easy || "Easy" }}
+          </button>
+          <button v-on:click="selectedDifficulty = 'medium'"
+            v-bind:class="['option-btn', { selected: selectedDifficulty === 'medium' }]">
+            {{ uiLabels.medium || "Medium" }}
+          </button>
+          <button v-on:click="selectedDifficulty = 'hard'"
+            v-bind:class="['option-btn', { selected: selectedDifficulty === 'hard' }]">
+            {{ uiLabels.hard || "Hard" }}
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div class="selection-wrapper">
-      <h3>{{ uiLabels.numOfQuestions  || "Antal Frågor" }}</h3>
-      <div class="button-row">
-        <button v-for="num in [5, 7, 10]" v-bind:key="num" v-on:click="selectedNrOfQuestions = num"
-          v-bind:class="['option-btn', { selected: selectedNrOfQuestions === num }]">
-          {{ num }}
-        </button>
+      <div class="selection-wrapper">
+        <h3>{{ uiLabels.numOfQuestions || "Antal Frågor" }}</h3>
+        <div class="button-row">
+          <button v-for="num in [5, 7, 10]" v-bind:key="num" v-on:click="selectedNrOfQuestions = num"
+            v-bind:class="['option-btn', { selected: selectedNrOfQuestions === num }]">
+            {{ num }}
+          </button>
+        </div>
       </div>
+
+      <button v-on:click="createPollSettings" class="start-btn">
+        <span>{{ uiLabels.createGameNow || "CREATE!" }}</span>
+        <span style="font-size:0.8rem;padding: 0;">{{ selectedNrOfQuestions }} {{ difficultyLabel }} {{
+          uiLabels.questions || "questions" }}</span>
+      </button>
+
     </div>
-
-    <button v-on:click="createPollSettings" class="start-btn">
-      <span>{{ uiLabels.createGameNow  || "CREATE!" }}</span>
-      <span style="font-size:0.8rem;padding: 0;">{{ selectedNrOfQuestions }} {{ difficultyLabel }} {{ uiLabels.questions  || "questions" }}</span>
-    </button>
-
-  </div>
   </main>
   <ResponsiveNav>
-        <router-link to="/about/">
-            {{ uiLabels.about || "ABOUT!" }}
-        </router-link>
-        <router-link to="/faq/">
-            {{ uiLabels.faq || "FAQ!" }}
-        </router-link>
-        <router-link to="/lobby/">
-            {{ uiLabels.play || "PLAY!" }}
-        </router-link>
-        <router-link to="/create/">
-            {{ uiLabels["createGame"] || "CREATE!" }}
-        </router-link>
-        <LangSwitch @switch-language="switchLanguage" />  
-    </ResponsiveNav>
+    <router-link to="/about/">
+      {{ uiLabels.about || "ABOUT!" }}
+    </router-link>
+    <router-link to="/faq/">
+      {{ uiLabels.faq || "FAQ!" }}
+    </router-link>
+    <router-link to="/">
+      {{ uiLabels.play || "PLAY!" }}
+    </router-link>
+    <router-link to="/create/">
+      {{ uiLabels["createGame"] || "CREATE!" }}
+    </router-link>
+    <LangSwitch @switch-language="switchLanguage" />
+  </ResponsiveNav>
 </template>
 
 <script>
@@ -103,7 +104,7 @@ export default {
   methods: {
     switchLanguage: function (lang) {
       if (lang) {
-        this.lang = lang; 
+        this.lang = lang;
       } else {
         // Fallback / toggle if called without argument (though LangSwitch provides it now)
         this.lang = this.lang === "en" ? "sv" : "en";
@@ -150,37 +151,39 @@ export default {
 
 <style scoped>
 header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: clamp(8rem, 8dvh, 10rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: clamp(8rem, 8dvh, 10rem);
 }
 
 @media (min-width: 1024px) {
-    header {
-        padding-top: clamp(10rem, 8dvh, 12rem);
-    }
+  header {
+    padding-top: clamp(10rem, 8dvh, 12rem);
+  }
 }
 
 
 header h1,
 h2 {
-    color: var(--headline-color);
-    text-align: center;
-    text-shadow:
-        0 0 10px rgba(255, 215, 0, 0.8),
-        0 0 20px rgba(0, 0, 0, 0.9);
+  color: var(--headline-color);
+  text-align: center;
+  text-shadow:
+    0 0 10px rgba(255, 215, 0, 0.8),
+    0 0 20px rgba(0, 0, 0, 0.9);
 }
+
 h3 {
   font-size: 2.5rem;
   text-wrap: nowrap;
 }
+
 header p {
-    color: var(--headline-color);
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    font-size: 1.5rem;
+  color: var(--headline-color);
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  font-size: 1.5rem;
 }
 
 .create-container {
@@ -266,5 +269,4 @@ button:hover {
   text-shadow: 2px 2px 0px #000;
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
 }
-
 </style>

@@ -1,83 +1,83 @@
 <template>
   <TopRightHeader />
   <header>
-    <h1>{{ uiLabels.lobbyTitle  || "Lobby" }}</h1>
-    <p>{{ uiLabels.lobbySubtitle  || "Vänta på att spelet ska starta" }}</p>
+    <h1>{{ uiLabels.lobbyTitle || "Lobby" }}</h1>
+    <p>{{ uiLabels.lobbySubtitle || "Vänta på att spelet ska starta" }}</p>
   </header>
   <main>
-  <div class="lobby-view">
-    
-    <LobbyLicensePlate :pollId="pollId" />
+    <div class="lobby-view">
 
-    <div v-if="!joined" class="join-container panel-card">
-      <h2>{{ uiLabels.participateInPoll || "Enter Name" }}</h2>
-      <input type="text" class="input-main" v-model="userName" :placeholder="uiLabels['name'] || 'NAME'"
-        v-on:keyup.enter="participateInPoll">
-      <button class="btn-main" v-on:click="participateInPoll" :disabled="userName.length < 1">
-        {{ uiLabels["join"] || "JOIN" }}
-      </button>
-    </div>
+      <LobbyLicensePlate :pollId="pollId" />
 
-    <div v-if="joined" class="waiting-container">
-      <img src="/img/logo.png" alt="Logo" class="lobby-logo" />
-
-      <h2 v-if="!isHost">
-        {{ uiLabels.welcome || "Welcome" }}
-        <span class="highlight">{{ userName }}</span>!
-      </h2>
-
-      <button v-if="!isHost" class="btn-main" :class="{ 'btn-alt': isReady }" v-on:click="toggleReady">
-        {{ isReady ? (uiLabels.notReady || "INTE REDO") : (uiLabels.ready || "REDO") }}
-      </button>
-
-      <div v-if="isHost" class="host-controls">
-        <button class="btn-main" v-on:click="runQuiz">
-          {{ uiLabels.startGame || "STARTA SPELET" }}
+      <div v-if="!joined" class="join-container panel-card">
+        <h2>{{ uiLabels.participateInPoll || "Enter Name" }}</h2>
+        <input type="text" class="input-main" v-model="userName" :placeholder="uiLabels['name'] || 'NAME'"
+          v-on:keyup.enter="participateInPoll">
+        <button class="btn-main" v-on:click="participateInPoll" :disabled="userName.length < 1">
+          {{ uiLabels["join"] || "JOIN" }}
         </button>
       </div>
 
-      <h3 v-if="!isHost" class="pulsing-text">
-        {{ isReady ? "AWAITING INITIATION..." : "CONFIRM PRESENCE, OPERATOR." }}
-      </h3>
+      <div v-if="joined" class="waiting-container">
+        <img src="/img/logo.png" alt="Logo" class="lobby-logo" />
 
-      <h3>{{ uiLabels.participants || "Deltagare" }}: {{ participants.length }}</h3>
+        <h2 v-if="!isHost">
+          {{ uiLabels.welcome || "Welcome" }}
+          <span class="highlight">{{ userName }}</span>!
+        </h2>
 
-      <div class="participants-grid">
-        <div v-for="(participant, index) in participants" :key="index" class="participant-card" :class="{
-          'is-me': participant.name === userName,
-          'ready': participant.isReady
-        }">
-          {{ participant.name }}
+        <button v-if="!isHost" class="btn-main" :class="{ 'btn-alt': isReady }" v-on:click="toggleReady">
+          {{ isReady ? (uiLabels.notReady || "INTE REDO") : (uiLabels.ready || "REDO") }}
+        </button>
+
+        <div v-if="isHost" class="host-controls">
+          <button class="btn-main" v-on:click="runQuiz">
+            {{ uiLabels.startGame || "STARTA SPELET" }}
+          </button>
+        </div>
+
+        <h3 v-if="!isHost" class="pulsing-text">
+          {{ isReady ? "AWAITING INITIATION..." : "CONFIRM PRESENCE, OPERATOR." }}
+        </h3>
+
+        <h3>{{ uiLabels.participants || "Deltagare" }}: {{ participants.length }}</h3>
+
+        <div class="participants-grid">
+          <div v-for="(participant, index) in participants" :key="index" class="participant-card" :class="{
+            'is-me': participant.name === userName,
+            'ready': participant.isReady
+          }">
+            {{ participant.name }}
+          </div>
+        </div>
+      </div>
+
+      <div v-if="showErrorModal" class="modal-overlay" @click="showErrorModal = false">
+        <div class="panel-card" @click.stop>
+          <h2>{{ errorTitle }}</h2>
+          <p>{{ errorMessage }}</p>
+          <button class="btn-main" @click="showErrorModal = false">
+            {{ uiLabels.okButton || "UPPFATTAT" }}
+          </button>
         </div>
       </div>
     </div>
-
-    <div v-if="showErrorModal" class="modal-overlay" @click="showErrorModal = false">
-      <div class="panel-card" @click.stop>
-        <h2>{{ errorTitle }}</h2>
-        <p>{{ errorMessage }}</p>
-        <button class="btn-main" @click="showErrorModal = false">
-          {{ uiLabels.okButton || "UPPFATTAT" }}
-        </button>
-      </div>
-    </div>
-  </div>
   </main>
   <ResponsiveNav>
-        <router-link to="/about/">
-            {{ uiLabels.about || "ABOUT!" }}
-        </router-link>
-        <router-link to="/faq/">
-            {{ uiLabels.faq || "FAQ!" }}
-        </router-link>
-        <router-link to="/lobby/">
-            {{ uiLabels.play || "PLAY!" }}
-        </router-link>
-        <router-link to="/create/">
-            {{ uiLabels["createGame"] || "CREATE!" }}
-        </router-link>
-        <LangSwitch @switch-language="switchLanguage" />  
-    </ResponsiveNav>
+    <router-link to="/about/">
+      {{ uiLabels.about || "ABOUT!" }}
+    </router-link>
+    <router-link to="/faq/">
+      {{ uiLabels.faq || "FAQ!" }}
+    </router-link>
+    <router-link to="/">
+      {{ uiLabels.play || "PLAY!" }}
+    </router-link>
+    <router-link to="/create/">
+      {{ uiLabels["createGame"] || "CREATE!" }}
+    </router-link>
+    <LangSwitch @switch-language="switchLanguage" />
+  </ResponsiveNav>
 </template>
 
 <script>
@@ -112,17 +112,17 @@ export default {
     TopRightHeader,
   },
   methods: {
-        switchLanguage: function (lang) {
-            if (lang) {
-               this.lang = lang; 
-            } else {
-                // Fallback / toggle if called without argument (though LangSwitch provides it now)
-                this.lang = this.lang === "en" ? "sv" : "en";
-            }
-            localStorage.setItem("lang", this.lang);
-            socket.emit("getUILabels", this.lang);
-        },
+    switchLanguage: function (lang) {
+      if (lang) {
+        this.lang = lang;
+      } else {
+        // Fallback / toggle if called without argument (though LangSwitch provides it now)
+        this.lang = this.lang === "en" ? "sv" : "en";
+      }
+      localStorage.setItem("lang", this.lang);
+      socket.emit("getUILabels", this.lang);
     },
+  },
   computed: {
     displayParticipants() {
       // Ganska stor ändring här för att programmet ska godkänna unika användarnamn. 
@@ -202,36 +202,38 @@ export default {
 
 <style scoped>
 header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: clamp(8rem, 8dvh, 10rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: clamp(8rem, 8dvh, 10rem);
 }
 
 @media (min-width: 1024px) {
-    header {
-        padding-top: clamp(10rem, 8dvh, 12rem);
-    }
+  header {
+    padding-top: clamp(10rem, 8dvh, 12rem);
+  }
 }
 
 header h1,
 h2 {
-    color: var(--headline-color);
-    text-align: center;
-    text-shadow:
-        0 0 10px rgba(255, 215, 0, 0.8),
-        0 0 20px rgba(0, 0, 0, 0.9);
+  color: var(--headline-color);
+  text-align: center;
+  text-shadow:
+    0 0 10px rgba(255, 215, 0, 0.8),
+    0 0 20px rgba(0, 0, 0, 0.9);
 }
+
 h3 {
   font-size: 2.5rem;
   text-wrap: nowrap;
 }
+
 header p {
-    color: var(--headline-color);
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    font-size: 1.5rem;
+  color: var(--headline-color);
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  font-size: 1.5rem;
 }
 
 .lobby-view {

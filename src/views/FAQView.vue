@@ -41,13 +41,13 @@
         <router-link to="/faq/">
             {{ uiLabels.faq || "FAQ!" }}
         </router-link>
-        <router-link to="/lobby/">
+        <router-link to="/">
             {{ uiLabels.play || "PLAY!" }}
         </router-link>
         <router-link to="/create/">
             {{ uiLabels["createGame"] || "CREATE!" }}
         </router-link>
-        <LangSwitch @switch-language="switchLanguage" />  
+        <LangSwitch @switch-language="switchLanguage" />
     </ResponsiveNav>
 </template>
 <script>
@@ -95,11 +95,13 @@ header {
     padding-top: clamp(8rem, 8dvh, 10rem);
     margin-bottom: 3rem;
 }
+
 @media (min-width: 1024px) {
     header {
         padding-top: clamp(10rem, 8dvh, 12rem);
     }
 }
+
 header h1,
 h2 {
     color: var(--headline-color);
@@ -108,10 +110,12 @@ h2 {
         0 0 10px rgba(255, 215, 0, 0.8),
         0 0 20px rgba(0, 0, 0, 0.9);
 }
+
 h2 {
     margin-bottom: 1.5rem;
     text-wrap: balance;
 }
+
 main p {
     font-size: 1.1rem;
     color: #e0e0e0;
@@ -151,10 +155,12 @@ main p {
         border-left-color: #ffd700;
         box-shadow: -2px 0 5px rgba(255, 215, 0, 0.2);
     }
+
     50% {
         border-left-color: #fff200;
         box-shadow: -4px 0 15px rgba(255, 215, 0, 0.5);
     }
+
     100% {
         border-left-color: #ffd700;
         box-shadow: -2px 0 5px rgba(255, 215, 0, 0.2);
@@ -165,7 +171,8 @@ main p {
     text-align: left;
     padding: 1.2rem;
     background: rgba(0, 0, 0, 0.4);
-    border-left: 3px solid var(--button-color); /* Guld */
+    border-left: 3px solid var(--button-color);
+    /* Guld */
     border-radius: 0 8px 8px 0;
     position: relative;
     overflow: hidden;
@@ -179,11 +186,9 @@ main p {
     left: 0;
     width: 100%;
     height: 100%;
-    background: radial-gradient(
-        circle at left,
-        rgba(255, 215, 0, 0.05),
-        transparent
-    );
+    background: radial-gradient(circle at left,
+            rgba(255, 215, 0, 0.05),
+            transparent);
     pointer-events: none;
 }
 
@@ -201,5 +206,4 @@ main p {
     font-size: 0.95rem;
     opacity: 0.9;
 }
-
 </style>
