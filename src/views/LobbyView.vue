@@ -63,28 +63,13 @@
       </div>
     </div>
   </main>
-  <ResponsiveNav>
-    <router-link to="/about/">
-      {{ uiLabels.about || "ABOUT!" }}
-    </router-link>
-    <router-link to="/faq/">
-      {{ uiLabels.faq || "FAQ!" }}
-    </router-link>
-    <router-link to="/">
-      {{ uiLabels.play || "PLAY!" }}
-    </router-link>
-    <router-link to="/create/">
-      {{ uiLabels["createGame"] || "CREATE!" }}
-    </router-link>
-    <LangSwitch @switch-language="switchLanguage" />
-  </ResponsiveNav>
+  <ResponsiveNav :uiLabels="uiLabels" @switch-language="switchLanguage" />
 </template>
 
 <script>
 import socket from "@/socket.js";
 import LobbyLicensePlate from "@/components/LobbyLicensePlate.vue";
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
-import LangSwitch from "@/components/LangSwitch.vue";
 import TopRightHeader from "@/components/TopRightHeader.vue";
 
 export default {
@@ -108,7 +93,6 @@ export default {
   components: {
     LobbyLicensePlate,
     ResponsiveNav,
-    LangSwitch,
     TopRightHeader,
   },
   methods: {

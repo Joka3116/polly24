@@ -11,34 +11,18 @@
             <p>{{ uiLabels.aboutText3 }}</p>
         </div>
     </main>
-    <ResponsiveNav>
-        <router-link to="/about/">
-            {{ uiLabels.about || "ABOUT!" }}
-        </router-link>
-        <router-link to="/faq/">
-            {{ uiLabels.faq || "FAQ!" }}
-        </router-link>
-        <router-link to="/">
-            {{ uiLabels.play || "PLAY!" }}
-        </router-link>
-        <router-link to="/create/">
-            {{ uiLabels["createGame"] || "CREATE!" }}
-        </router-link>
-        <LangSwitch @switch-language="switchLanguage" />
-    </ResponsiveNav>
+    <ResponsiveNav :uiLabels="uiLabels" @switch-language="switchLanguage" />
 </template>
 <script>
 import socket from "@/socket.js";
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
 import TopRightHeader from "@/components/TopRightHeader.vue";
-import LangSwitch from "@/components/LangSwitch.vue";
 
 export default {
     name: "AboutView",
     components: {
         ResponsiveNav,
         TopRightHeader,
-        LangSwitch,
     },
     data: function () {
         return {

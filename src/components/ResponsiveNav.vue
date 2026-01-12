@@ -4,7 +4,29 @@
             <div id="nav-overlay-container">
                 <ul>
                     <li>
-                        <slot></slot>
+                        <transition name="fade" mode="out-in">
+                            <div v-if="showGameInput" class="nav-input-row" :class="{ shake: isShaking }" key="input">
+                                <input ref="gameInputRef" type="text" v-model="gameId" class="nav-input"
+                                    :placeholder="uiLabels.gameId || 'GAME ID'" @click.stop @keyup.enter="joinGame" />
+                                <button class="nav-btn" @click.stop="joinGame">
+                                    {{ uiLabels.join || "JOIN" }}
+                                </button>
+                            </div>
+                            <a v-else class="nav-item" @click.stop="revealInput" key="play-btn">
+                                {{ uiLabels.play || "PLAY!" }}
+                            </a>
+                        </transition>
+
+                        <router-link to="/create/">
+                            {{ uiLabels["createGame"] || "CREATE!" }}
+                        </router-link>
+                        <router-link to="/about/">
+                            {{ uiLabels.about || "ABOUT!" }}
+                        </router-link>
+                        <router-link to="/faq/">
+                            {{ uiLabels.faq || "FAQ!" }}
+                        </router-link>
+                        <LangSwitch @switch-language="$emit('switch-language', $event)" />
                     </li>
                 </ul>
                 <div class="top-right-header">
@@ -21,18 +43,75 @@
 </template>
 
 <script setup>
-import { ref, watch, onBeforeUnmount } from 'vue';
+import { ref, watch, onBeforeUnmount, defineProps, defineEmits, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
+import LangSwitch from "@/components/LangSwitch.vue";
+import socket from "@/socket.js";
+
+const props = defineProps({
+    uiLabels: {
+        type: Object,
+        default: () => ({})
+    }
+});
+
+const emit = defineEmits(['switch-language']);
+const router = useRouter();
 
 const isMenuOpen = ref(false);
+const gameId = ref("");
+const showGameInput = ref(false);
+
+const gameInputRef = ref(null);
+const isShaking = ref(false);
 
 const toggleMenu = () => {
     isMenuOpen.value = !isMenuOpen.value;
 };
 
+const revealInput = () => {
+    showGameInput.value = true;
+};
+
+// Auto-focus when input element is mounted
+watch(gameInputRef, (el) => {
+    if (el) {
+        el.focus();
+    }
+});
+
 const handleOverlayClick = (event) => {
-    if (!event.target.closest('.lang-switch-container')) {
+    if (!event.target.closest('.lang-switch-container') && !event.target.closest('.nav-input-row')) {
         isMenuOpen.value = false;
     }
+};
+
+const triggerShake = () => {
+    isShaking.value = true;
+    gameInputRef.value?.focus(); // Keep focus on input
+    setTimeout(() => {
+        isShaking.value = false;
+    }, 500);
+};
+
+const joinGame = () => {
+    if (!gameId.value) {
+        triggerShake();
+        return;
+    }
+
+    socket.emit("checkPollExists", gameId.value);
+
+    socket.once("pollExistsResponse", (exists) => {
+        if (exists) {
+            isMenuOpen.value = false;
+            router.push("/lobby/" + gameId.value);
+            gameId.value = ""; // Reset after join
+            showGameInput.value = false;
+        } else {
+            triggerShake();
+        }
+    });
 };
 
 const getScrollbarWidth = () => {
@@ -53,6 +132,10 @@ watch(isMenuOpen, (isOpen) => {
         document.body.style.paddingRight = `${scrollbarWidth}px`;
     } else {
         cleanup();
+        setTimeout(() => {
+            showGameInput.value = false; // Reset input view when menu closes
+            gameId.value = "";
+        }, 400); // Wait for transition
     }
 });
 
@@ -152,7 +235,6 @@ nav ul {
     /* Keep PX for height to ensure lines stay sharp and don't blur */
     height: 2px;
     border-radius: 2px;
-
     transition: all 0.4s ease;
     transform-origin: left center;
 }
@@ -245,7 +327,8 @@ nav ul {
     }
 
     /* Reduce menu item sizes on mobile */
-    #nav-overlay-container ul :deep(li a) {
+    #nav-overlay-container ul :deep(li a),
+    #nav-overlay-container ul :deep(.nav-item) {
         font-size: 1.8rem !important;
         padding: 0.5em !important;
         margin: 1.5rem !important;
@@ -294,7 +377,8 @@ nav ul {
 /* =========================================
    Menu Items (The Big Change)
    ========================================= */
-#nav-overlay-container ul :deep(li a) {
+#nav-overlay-container ul :deep(li a),
+.nav-item {
     opacity: 1 !important;
     display: block;
     color: var(--foreground-alt-color);
@@ -337,7 +421,8 @@ nav ul {
     outline-offset: -1px;
 }
 
-#nav-overlay-container ul :deep(li a) {
+#nav-overlay-container ul :deep(li a),
+.nav-item {
     opacity: 1;
     display: block;
     color: var(--foreground-alt-color);
@@ -369,7 +454,8 @@ nav ul {
     outline-offset: -1px;
 }
 
-#nav-overlay-container ul :deep(li a:hover) {
+#nav-overlay-container ul :deep(li a:hover),
+.nav-item:hover {
     border: 2px solid var(--foreground-alt-color);
     outline-width: 5px;
     outline-color: var(--foreground-alt-color);
@@ -398,5 +484,142 @@ nav ul {
     left: 50%;
     transform: translateX(-50%);
     margin: 0;
+}
+
+/* =========================================
+   New Input & Join Button Styles
+   ========================================= */
+.nav-input-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: space-evenly;
+    /* gap removed to allow full margin transition control */
+    margin: 2rem 0;
+    
+    /* Strict sizing to match links */
+    width: 100%;
+    min-width: 60vw;
+    box-sizing: border-box;
+}
+
+.nav-input {
+    font-family: bebas-kai, sans-serif;
+    font-size: 2.5rem;
+    line-height: 1.2;
+    padding: 0.625em;
+    border-radius: 1.2em;
+    border: 2px solid var(--foreground-alt-color);
+    background: transparent;
+    color: var(--foreground-alt-color);
+    text-align: center;
+    text-transform: uppercase;
+    
+    /* Flex logic */
+    flex: 1 1 auto;
+    width: auto; /* let flex handle width */
+    
+    outline: none;
+    transition: box-shadow 0.3s ease;
+}
+
+.nav-input::placeholder {
+    color: color-mix(in srgb, var(--foreground-alt-color), transparent 60%);
+}
+
+.nav-input:focus {
+    outline-width: 5px !important;
+    outline-color: var(--foreground-alt-color);
+}
+
+.nav-btn {
+    font-family: bebas-kai, sans-serif;
+    font-size: 2.5rem;
+    line-height: 1.2;
+    padding: 0.625em;
+    border-radius: 1.2em;
+    border: 2px solid var(--foreground-alt-color);
+    background: var(--foreground-alt-color);
+    color: var(--background-alt-color);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+    white-space: nowrap;
+    
+    /* Flex logic */
+    flex: 0 0 auto;
+    width: auto;
+    margin-left: 0.5rem; /* Replaces gap */
+    overflow: hidden; /* Ensure text doesn't spill during transition */
+}
+
+.nav-btn:hover {
+    transform: scale(1.05);
+    background: #fff;
+    /* Slightly brighter on hover */
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .nav-input,
+    .nav-btn {
+        font-size: 1.8rem !important;
+        padding: 0.5em !important;
+        margin: 0 !important;
+    }
+    .nav-input-row {
+        margin: 1.5rem !important;
+    }
+    .nav-btn {
+        margin-left: 0.5rem !important;
+        margin-right: 3rem !important;
+    }
+}
+
+/* Simple fade transition */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.1s ease;
+}
+
+/* Instant disappearance for Play link */
+.nav-item.fade-leave-active {
+    transition: none;
+    opacity: 0;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    /* Main container fades in */
+    opacity: 0;
+}
+
+/* Animate the button expanding in */
+.fade-enter-active .nav-btn {
+    transition: 
+        max-width 0.2s ease-out,
+        padding 0.2s ease-out,
+        margin 0.2s ease-out,
+        opacity 0.2s ease-in;
+    max-width: 200px; /* Arbitrary large enough width */
+}
+
+.fade-enter-from .nav-btn {
+    max-width: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border-width: 0;
+    margin-left: 0;
+    opacity: 0;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
 }
 </style>

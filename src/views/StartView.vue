@@ -22,28 +22,12 @@
         </div>
 
     </main>
-    <ResponsiveNav>
-        <router-link to="/about/">
-            {{ uiLabels.about || "ABOUT!" }}
-        </router-link>
-        <router-link to="/faq/">
-            {{ uiLabels.faq || "FAQ!" }}
-        </router-link>
-        <router-link to="/">
-            {{ uiLabels.play || "PLAY!" }}
-        </router-link>
-        <router-link to="/create/">
-            {{ uiLabels["createGame"] || "CREATE!" }}
-        </router-link>
-        <LangSwitch @switch-language="switchLanguage" />
-    </ResponsiveNav>
-
+    <ResponsiveNav :uiLabels="uiLabels" @switch-language="switchLanguage" />
 
 </template>
 
 <script>
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
-import LangSwitch from "@/components/LangSwitch.vue";
 import GameInput from "@/components/GameInput.vue";
 import socket from "@/socket.js";
 
@@ -51,7 +35,6 @@ export default {
     name: "StartView",
     components: {
         ResponsiveNav,
-        LangSwitch,
         GameInput,
     },
     data: function () {

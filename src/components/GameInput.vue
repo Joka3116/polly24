@@ -1,6 +1,7 @@
 <template>
-    <div class="game-input-area">
+    <div class="game-input-area" :class="{ shake: isShaking }" ref="containerRef">
         <input
+            ref="gameInputRef"
             type="text"
             class="input-main"
             v-model="gameId"
@@ -18,32 +19,11 @@
         >
             <i class="bi bi-x-lg"></i>
         </button>
-
-        <div
-            v-if="showErrorModal"
-            class="modal-overlay"
-            @click="showErrorModal = false"
-        >
-            <div class="panel-card" @click.stop>
-                <h2>{{ uiLabels.errorTitle || "USER ERROR" }}</h2>
-
-                <p>
-                    {{
-                        uiLabels.serverMissing ||
-                        "Impressively incorrect. This node is deader than the code it's running on..."
-                    }}
-                </p>
-
-                <button class="btn-main" @click="showErrorModal = false">
-                    {{ uiLabels.okButton || "UNDERSTOOD" }}
-                </button>
-            </div>
-        </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import socket from "@/socket.js";
 
@@ -58,10 +38,23 @@ const emit = defineEmits(["cancel"]);
 const router = useRouter();
 
 const gameId = ref("");
-const showErrorModal = ref(false);
+const isShaking = ref(false);
+const gameInputRef = ref(null);
+const containerRef = ref(null);
+
+const triggerShake = () => {
+    isShaking.value = true;
+    gameInputRef.value?.focus();
+    setTimeout(() => {
+        isShaking.value = false;
+    }, 500);
+};
 
 function joinGame() {
-    if (!gameId.value) return;
+    if (!gameId.value) {
+        triggerShake();
+        return;
+    }
 
     socket.emit("checkPollExists", gameId.value);
 
@@ -69,7 +62,7 @@ function joinGame() {
         if (exists) {
             router.push("/lobby/" + gameId.value);
         } else {
-            showErrorModal.value = true;
+            triggerShake();
         }
     });
 }
@@ -77,6 +70,23 @@ function joinGame() {
 function emitCancel() {
     emit("cancel");
 }
+
+function handleClickOutside(event) {
+    if (containerRef.value && !containerRef.value.contains(event.target)) {
+        emitCancel();
+    }
+}
+
+onMounted(() => {
+    // Add a slight delay or use setTimeout to avoid catching the click that opened this component
+    setTimeout(() => {
+        window.addEventListener('click', handleClickOutside);
+    }, 100);
+});
+
+onBeforeUnmount(() => {
+    window.removeEventListener('click', handleClickOutside);
+});
 </script>
 
 <style scoped>
@@ -114,4 +124,15 @@ function emitCancel() {
 .back-btn:hover i {
     font-size: 2rem;
 }
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+    20%, 40%, 60%, 80% { transform: translateX(3px); }
+}
+
+.shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
 </style>

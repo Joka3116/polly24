@@ -41,22 +41,7 @@
       {{ uiLabels.startingPage || "Gå till startsidan" }}
     </button>
 
-    <ResponsiveNav>
-      <router-link to="/about/">
-        {{ uiLabels.about || "ABOUT!" }}
-      </router-link>
-      <router-link to="/faq/">
-        {{ uiLabels.faq || "FAQ!" }}
-      </router-link>
-      <router-link to="/">
-        {{ uiLabels.play || "PLAY!" }}
-      </router-link>
-      <router-link to="/create/">
-        {{ uiLabels.createGame || "CREATE!" }}
-      </router-link>
-
-      <LangSwitch @switch-language="switchLanguage" />
-    </ResponsiveNav>
+    <ResponsiveNav :uiLabels="uiLabels" @switch-language="switchLanguage" />
 
   </div>
 </template>
@@ -64,7 +49,6 @@
 <script>
 import socket from "@/socket.js";
 import ResponsiveNav from "@/components/ResponsiveNav.vue";
-import LangSwitch from "@/components/LangSwitch.vue";
 import confetti from "canvas-confetti";
 
 export default {
@@ -72,7 +56,6 @@ export default {
 
   components: {
     ResponsiveNav,
-    LangSwitch
   },
 
   data: function () {
