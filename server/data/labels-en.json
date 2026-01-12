@@ -67,5 +67,6 @@
   "showanswer": "SHOW ANSWER",
   "nextQ": "NEXT QUESTION",
   "waiting": "Waiting for question...",
-  "readyStart": "Ready to start?"
+  "readyStart": "Ready to start?",
+  "timerDuration": "Select Time Limit"
 }

@@ -67,5 +67,6 @@
   "showanswer": "VISA SVAR",
   "nextQ": "NÄSTA FRÅGA",
   "waiting": "Väntar på fråga...",
-  "readyStart": "Redo att starta?"
+  "readyStart": "Redo att starta?",
+  "timerDuration": "Välj Tidsgräns"
 }

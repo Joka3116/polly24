@@ -172,8 +172,15 @@ function sockets(io, socket, data) {
     }
 
     const times = { easy: 60, medium: 45, hard: 30 };
-    const diffKey = difficulty ? difficulty.toLowerCase() : 'medium';
-    let timeLeft = times[diffKey] || 45;
+    const diffKey = String(difficulty).toLowerCase();
+
+    let timeLeft = 20; // Default fallback
+
+    if (!isNaN(difficulty)) {
+      timeLeft = parseInt(difficulty);
+    } else if (times[diffKey]) {
+      timeLeft = times[diffKey];
+    }
 
     io.to(pollId).emit('timerUpdate', timeLeft);
 
