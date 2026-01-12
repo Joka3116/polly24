@@ -7,14 +7,14 @@
 
     <div class="poll-view">
 
-      <LobbyLicensePlate :pollId="pollId" />
+      <LobbyLicensePlate :pollId="pollId" class="desktop-only" />
 
       <div class="info-container">
         <img src="/img/logo.png" alt="Logo" class="poll-logo" />
 
         <div v-if="isHost && question.text" class="question-count-display">
           <h2>{{ uiLabels.question }}: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions
-              }}</span></h2>
+          }}</span></h2>
         </div>
 
         <div class="timer-wrapper" v-if="question.text && !showResults">
@@ -284,9 +284,6 @@ header p {
   margin-bottom: 1rem;
 }
 
-
-
-
 .debug-text {
   margin-top: 2rem;
   font-size: 0.8rem;
@@ -370,5 +367,16 @@ header p {
 .question-count-display h2 {
   font-size: 1.8rem;
   text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+@media (max-width: 600px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .header,
+  h1 {
+    display: none;
+  }
 }
 </style>

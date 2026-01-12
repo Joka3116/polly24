@@ -154,6 +154,7 @@ main {
     align-items: center;
     gap: 1.5rem;
     width: 100%;
+      min-width: 80px;
 }
 
 /* Transitions */
@@ -170,4 +171,27 @@ main {
     transform: translateY(20px);
     opacity: 0;
 }
+
+@media (max-width: 768px) {
+    header h1 {
+    color: var(--headline-color);
+    text-shadow:
+        0 0 10px rgba(255, 215, 0, 0.8),
+        0 0 20px rgba(0, 0, 0, 0.9);
+    text-align: center;
+    text-wrap: balance !important;   
+    font-size: 2rem;
+}
+
+h2     {color: var(--headline-color);
+    text-shadow:
+        0 0 10px rgba(255, 215, 0, 0.8),
+        0 0 20px rgba(0, 0, 0, 0.9);
+    text-align: center;
+    text-wrap: balance !important;   
+    font-size: 1rem;
+}
+
+}
+
 </style>

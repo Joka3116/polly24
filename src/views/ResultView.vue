@@ -232,6 +232,8 @@ export default {
   gap: 1rem;
   text-align: center;
   margin-bottom: 3rem;
+  min-width: 180px;
+  min-height: 150px;
 }
 
 .podium-slot {
