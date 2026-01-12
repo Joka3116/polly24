@@ -266,10 +266,21 @@ header p {
 }
 
 .lobby-logo {
-  width: 180px;
-  height: auto;
-  margin-bottom: -1rem;
-  animation: float 6s ease-in-out infinite;
+    width: var(--logo-size) !important; 
+    max-width: 150px; 
+    height: auto;
+    margin: 0 auto;
+    animation: float 6s ease-in-out infinite;
+}
+
+.waiting-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px; 
+    margin: 0 auto;
+    gap: 1rem; 
 }
 
 @keyframes float {

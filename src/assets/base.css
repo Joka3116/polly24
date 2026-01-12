@@ -8,8 +8,17 @@
     --button-background-color: radial-gradient(circle, #512da8, #311b92);
     --button-color: gold;
     --headline-color: gold;
-}
 
+    --font-main-title: clamp(2rem, 8vw, 3.5rem);
+    --font-sub-title: clamp(1.2rem, 4vw, 1.8rem);
+    --header-padding: clamp(2rem, 6dvh, 8rem);
+    --main-padding-top: 4dvh;
+--logo-size: clamp(100px, 12vw, 150px);
+}
+img {
+    max-width: 100%;
+    height: auto;
+}
 *,
 body,
 main,
@@ -18,15 +27,61 @@ header {
     padding: 0;
 }
 
+/* --- STANDARDISERAD HEADER --- */
+header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* !important säkerställer att vi vinner över gamla lokala vyer */
+    padding-top: var(--header-padding) !important;
+    text-align: center;
+}
+
+header h1,
+header h2,
+.selection-wrapper h3 {
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+header h1 {
+    font-size: var(--font-main-title);
+    color: var(--headline-color);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.8), 0 0 20px rgba(0, 0, 0, 0.9);
+    text-transform: uppercase;
+    text-wrap: balance;
+}
+
+header h2,
+.selection-wrapper h3 {
+    font-size: var(--font-sub-title);
+    color: var(--headline-color);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    text-wrap: balance;
+}
+
+main {
+    padding-top: var(--main-padding-top);
+}
+
+/* --- MOBILANPASSNING (GLOBAL) --- */
+@media (max-width: 768px) {
+
+    header p,
+    .desktop-only {
+        display: none !important;
+    }
+
+    header {
+        padding-top: 2rem !important;
+    }
+}
+
 body {
     height: 100%;
     background-color: var(--background-color);
-}
-
-/* If the body contains an element with ID #hamburger that has class .active... */
-body:has(#hamburger.active) {
-    background-color: var(--background-alt-color);
-    height: 100dvh;
+    font-family: 'Arial', sans-serif;
 }
 
 .btn-main {
@@ -43,9 +98,7 @@ body:has(#hamburger.active) {
     text-transform: uppercase;
     letter-spacing: 2px;
     cursor: pointer;
-    transition:
-        transform 0.2s,
-        box-shadow 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
     box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
     display: inline-block;
     text-align: center;
@@ -153,7 +206,6 @@ body:has(#hamburger.active) {
     }
 }
 
-/* formattering för hur texten ser ut på våra error message */
 .modal-overlay p {
     font-family: "Times New Roman", serif;
     line-height: 1.6;
