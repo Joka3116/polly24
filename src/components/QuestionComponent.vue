@@ -6,25 +6,19 @@
 
     <div v-if="!isHost || showResults" class="player-view">
       <div class="answers-grid">
-        <button 
-          v-for="(answer, index) in question.answers" 
-          :key="index"
-          class="answer-btn"
-          :disabled="timeExpired || showResults || isHost" 
-          :class="{ 
+        <button v-for="(answer, index) in question.answers" :key="index" class="answer-btn"
+          :disabled="timeExpired || showResults || isHost" :class="{
             'selected': selectedAnswer === answer,
             'correct': showResults && answer.id === correctAnswerId,
             'wrong': showResults && selectedAnswer === answer && answer.id !== correctAnswerId,
             'time-out': timeExpired && !selectedAnswer && !showResults
-          }" 
-          @click="clicked(answer)"
-        >
+          }" @click="clicked(answer)">
           {{ answer.text }}
         </button>
       </div>
     </div>
 
-    </div>
+  </div>
 </template>
 <script>
 export default {
@@ -78,9 +72,9 @@ export default {
 .answers-grid {
   display: grid;
   /* Tvingar fram 2 kolumner oavsett skärmstorlek */
-  grid-template-columns: 1fr 1fr; 
+  grid-template-columns: 1fr 1fr;
   /* Minskat gap för att få plats på mobilen */
-  gap: clamp(10px, 2vw, 20px); 
+  gap: clamp(10px, 2vw, 20px);
   width: 100%;
   max-width: 1000px;
   padding: 15px;
@@ -90,20 +84,20 @@ export default {
 .answer-btn {
   background: linear-gradient(145deg, #311b92, #512da8);
   color: gold;
-  border: clamp(2px, 0.5vw, 4px) solid gold; 
-  border-radius: 30px; 
-  
+  border: clamp(2px, 0.5vw, 4px) solid gold;
+  border-radius: 30px;
+
   /* Flexibel textstorlek för att undvika radbrytningar på små skärmar */
   font-size: clamp(0.9rem, 2.5vw, 1.6rem);
-  
+
   font-weight: bold;
   text-transform: uppercase;
-  text-shadow: 1px 1px 0 rgba(0,0,0,0.5);
-  
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+
   /* Säkrar att knapparna är stora men inte för höga på mobil */
   padding: clamp(10px, 2vh, 25px);
-  min-height: clamp(80px, 15vh, 120px); 
-  
+  min-height: clamp(80px, 15vh, 120px);
+
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -126,13 +120,14 @@ export default {
     padding: 10px;
     gap: 12px;
   }
-  
+
   .answer-btn {
     border-radius: 20px;
     /* Gör texten lite smalare på mobil om namnen är långa */
-    letter-spacing: 0px; 
+    letter-spacing: 0px;
   }
 }
+
 .answer-btn.selected {
   color: gold;
   border-color: gold;
@@ -161,6 +156,11 @@ export default {
   cursor: not-allowed;
   filter: grayscale(0.8);
   opacity: 0.6;
+}
+
+.answer-btn:disabled.correct {
+  filter: none;
+  opacity: 1;
 }
 
 .answer-btn.time-out {
