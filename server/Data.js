@@ -83,16 +83,12 @@ Data.prototype.resetPoll = function (pollId) {
     poll.answers = [];
     poll.currentQuestion = 0;
 
-    console.log(`[DEBUG] Resetting poll ${pollId}. Previous participants state:`, JSON.stringify(poll.participants));
-
     poll.participants.forEach(participant => {
-      console.log(`[DEBUG] Resetting participant ${participant.name} from ${participant.points} to 0`);
       participant.points = 0;
       participant.answers = [];
       participant.isReady = false;
     });
 
-    console.log(`[DEBUG] Poll reset complete. New participants state:`, JSON.stringify(poll.participants));
     console.log("Poll reset for", pollId);
   }
 }

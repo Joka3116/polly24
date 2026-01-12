@@ -125,11 +125,8 @@ function sockets(io, socket, data) {
 
   socket.on("getFinalResults", pollId => {
     const poll = data.getPoll(pollId);
-    console.log(`getFinalResults requested for pollId: ${pollId}`);
-    console.log("Poll object retrieved:", poll);
 
     if (!poll || Object.keys(poll).length === 0) {
-      console.log("Poll not found or empty!");
       socket.emit("finalResults", []);
       return;
     }
@@ -138,8 +135,6 @@ function sockets(io, socket, data) {
       ? poll.participants
       : [];
 
-    console.log("Participants found:", participants);
-
     const leaderboard = participants
       .filter(p => p.name !== "Host")
       .map(p => ({
@@ -147,8 +142,6 @@ function sockets(io, socket, data) {
         points: p.points || 0
       }))
       .sort((a, b) => b.points - a.points);
-
-    console.log("FINAL RESULTS SENT:", leaderboard);
 
     socket.emit("finalResults", leaderboard);
   });
