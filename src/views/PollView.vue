@@ -160,7 +160,7 @@ export default {
 
       this.gameOverTimeout = setTimeout(() => {
         this.$router.push(`/result/${this.pollId}`);
-      }, 5000);
+      }, 2000);
     });
 
     socket.on("submittedAnswersUpdate", answers => this.submittedAnswers = answers);
