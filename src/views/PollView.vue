@@ -7,6 +7,16 @@
 
     <div class="poll-view">
 
+      <div v-if="isHost && showReadyBonusPopup" class="modal-overlay">
+        <div class="panel-card">
+          <h2>Bonus utdelad!</h2>
+          <p>
+            <span class="highlight">Grattis till alla spelare som var redo –<br />
+              ni har precis fått <strong>500 bonuspoäng</strong>!</span>
+          </p>
+        </div>
+      </div>
+
       <LobbyLicensePlate :pollId="pollId" class="desktop-only" />
 
       <div class="info-container">
@@ -14,11 +24,11 @@
       </div>
 
       <div class="timer-wrapper" v-if="question.text && !showResults">
-       <div class="timertimer"> 
-        <h2 :class="{ 'critical': timer < 10 }">{{ uiLabels.timer }} {{ timer }}s</h2>
-        <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
+        <div class="timertimer">
+          <h2 :class="{ 'critical': timer < 10 }">{{ uiLabels.timer }} {{ timer }}s</h2>
+          <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
         </div>
-        
+
         <div v-if="isHost && question.text" class="question-count-display">
 
 
@@ -94,7 +104,9 @@ export default {
       answersStatus: { answered: 0, total: 0 },
       correctAnswerId: null,
       isGameOver: false,
-      gameOverTimeout: null
+      gameOverTimeout: null,
+      showReadyBonusPopup: false
+
     }
   },
 
@@ -117,6 +129,19 @@ export default {
   created: function () {
     this.pollId = this.$route.params.id;
     this.isHost = localStorage.getItem("isHost") === "true";
+
+    if (
+      this.isHost &&
+      localStorage.getItem('showReadyBonusPopup') === 'true'
+    ) {
+      this.showReadyBonusPopup = true;
+      localStorage.removeItem('showReadyBonusPopup');
+
+      setTimeout(() => {
+        this.showReadyBonusPopup = false;
+      }, 3000);
+    }
+
 
     socket.on("questionUpdate", q => {
       this.question = q || { text: "", answers: [] };

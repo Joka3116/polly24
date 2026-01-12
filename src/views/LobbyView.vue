@@ -192,7 +192,7 @@ export default {
     },
 
     runQuiz: function () {
-
+      localStorage.setItem('showReadyBonusPopup', 'true');
       socket.emit("initiateGameNavigation", { pollId: this.pollId });
 
       this.$router.push("/poll/" + this.pollId);
