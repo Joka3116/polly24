@@ -1,7 +1,7 @@
 <template>
   <TopRightHeader />
   <header>
-<h1>{{ uiLabels.playpoll || "PLAY AND WIN!" }}</h1>
+    <h1>{{ uiLabels.playpoll || "PLAY AND WIN!" }}</h1>
   </header>
   <main>
 
@@ -13,7 +13,8 @@
         <img src="/img/logo.png" alt="Logo" class="poll-logo" />
 
         <div v-if="isHost && question.text" class="question-count-display">
-          <h2>{{uiLabels.question}}: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions }}</span></h2>
+          <h2>{{ uiLabels.question }}: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions
+              }}</span></h2>
         </div>
 
         <div class="timer-wrapper" v-if="question.text && !showResults">
@@ -21,7 +22,7 @@
           <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
 
           <div class="answers-count">
-            <h3>{{uiLabels.answer}}: <span class="highlight">{{ answersStatus.answered }}</span></h3>
+            <h3>{{ uiLabels.answer }}: <span class="highlight">{{ answersStatus.answered }}</span></h3>
           </div>
         </div>
       </div>
@@ -34,7 +35,7 @@
 
           <div v-if="isHost" class="host-controls">
             <button v-if="!showResults" class="btn-main" @click="revealAnswer">
-              {{uiLabels.showanswer}}
+              {{ uiLabels.showanswer }}
             </button>
 
             <button v-else-if="question.currentNumber < question.totalQuestions" class="btn-main"
@@ -163,7 +164,7 @@ export default {
     });
 
     socket.on("submittedAnswersUpdate", answers => this.submittedAnswers = answers);
-socket.on("uiLabels", labels => {
+    socket.on("uiLabels", labels => {
       this.uiLabels = { ...labels };
     });
     socket.on("participantsUpdate", p => this.participants = p);
@@ -195,24 +196,22 @@ socket.on("uiLabels", labels => {
         socket.emit("runQuestion", { pollId: this.pollId });
       }
     },
-revealAnswer: function () {
+    revealAnswer: function () {
       socket.emit('forceEndQuestion', { pollId: this.pollId });
     },
 
-switchLanguage: function (lang) {
-  this.lang = lang;
-  localStorage.setItem("lang", this.lang);
-  
-  // Uppdatera gränssnittet
-  socket.emit("getUILabels", this.lang);
+    switchLanguage: function (lang) {
+      this.lang = lang;
+      localStorage.setItem("lang", this.lang);
 
-  // Uppdatera själva frågan från databasen
-  socket.emit("patchCurrentQuestion", { 
-    pollId: this.pollId, 
-    lang: this.lang 
-  });
-}
-}
+      socket.emit("getUILabels", this.lang);
+
+      socket.emit("patchCurrentQuestion", {
+        pollId: this.pollId,
+        lang: this.lang
+      });
+    }
+  }
 }
 </script>
 
