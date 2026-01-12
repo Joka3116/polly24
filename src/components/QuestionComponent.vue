@@ -76,7 +76,7 @@ export default {
   /* Minskat gap för att få plats på mobilen */
   gap: clamp(10px, 2vw, 20px);
   width: 100%;
-  max-width: 1000px;
+  max-width: 1400px;
   padding: 15px;
   box-sizing: border-box;
 }
@@ -96,7 +96,8 @@ export default {
 
   /* Säkrar att knapparna är stora men inte för höga på mobil */
   padding: clamp(10px, 2vh, 25px);
-  min-height: clamp(80px, 15vh, 120px);
+  min-height: clamp(100px, 15vh, 140px);
+  min-width: 300px;
 
   cursor: pointer;
   display: flex;
@@ -125,6 +126,7 @@ export default {
     border-radius: 20px;
     /* Gör texten lite smalare på mobil om namnen är långa */
     letter-spacing: 0px;
+    min-width: 0;
   }
 }
 
