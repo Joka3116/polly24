@@ -126,7 +126,7 @@ export default {
     border-radius: 20px;
     /* Gör texten lite smalare på mobil om namnen är långa */
     letter-spacing: 0px;
-    min-width: 0;
+    min-width: 150px;
   }
 }
 

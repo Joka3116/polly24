@@ -143,27 +143,27 @@ function sockets(io, socket, data) {
     socket.emit("finalResults", leaderboard);
   });
 
- socket.on('patchCurrentQuestion', async function (d) {
-  let poll = data.getPoll(d.pollId);
+  socket.on('patchCurrentQuestion', async function (d) {
+    let poll = data.getPoll(d.pollId);
 
-  let currentQ = poll.questions[poll.currentQuestion];
+    let currentQ = poll.questions[poll.currentQuestion];
 
-  if (currentQ && currentQ.sharedId) {
-    let translated = await data.getQuestionBySharedId(currentQ.sharedId, d.lang);
-    
-    if (translated) {
-      const sanitizedQuestion = {
-        id: translated.id,
-        text: translated.text,
-        answers: translated.answers.map(a => ({ id: a.id, text: a.text })),
-        currentNumber: poll.currentQuestion + 1,
-        totalQuestions: poll.settings.nrOfQuestions
-      };
+    if (currentQ && currentQ.sharedId) {
+      let translated = await data.getQuestionBySharedId(currentQ.sharedId, d.lang);
 
-      socket.emit('questionUpdate', sanitizedQuestion);
+      if (translated) {
+        const sanitizedQuestion = {
+          id: translated.id,
+          text: translated.text,
+          answers: translated.answers.map(a => ({ id: a.id, text: a.text })),
+          currentNumber: poll.currentQuestion + 1,
+          totalQuestions: poll.settings.nrOfQuestions
+        };
+
+        socket.emit('questionUpdate', sanitizedQuestion);
+      }
     }
-  }
-});
+  });
 
   function startTimer(pollId, difficulty) {
     if (timers[pollId]) {
@@ -241,7 +241,7 @@ function sockets(io, socket, data) {
     if (poll.currentQuestion + 1 >= poll.settings.nrOfQuestions) {
       setTimeout(() => {
         io.to(pollId).emit('gameOver');
-      }, 5000);
+      }, 2000);
     }
   }
 };
