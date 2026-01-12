@@ -57,8 +57,17 @@
   "hardQuestions": "hard",
   "lobbyTitle": "Game Lobby",
   "lobbySubtitle": "Wait for the game to start",
-  "startGame": "Start Game",
+  "startGame": "START GAME",
   "result": "Results",
   "loading": "Loading results...",
-  "startingPage": "Go to starting page"
+  "startingPage": "Go to starting page",
+    "playpoll": "PLAY AND WIN!",
+    "timer": "Time left:",
+      "answer": "ANSWER",
+      "showanswer": "SHOW ANSWER",
+      "nextQ": "NEXT QUESTION",
+                  "waiting": "Waiting for question...",
+                  "readyStart": "Ready to start?"
+
+
 }

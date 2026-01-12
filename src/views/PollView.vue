@@ -1,7 +1,7 @@
 <template>
   <TopRightHeader />
   <header>
-    <h1>SPELA OCH VINN!</h1>
+<h1>{{ uiLabels.playpoll || "PLAY AND WIN!" }}</h1>
   </header>
   <main>
 
@@ -13,15 +13,15 @@
         <img src="/img/logo.png" alt="Logo" class="poll-logo" />
 
         <div v-if="isHost && question.text" class="question-count-display">
-          <h2>FRÅGA: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions }}</span></h2>
+          <h2>{{uiLabels.question}}: <span class="highlight">{{ question.currentNumber }} / {{ question.totalQuestions }}</span></h2>
         </div>
 
         <div class="timer-wrapper" v-if="question.text && !showResults">
-          <h2 :class="{ 'critical': timer < 10 }">TID KVAR: {{ timer }}s</h2>
+          <h2 :class="{ 'critical': timer < 10 }">{{ uiLabels.timer }} {{ timer }}s</h2>
           <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
 
           <div class="answers-count">
-            <h3>SVAR: <span class="highlight">{{ answersStatus.answered }}</span></h3>
+            <h3>{{uiLabels.answer}}: <span class="highlight">{{ answersStatus.answered }}</span></h3>
           </div>
         </div>
       </div>
@@ -34,22 +34,22 @@
 
           <div v-if="isHost" class="host-controls">
             <button v-if="!showResults" class="btn-main" @click="revealAnswer">
-              VISA SVAR
+              {{uiLabels.showanswer}}
             </button>
 
             <button v-else-if="question.currentNumber < question.totalQuestions" class="btn-main"
               @click="runNextQuestion">
-              NÄSTA FRÅGA
+              {{ uiLabels.nextQ }}
             </button>
           </div>
 
         </div>
 
         <div v-else class="waiting-screen">
-          <h2 v-if="!isHost">Väntar på fråga...</h2>
+          <h2 v-if="!isHost">{{ uiLabels.waiting }}</h2>
           <div v-else>
-            <h2>Redo att starta?</h2>
-            <button class="btn-main" @click="runNextQuestion">START GAME</button>
+            <h2>{{ uiLabels.readyStart }}</h2>
+            <button class="btn-main" @click="runNextQuestion">{{ uiLabels.startGame }}</button>
           </div>
         </div>
       </div>
