@@ -97,19 +97,29 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 8dvh;
+    padding-top: 4dvh;
 }
 
 header img {
     width: 60%;
     height: auto;
-    max-width: 30rem;
+    max-width: 20rem;
     max-height: 30rem;
     aspect-ratio: 1;
     padding-bottom: 2rem;
+}   
+
+header h1 {
+    color: var(--headline-color);
+    text-shadow:
+        0 0 10px rgba(255, 215, 0, 0.8),
+        0 0 20px rgba(0, 0, 0, 0.9);
+    text-align: center;
+    text-wrap: balance !important;   
+    font-size: 5rem;
 }
 
-header h1,
+
 h2 {
     color: var(--headline-color);
     text-shadow:
@@ -117,20 +127,23 @@ h2 {
         0 0 20px rgba(0, 0, 0, 0.9);
     text-align: center;
     text-wrap: balance !important;
+    font-size: 2rem;
+
+    
 }
 
 main {
     color: white;
-    padding-top: 10dvh;
+    padding-top: 5dvh; /* Sänkt från 10dvh */
     padding-bottom: 5rem;
-}
+}   
 
 .button-group {
     width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 1rem;
+    margin-top: 0;
     min-height: 12rem;
     /* Reserve space to prevent jumpiness, adjust as needed */
 }
