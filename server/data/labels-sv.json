@@ -11,7 +11,7 @@
   "createGame": "Skapa",
   "play": "SPELA",
   "join": "DELTA",
-  "gameID": "Skriv spel id:",
+  "gameID": "Spel id",
   "name": "Ditt namn",
   "waitingplayer": "BEKRÄFTA NÄRVARO, OPERATÖR.",
   "waitinghost": "VÄNTAR PÅ INITIERING...",

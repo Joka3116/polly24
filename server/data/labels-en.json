@@ -11,7 +11,7 @@
   "createGame": "Create",
   "play": "PLAY",
   "join": "JOIN",
-  "gameID": "Write game id:",
+  "gameID": "Game id",
   "name": "Your name",
   "waitingplayer": "CONFIRM PRESENCE, OPERATOR.",
   "waitinghost": "AWAITING INITIATION...",
