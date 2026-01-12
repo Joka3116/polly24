@@ -22,9 +22,26 @@
         </div>
 
     </main>
+<<<<<<< Updated upstream
     <ResponsiveNav :uiLabels="uiLabels" @switch-language="switchLanguage" />
 
-
+=======
+    <ResponsiveNav>
+        <router-link to="/about/">
+            {{ uiLabels.about || "ABOUT!" }}
+        </router-link>
+        <router-link to="/faq/">
+            {{ uiLabels.faq || "FAQ!" }}
+        </router-link>
+        <router-link to="/">
+            {{ uiLabels.play || "PLAY!" }}
+        </router-link>
+        <router-link to="/create/">
+            {{ uiLabels["createGame"] || "CREATE!" }}
+        </router-link>
+        <LangSwitch @switch-language="switchLanguage" />
+    </ResponsiveNav>
+>>>>>>> Stashed changes
 </template>
 
 <script>
