@@ -74,18 +74,14 @@ export default {
       selectedNrOfQuestions: 7    // Förvalt antal frågor
     }
   },
-created: function () {
-  this.pollId = Math.floor(100000 + Math.random() * 900000);
-  
-  socket.on("uiLabels", labels => {
-    this.uiLabels = { ...labels };
-  });
-  
-  socket.on("pollData", data => this.pollData = data);
-  socket.on("participantsUpdate", p => this.pollData.participants = p);
-  socket.emit("getUILabels", this.lang);
-  this.createPoll();
-},
+  created: function () {
+    this.pollId = Math.floor(100000 + Math.random() * 900000);
+    socket.on("uiLabels", labels => this.uiLabels = labels);
+    socket.on("pollData", data => this.pollData = data);
+    socket.on("participantsUpdate", p => this.pollData.participants = p);
+    socket.emit("getUILabels", this.lang);
+    this.createPoll();
+  },
   methods: {
     switchLanguage: function (lang) {
       if (lang) {
@@ -132,21 +128,81 @@ created: function () {
 </script>
 
 <style scoped>
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: clamp(2rem, 4dvh, 10rem);
+}
+
 .pulsing-text {
   animation: pulse 2s infinite;
+  margin-bottom: -1.2rem;
   color: gold;
   font-style: italic;
 }
 
 @keyframes pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
+  0% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 600px) {
+
+  .LobbyPlateSpacing {
+    margin-top: 2rem;
+  }
+
+  .header,
+  h1 {
+    display: none;
+  }
+
+  .pulsing-text {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  header {
+    padding-top: clamp(4rem, 4dvh, 5rem);
+  }
+}
+
+header h1,
+h2 {
+  color: var(--headline-color);
+  text-align: center;
+  text-shadow:
+    0 0 10px rgba(255, 215, 0, 0.8),
+    0 0 20px rgba(0, 0, 0, 0.9);
+}
+
+h3 {
+  font-size: 2.5rem;
+  text-wrap: nowrap;
+}
+
+header p {
+  color: var(--headline-color);
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  font-size: 1.5rem;
 }
 
 .create-container {
   color: var(--headline-color);
-  padding: 1rem 2rem; 
+  padding: 2em;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -154,7 +210,7 @@ created: function () {
 
 .selection-wrapper {
   margin-top: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   width: 100%;
   max-width: 600px;
 }
@@ -228,10 +284,5 @@ button:hover {
   margin-bottom: 20px;
   text-shadow: 2px 2px 0px #000;
   box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-}
-
-.LobbyPlateSpacing {
-    margin-top: 1.5rem;
-    margin-bottom: 2rem;
 }
 </style>

@@ -22,26 +22,8 @@
         </div>
 
     </main>
-<<<<<<< Updated upstream
     <ResponsiveNav :uiLabels="uiLabels" @switch-language="switchLanguage" />
 
-=======
-    <ResponsiveNav>
-        <router-link to="/about/">
-            {{ uiLabels.about || "ABOUT!" }}
-        </router-link>
-        <router-link to="/faq/">
-            {{ uiLabels.faq || "FAQ!" }}
-        </router-link>
-        <router-link to="/">
-            {{ uiLabels.play || "PLAY!" }}
-        </router-link>
-        <router-link to="/create/">
-            {{ uiLabels["createGame"] || "CREATE!" }}
-        </router-link>
-        <LangSwitch @switch-language="switchLanguage" />
-    </ResponsiveNav>
->>>>>>> Stashed changes
 </template>
 
 <script>
@@ -62,12 +44,10 @@ export default {
             showGameInput: false,
         };
     },
-created: function () {
-    socket.on("uiLabels", (labels) => {
-        this.uiLabels = { ...labels }; 
-    });
-    socket.emit("getUILabels", this.lang);
-},
+    created: function () {
+        socket.on("uiLabels", (labels) => (this.uiLabels = labels));
+        socket.emit("getUILabels", this.lang);
+    },
     methods: {
         unlockAudio() {
             if (this.audioUnlocked) return;
@@ -100,6 +80,7 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 4dvh;
 }
 
 header img {
@@ -112,18 +93,32 @@ header img {
 }
 
 header h1 {
+    color: var(--headline-color);
+    text-shadow:
+        0 0 10px rgba(255, 215, 0, 0.8),
+        0 0 20px rgba(0, 0, 0, 0.9);
     text-align: center;
     text-wrap: balance !important;
+    font-size: 3rem;
 }
 
+
 h2 {
+    color: var(--headline-color);
+    text-shadow:
+        0 0 10px rgba(255, 215, 0, 0.8),
+        0 0 20px rgba(0, 0, 0, 0.9);
     text-align: center;
     text-wrap: balance !important;
+    font-size: 1.5rem;
+
+
 }
 
 main {
     color: white;
-    padding-top: var(--main-padding-top);
+    padding-top: 5dvh;
+    /* Sänkt från 10dvh */
     padding-bottom: 5rem;
 }
 
@@ -146,6 +141,7 @@ main {
     min-width: 80px;
 }
 
+/* Transitions */
 .slide-fade-enter-active {
     transition: all 0.15s ease-out;
 }
@@ -158,5 +154,28 @@ main {
 .slide-fade-leave-to {
     transform: translateY(20px);
     opacity: 0;
+}
+
+@media (max-width: 768px) {
+    header h1 {
+        color: var(--headline-color);
+        text-shadow:
+            0 0 10px rgba(255, 215, 0, 0.8),
+            0 0 20px rgba(0, 0, 0, 0.9);
+        text-align: center;
+        text-wrap: balance !important;
+        font-size: 2.2rem;
+    }
+
+    h2 {
+        color: var(--headline-color);
+        text-shadow:
+            0 0 10px rgba(255, 215, 0, 0.8),
+            0 0 20px rgba(0, 0, 0, 0.9);
+        text-align: center;
+        text-wrap: balance !important;
+        font-size: 1.2rem;
+    }
+
 }
 </style>

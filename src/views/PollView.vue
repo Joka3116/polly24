@@ -14,11 +14,11 @@
       </div>
 
       <div class="timer-wrapper" v-if="question.text && !showResults">
-        <div class="timertimer">
-          <h2 :class="{ 'critical': timer < 10 }">{{ uiLabels.timer }} {{ timer }}s</h2>
-          <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
+       <div class="timertimer"> 
+        <h2 :class="{ 'critical': timer < 10 }">{{ uiLabels.timer }} {{ timer }}s</h2>
+        <div class="timer-bar" :style="{ width: (timer / 60) * 100 + '%' }"></div>
         </div>
-
+        
         <div v-if="isHost && question.text" class="question-count-display">
 
 
@@ -125,6 +125,7 @@ export default {
       this.isGameOver = false;
     });
 
+
     socket.on("showResults", (correctId) => {
       if (correctId !== undefined) {
         this.correctAnswerId = correctId;
@@ -169,6 +170,7 @@ export default {
     submitAnswer: function (answerObject) {
       const user = localStorage.getItem("userName");
 
+
       socket.emit("submitAnswer", {
         pollId: this.pollId,
         answerId: answerObject.id, // Ändrat från 'answer' till 'answerId'
@@ -204,12 +206,39 @@ export default {
 </script>
 
 <style scoped>
-.poll-view {
-  padding-top: 0;
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: clamp(8rem, 8dvh, 10rem);
 }
 
-.desktop-only {
-  margin-top: 1.5rem;
+@media (min-width: 1024px) {
+  header {
+    padding-top: clamp(10rem, 8dvh, 12rem);
+  }
+}
+
+header h1,
+h2 {
+  color: var(--headline-color);
+  text-align: center;
+  text-shadow:
+    0 0 10px rgba(255, 215, 0, 0.8),
+    0 0 20px rgba(0, 0, 0, 0.9);
+}
+
+h3 {
+  font-size: 1.5rem;
+  text-wrap: nowrap;
+}
+
+header p {
+  color: var(--headline-color);
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  font-size: 1.5rem;
 }
 
 .poll-view {
@@ -217,34 +246,32 @@ export default {
   flex-direction: column;
   align-items: center;
   color: white;
-  padding: 10px 20px;
+  font-family: 'Arial', sans-serif;
+  padding: 20px;
+}
+
+.poll-header {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .highlight {
   color: gold;
+
 }
 
 .info-container {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 3rem;
+
 }
 
 .poll-logo {
-    width: var(--logo-size); 
-    height: auto;
-    animation: float 6s ease-in-out infinite; 
-}
+  width: 120px;
 
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0px);
-  }
+  height: auto;
+  margin-bottom: 1rem;
 }
 
 .debug-text {
@@ -271,17 +298,15 @@ export default {
   padding: 5px 15px;
   color: white;
   font-size: 0.9rem;
-
+  /* Lite mindre text än i lobbyn */
   font-weight: bold;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 
 .timer-wrapper {
-  margin: 0.5rem 0;
+  margin: 1rem 0;
   color: gold;
-  width: 100%;
-  text-align: center;
 }
 
 .timer-wrapper h2.critical {
@@ -295,7 +320,7 @@ export default {
   border-radius: 4px;
   transition: width 1s linear;
   box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-  margin: 10px auto;
+  margin: 0 auto;
   max-width: 300px;
 }
 
@@ -345,5 +370,23 @@ export default {
     display: none;
   }
 
+}
+
+
+@media (min-width: 1000px) {
+
+  .header,
+  h1 {
+    margin-top: -9rem;
+
+  }
+
+  .desktop-only {
+    margin-top: -4rem;
+  }
+}
+
+.timertimer {
+  margin-top: -4rem;
 }
 </style>
