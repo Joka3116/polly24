@@ -10,20 +10,20 @@
       <LobbyLicensePlate :pollId="pollId" />
 
       <div class="selection-wrapper">
-        <h3>{{ uiLabels.difficultyLevel || "Välj Svårighetsgrad" }}</h3>
+        <h3>{{ uiLabels.timerDuration || "Välj Tidsgräns" }}</h3>
 
         <div class="button-row">
-          <button v-on:click="selectedDifficulty = 'easy'"
-            v-bind:class="['option-btn', { selected: selectedDifficulty === 'easy' }]">
-            {{ uiLabels.easy || "Easy" }}
+          <button v-on:click="selectedDifficulty = 10"
+            v-bind:class="['option-btn', { selected: selectedDifficulty === 10 }]">
+            10s
           </button>
-          <button v-on:click="selectedDifficulty = 'medium'"
-            v-bind:class="['option-btn', { selected: selectedDifficulty === 'medium' }]">
-            {{ uiLabels.medium || "Medium" }}
+          <button v-on:click="selectedDifficulty = 20"
+            v-bind:class="['option-btn', { selected: selectedDifficulty === 20 }]">
+            20s
           </button>
-          <button v-on:click="selectedDifficulty = 'hard'"
-            v-bind:class="['option-btn', { selected: selectedDifficulty === 'hard' }]">
-            {{ uiLabels.hard || "Hard" }}
+          <button v-on:click="selectedDifficulty = 30"
+            v-bind:class="['option-btn', { selected: selectedDifficulty === 30 }]">
+            30s
           </button>
         </div>
       </div>
@@ -40,8 +40,6 @@
 
       <button v-on:click="createPollSettings" class="start-btn">
         <span>{{ uiLabels.createGameNow || "CREATE!" }}</span>
-        <span style="font-size:0.8rem;padding: 0;">{{ selectedNrOfQuestions }} {{ difficultyLabel }} {{
-          uiLabels.questions || "questions" }}</span>
       </button>
 
     </div>
@@ -89,7 +87,7 @@ export default {
       pollData: {},
       uiLabels: {},
       // NY DATA HÄR:
-      selectedDifficulty: 'easy', // Förvald svårighetsgrad
+      selectedDifficulty: 20, // Förvald tidsgräns
       selectedNrOfQuestions: 5    // Förvalt antal frågor
     }
   },
@@ -131,10 +129,7 @@ export default {
   },
   computed: {
     difficultyLabel() {
-      if (this.selectedDifficulty === 'easy') return this.uiLabels.easyQuestions || 'easy';
-      if (this.selectedDifficulty === 'medium') return this.uiLabels.mediumQuestions || 'medium';
-      if (this.selectedDifficulty === 'hard') return this.uiLabels.hardQuestions || 'hard';
-      return this.selectedDifficulty;
+      return this.selectedDifficulty + "s";
     }
   },
   addQuestion: function () {
@@ -226,6 +221,8 @@ button {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
+  text-transform: none;
+  font-family: Arial, sans-serif;
 }
 
 .option-btn.selected {
@@ -237,7 +234,7 @@ button {
 }
 
 .start-btn {
-  margin-top: 3rem;
+  margin-top: 1rem;
   padding: 1.25rem 2.5rem;
   font-size: 2rem;
   letter-spacing: 3px;
