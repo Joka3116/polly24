@@ -89,6 +89,8 @@ Data.prototype.resetPoll = function (pollId) {
       participant.isReady = false;
     });
 
+    poll.readyBonusGiven = false;
+
     console.log("Poll reset for", pollId);
   }
 }
@@ -101,26 +103,39 @@ Data.prototype.getPoll = function (pollId) {
 }
 
 Data.prototype.participateInPoll = function (pollId, name) {
-  if (this.pollExists(pollId)) {
-    this.polls[pollId].participants.push({
-      name: name,
-      answers: [],
-      isReady: false,
-      points: 0
-    });
+  if (!this.pollExists(pollId)) return;
+
+  const poll = this.polls[pollId];
+
+  let participant = poll.participants.find(p => p.name === name);
+
+  if (participant) {
+    participant.isReady = false;
+    participant.answers = [];
+    participant.points = participant.points ?? 0;
+    return;
   }
-}
+
+  poll.participants.push({
+    name,
+    answers: [],
+    isReady: false,
+    points: 0
+  });
+};
 
 Data.prototype.setPlayerReady = function (pollId, name, isReady) {
-  if (this.pollExists(pollId)) {
-    const participants = this.polls[pollId].participants;
+  if (!this.pollExists(pollId)) return;
 
-    const participant = participants.find(p => p.name === name);
-    if (participant) {
-      participant.isReady = isReady;
+  const poll = this.polls[pollId];
+
+  poll.participants.forEach(p => {
+    if (p.name === name) {
+      p.isReady = isReady === true;
     }
-  }
-}
+  });
+};
+
 
 Data.prototype.getParticipants = function (pollId) {
   const poll = this.polls[pollId];

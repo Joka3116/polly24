@@ -10,37 +10,50 @@ function sockets(io, socket, data) {
   });
 
   socket.on('initiateGameNavigation', function (d) {
-    data.resetPoll(d.pollId);
     io.to(d.pollId).emit('navToPoll', d.pollId);
   });
 
-
   socket.on('startPoll', async function (d) {
-    data.resetPoll(d.pollId);
     let poll = data.getPoll(d.pollId);
+
+    if (poll.readyBonusGiven) return;
+    poll.readyBonusGiven = true;
+
+    const readyPlayerNames = poll.participants
+      .filter(p => p.isReady === true)
+      .map(p => p.name);
+
+    data.resetPoll(d.pollId);
+
+    poll.participants.forEach(participant => {
+      if (readyPlayerNames.includes(participant.name)) {
+        participant.points += 500;
+      }
+    });
+
+    io.to(d.pollId).emit('participantsUpdate', poll.participants);
 
     poll.currentQuestion = 0;
 
     console.log("--- BILLIONAIRE ENGINE INITIATED ---");
+
     let question = await data.getRandomQuestion(d.language || "en");
 
-
     data.addQuestion(d.pollId, question);
+
     const sanitizedQuestion = {
       id: question.id,
       text: question.text,
       answers: question.answers.map(a => ({ id: a.id, text: a.text })),
-      currentNumber: poll.currentQuestion + 1, // +1 eftersom currentQuestion börjar på 0
+      currentNumber: poll.currentQuestion + 1,
       totalQuestions: poll.settings.nrOfQuestions
     };
 
-
     io.to(d.pollId).emit('questionUpdate', sanitizedQuestion);
-
-
     io.to(d.pollId).emit('submittedAnswersUpdate', {});
     startTimer(d.pollId, poll.settings?.difficulty || 'medium');
   });
+
   socket.on('getUILabels', function (lang) {
     socket.emit('uiLabels', data.getUILabels(lang));
   });
